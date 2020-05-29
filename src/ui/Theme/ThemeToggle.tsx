@@ -1,12 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import moonIcon from '../../assets/icons/moon.svg'
+import React from 'react';
+import styled from 'styled-components';
+import moonIcon from '../../assets/icons/moon.svg';
 
 export const ThemeToggle = () => (
   <ToggleButton>
     <img src={moonIcon} alt="moon"/>
   </ToggleButton>
-)
+);
 
 const ToggleButton = styled.button`
   display: flex;
@@ -18,4 +18,4 @@ const ToggleButton = styled.button`
   border: 1px solid #E7EBF2;
   border-radius: 2px;
   cursor: pointer;
-`
+`;

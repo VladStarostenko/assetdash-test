@@ -1,5 +1,5 @@
-import React from 'react'
-import { NavList, NavItem, NavigationLink } from '../Nav/Nav'
+import React from 'react';
+import { NavList, NavItem, NavigationLink } from '../Nav/Nav';
 
 export const FooterNav = () => (
   <NavList>
@@ -16,4 +16,4 @@ export const FooterNav = () => (
       <NavigationLink to="/cryptocurrencies">Cryptocurrencies</NavigationLink>
     </NavItem>
   </NavList>
-)
+);

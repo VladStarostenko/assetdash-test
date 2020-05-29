@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
-export const Logo = () => <LogoText>Asset<span>Dash</span></LogoText>
+export const Logo = () => <LogoText>Asset<span>Dash</span></LogoText>;
 
 const LogoText = styled.p`
   font-size: 22px;
@@ -12,4 +12,4 @@ const LogoText = styled.p`
   & span {
     font-weight: 700
   }
-`
+`;

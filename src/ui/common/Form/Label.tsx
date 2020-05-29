@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Label = styled.label`
   display: block;
@@ -10,4 +10,4 @@ export const Label = styled.label`
   & + & {
     margin-top: 24px;
   }
-`
+`;

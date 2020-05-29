@@ -79,7 +79,7 @@
         },
         "singleline": {
           "delimiter": "comma",
-          "requireLast": true
+          "requireLast": false
         }
       }
     ],
@@ -200,6 +200,12 @@
       "always",
       {
         "exceptAfterSingleLine": true
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 150
       }
     ],
     "new-cap": [
@@ -420,8 +426,7 @@
       "never"
     ],
     "semi": [
-      "error",
-      "never"
+      "error"
     ],
     "semi-spacing": [
       "error",

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const ButtonPrimary = styled.button`
   width: 100%;
@@ -13,4 +13,4 @@ export const ButtonPrimary = styled.button`
   border-radius: 2px;
   border: none;
   cursor: pointer;
-`
+`;

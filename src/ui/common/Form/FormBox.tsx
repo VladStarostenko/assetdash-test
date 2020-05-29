@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react'
-import styled from 'styled-components'
-import { ButtonPrimary } from '../Button/ButtonPrimary'
+import React, { ReactNode } from 'react';
+import styled from 'styled-components';
+import { ButtonPrimary } from '../Button/ButtonPrimary';
 
 interface FormBoxProps {
   children: ReactNode
@@ -12,7 +12,7 @@ export const FormBox = ({ children }: FormBoxProps) => (
       {children}
     </FormInner>
   </Form>
-)
+);
 
 export const FormBoxText = styled.p`
   margin-top: 24px;
@@ -25,11 +25,11 @@ export const FormBoxText = styled.p`
   a {
     color: #21ce99;
   }
-`
+`;
 
-export const FormButton = styled(ButtonPrimary as any)`
+export const FormButton = styled(ButtonPrimary)`
   margin-top: 24px;
-`
+`;
 
 const Form = styled.form`
   max-width: 570px;
@@ -38,9 +38,9 @@ const Form = styled.form`
   background: #FFFFFF;
   box-shadow: 0px 4px 32px rgba(225, 242, 242, 0.59);
   border-radius: 2px;
-`
+`;
 
 const FormInner = styled.div`
   max-width: 410px;
   margin: 0 auto;
-`
+`;

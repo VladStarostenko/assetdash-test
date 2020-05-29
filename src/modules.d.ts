@@ -1,5 +1,5 @@
 
 declare module 'react-modal-video' {
-  const ModalVideo: any
+  const ModalVideo: any;
   export = ModalVideo;
 }

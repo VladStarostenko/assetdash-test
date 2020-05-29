@@ -7,18 +7,18 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 const config: Configuration = {
   entry: [
     'react-hot-loader/patch',
-    './src/index.tsx',
+    './src/index.tsx'
   ],
 
   output: {
     filename: 'main.[hash].js',
-    path: path.resolve('./dist'),
+    path: path.resolve('./dist')
   },
 
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.json'],
     alias: {
-      'react-dom': '@hot-loader/react-dom',
+      'react-dom': '@hot-loader/react-dom'
     },
     modules: [
       path.resolve('./node_modules'),
@@ -35,8 +35,8 @@ const config: Configuration = {
           loader: 'babel-loader',
           options: {
             cacheDirectory: true,
-          },
-        },
+          }
+        }
       },
       {
         test: /\.svg$/,
@@ -54,7 +54,7 @@ const config: Configuration = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[hash].[ext]',
+              name: '[name].[hash].[ext]'
             },
           },
         ],
@@ -64,10 +64,10 @@ const config: Configuration = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'sass-loader',
-        ],
-      },
-    ],
+          'sass-loader'
+        ]
+      }
+    ]
   },
 
   plugins: [
@@ -77,23 +77,22 @@ const config: Configuration = {
       chunkFilename: '[id].[hash].css',
     }),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
-      // favicon: 'src/assets/favicon.ico'
+      template: 'src/index.html'
     }),
     new IgnorePlugin(/\/iconv-loader$/),
     new DefinePlugin({
       'process.env': JSON.stringify({
         NODE_ENV: process.env.NODE_ENV,
-      }),
-    }),
+      })
+    })
   ],
 
   devtool: 'source-map',
 
   devServer: {
     stats: 'errors-warnings',
-    historyApiFallback: true,
-  },
-}
+    historyApiFallback: true
+  }
+};
 
-export default config
+export default config;

@@ -1,11 +1,11 @@
-import React from 'react'
-import '../styles/reset.sass'
-import { hot } from 'react-hot-loader/root'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Home } from './Home/Home'
-import { Login } from './Login/Login'
-import { SingUp } from './SignUp/SingUp'
-import { ForgotPassword } from './ForgotPassword/ForgotPassword'
+import React from 'react';
+import '../styles/reset.sass';
+import { hot } from 'react-hot-loader/root';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Home } from './Home/Home';
+import { Login } from './Login/Login';
+import { SingUp } from './SignUp/SingUp';
+import { ForgotPassword } from './ForgotPassword/ForgotPassword';
 
 const App: React.FC = () => {
   return (
@@ -17,7 +17,7 @@ const App: React.FC = () => {
         <Route exact path="/forgot-password" component={ForgotPassword}/>
       </Switch>
     </Router>
-  )
-}
+  );
+};
 
-export default hot(App)
+export default hot(App);

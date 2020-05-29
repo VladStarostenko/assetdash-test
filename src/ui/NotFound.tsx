@@ -1,11 +1,11 @@
 
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 export function NotFound() {
   return (
     <Header>Page Not Found</Header>
-  )
+  );
 }
 
 const Header = styled.h1`
@@ -13,4 +13,4 @@ const Header = styled.h1`
   text-align: center;
   font-size: 3em;
   font-weight: bold;
-`
+`;

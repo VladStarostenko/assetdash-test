@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const OnboardView = styled.div`
   position: relative;
@@ -15,4 +15,4 @@ export const OnboardView = styled.div`
     background: #f4fbfb;
     z-index: -1;
   }
-`
+`;
