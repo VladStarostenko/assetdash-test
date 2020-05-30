@@ -202,12 +202,6 @@
         "exceptAfterSingleLine": true
       }
     ],
-    "max-len": [
-      "error",
-      {
-        "code": 150
-      }
-    ],
     "new-cap": [
       "error",
       {
