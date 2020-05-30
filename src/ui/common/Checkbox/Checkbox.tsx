@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import checkmark from '../../../assets/icons/checkmark.svg';
 
 export interface CheckboxProps {
-  id: string;
   value: boolean;
-  onChange: (value: boolean) => void
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  name: string;
+  id?: string
 }
 
-export const Checkbox = ({ id, value, onChange }: CheckboxProps) => (
-  <CheckboxWrapper onClick={() => onChange(!value)}>
-    <HiddenCheckbox id={id || ''} onChange={() => onChange(!value)} checked={value}/>
+export const Checkbox = ({ id, value, name, onChange }: CheckboxProps) => (
+  <CheckboxWrapper>
+    <HiddenCheckbox
+      name={name}
+      id={id || ''}
+      onChange={onChange}
+      checked={value}
+    />
     <StyledCheckbox checked={value}/>
   </CheckboxWrapper>
 );

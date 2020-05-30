@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { Checkbox } from '../common/Checkbox/Checkbox';
 
@@ -7,7 +7,7 @@ export const LoginCheckbox = () => {
 
   return (
     <Row>
-      <Checkbox id="login-checkbox" value={checked} onChange={setChecked}/>
+      <Checkbox id="login-checkbox" name="keep-login" value={checked} onChange={(event: ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked)}/>
       <CheckboxLabel htmlFor="login-checkbox">Keep me login</CheckboxLabel>
     </Row>
   );
