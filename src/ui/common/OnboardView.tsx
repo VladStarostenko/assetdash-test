@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const OnboardView = styled.div`
   position: relative;
   flex-grow: 1;
-  padding: 56px 0 100px;
+  padding: 0 0 100px;
 
   &::before {
     content: '';
