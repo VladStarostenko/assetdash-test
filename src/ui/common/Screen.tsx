@@ -30,3 +30,9 @@ const Main = styled.main`
   flex-grow: 1;
   padding-top: 56px;
 `;
+
+export const ScreenContent = styled.div`
+  flex-grow: 1;
+  padding: 24px 0 40px;
+  background: #f4fbfb;
+`;

@@ -48,7 +48,7 @@ export const Sort = () => {
   useOutsideClick(sortDropdownRef, () => isExpanded && setIsExpanded(false));
 
   return (
-    <>
+    <SortView>
       <Title>Sort by sector:</Title>
       <SortList ref={sortListRef}>
         {checkboxes.slice(0, maxElements).map(({ icon, label, name }, index) => (
@@ -81,7 +81,7 @@ export const Sort = () => {
           }
         </li>
       </SortList>
-    </>
+    </SortView>
   );
 };
 
@@ -174,6 +174,10 @@ const Title = styled.p`
   font-size: 14px;
   line-height: 17px;
   color: #8395AE;
+`;
+
+const SortView = styled.div`
+  padding-bottom: 32px;
 `;
 
 const SortList = styled.ul`
