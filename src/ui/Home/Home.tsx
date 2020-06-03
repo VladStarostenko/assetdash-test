@@ -15,9 +15,8 @@ export const Home = () => {
         <Sort/>
       </Container>
       <ScreenContent>
-        <Container>
-          <Assets/>
-        </Container>
+        <Container></Container>
+        <Assets/>
       </ScreenContent>
     </Screen>
   );

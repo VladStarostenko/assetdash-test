@@ -32,8 +32,8 @@ const FooterRow = styled.div`
 `;
 
 const CopyText = styled.p`
-  font-size: 22px;
-  line-height: 26px;
-  letter-spacing: -0.04em;
-  color: #000000;
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #1F3840;
 `;

@@ -35,13 +35,16 @@ export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
 
 export const SortDropdownContent = styled.ul`
   position: absolute;
-  left: 0;
+  right: 0;
   bottom: -15px;
   transform: translateY(100%);
   width: 254px;
+  max-height: 544px;
   padding: 8px;
   background: #FFFFFF;
   border: 1px solid #EEF2FA;
   box-shadow: 0px 4px 8px #EBF3F5;
   border-radius: 2px;
+  overflow-y: auto;
+  z-index: 1;
 `;

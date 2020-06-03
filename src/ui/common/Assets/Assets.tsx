@@ -5,26 +5,32 @@ import ethereumIcon from '../../../assets/icons/crypto/ethereum.svg';
 import chainlinkIcon from '../../../assets/icons/crypto/chainlink.svg';
 import rippleIcon from '../../../assets/icons/crypto/ripple.svg';
 import { AssetItem } from './AssetItem';
+import styled from 'styled-components';
 
 export const Assets = () => {
   return (
-    <Table>
-      <thead>
-        <Th>#</Th>
-        <Th>Daily Dash</Th>
-        <Th>Asset Name</Th>
-        <Th>Symbol</Th>
-        <Th>Market Cap</Th>
-        <Th>Price</Th>
-        <Th>Today</Th>
-        <Th>Weekly Dash</Th>
-        <Th>Monthly Dash</Th>
-        <Th>Quarterly Dash</Th>
-      </thead>
-      <tbody>
-        {placeholderData.map((asset, index) => <AssetItem key={index} asset={asset}/>)}
-      </tbody>
-    </Table>
+    <AssetsView>
+      <Table>
+        <thead>
+          <tr>
+            <Th>#</Th>
+            <Th>Daily Dash</Th>
+            <Th>Asset Name</Th>
+            <Th>Symbol</Th>
+            <Th>Market Cap</Th>
+            <Th>Price</Th>
+            <Th>Today</Th>
+            <Th>Weekly Dash</Th>
+            <Th>Monthly Dash</Th>
+            <Th>Quarterly Dash</Th>
+            <Th></Th>
+          </tr>
+        </thead>
+        <tbody>
+          {placeholderData.map((asset, index) => <AssetItem key={index} asset={asset}/>)}
+        </tbody>
+      </Table>
+    </AssetsView>
   );
 };
 
@@ -82,3 +88,11 @@ const placeholderData = [
     quarterlyDash: 2,
   },
 ];
+
+const AssetsView = styled.div`
+  max-width: 1210px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  overflow-x: scroll;
+`;

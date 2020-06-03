@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const Logo = () => <LogoText>Asset<span>Dash</span></LogoText>;
+export const Logo = () => (
+  <Link to="/">
+    <LogoText>Asset<span>Dash</span></LogoText>
+  </Link>
+);
 
 const LogoText = styled.p`
   font-size: 22px;

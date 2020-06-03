@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { Tr, Td } from '../Table/Table';
 import angleIcon from '../../../assets/icons/angle-down-bright.svg';
+import { ButtonFavorite } from '../Button/ButtonFavorite';
 
 interface AssetItemProps {
   asset: any
@@ -21,6 +22,13 @@ export const AssetItem = (props: AssetItemProps) => {
     monthlyDash,
     quarterlyDash,
   } = props.asset;
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const onFavoriteButtonClick = () => {
+    console.log(isFavorite);
+    setIsFavorite(!isFavorite);
+  };
 
   return (
     <Tr>
@@ -48,6 +56,11 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <Dash direction="down">{quarterlyDash}</Dash>
+      </Td>
+      <Td>
+        <ButtonFavorite
+          checked={isFavorite}
+          onChange={onFavoriteButtonClick}/>
       </Td>
     </Tr>
   );
