@@ -1,8 +1,12 @@
 import React from 'react';
 import { NavList, NavItem, NavigationLink } from '../Nav/Nav';
 
-export const FooterNav = () => (
-  <NavList>
+interface FooterNavProps {
+  className?: string
+}
+
+export const FooterNav = ({ className }: FooterNavProps) => (
+  <NavList className={className || ''}>
     <NavItem>
       <NavigationLink to="/home">Home</NavigationLink>
     </NavItem>

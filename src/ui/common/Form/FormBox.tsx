@@ -29,15 +29,27 @@ export const FormBoxText = styled.p`
 
 export const FormButton = styled(ButtonPrimary)`
   margin-top: 24px;
+
+  @media(max-width: 600px) {
+    margin-top: 16px;
+  }
 `;
 
 const Form = styled.form`
   max-width: 570px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 40px 16px;
   background: ${({ theme }) => theme.colors.backgroundPrimary};
   box-shadow: ${({ theme }) => theme.colors.boxShadowPrimary};
   border-radius: 2px;
+
+  @media(max-width: 990px) {
+    max-width: 482px;
+  }
+
+  @media(max-width: 6000px) {
+    padding: 24px 16px;
+  }
 `;
 
 const FormInner = styled.div`
