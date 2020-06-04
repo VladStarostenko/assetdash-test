@@ -25,10 +25,11 @@ export const Sort = () => {
   const [theme] = useContext(ThemeContext);
   const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
   const [maxElements, setMaxElements] = useState(5);
+  const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
+  const dropDownRef = useRef<HTMLLIElement>(null);
   const itemWidth = 165;
   const marginRight = 16;
-  const dropDownWidth = 145;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCheckedItems({ ...checkedItems, [event.target.name]: event.target.checked });
@@ -38,13 +39,16 @@ export const Sort = () => {
     const handleWindowResize = () => {
       if (sortListRef && sortListRef.current) {
         const containerWidth = sortListRef.current.offsetWidth;
+        if (document.documentElement.clientWidth < 600) setDropDownWidth(400);
+        else setDropDownWidth(145);
         setMaxElements(Math.floor((containerWidth - itemWidth) / (dropDownWidth + marginRight)));
       }
     };
+    handleWindowResize();
 
     window.addEventListener('resize', handleWindowResize);
     return () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
+  }, [dropDownWidth]);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const sortDropdownRef = useRef<HTMLUListElement>(null);
@@ -65,7 +69,7 @@ export const Sort = () => {
             />
           </SortItem>
         ))}
-        <li style={{ width: dropDownWidth, position: 'relative' }}>
+        <SortDropdownItem ref={dropDownRef} style={{ width: dropDownWidth }}>
           <SortDropdownButton
             isExpanded={isExpanded}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -74,7 +78,7 @@ export const Sort = () => {
             More
           </SortDropdownButton>
           {isExpanded &&
-            <DropdownContent ref={sortDropdownRef}>
+            <SortDropdownContent ref={sortDropdownRef}>
               {checkboxes.slice(maxElements).map(({ icon, label, name }, index) => (
                 <li key={index}>
                   <SortCheckbox
@@ -86,9 +90,9 @@ export const Sort = () => {
                   />
                 </li>
               ))}
-            </DropdownContent>
+            </SortDropdownContent>
           }
-        </li>
+        </SortDropdownItem>
       </SortList>
     </SortView>
   );
@@ -186,7 +190,11 @@ const Title = styled.p`
 `;
 
 const SortView = styled.div`
-  padding-bottom: 32px;
+  padding-bottom: 48px;
+
+  @media (max-width: 990px) {
+    padding-bottom: 24px;
+  }
 `;
 
 const SortList = styled.ul`
@@ -203,4 +211,18 @@ const SortItem = styled.li`
   border: 1px solid;
   border-color: ${({ theme }) => theme.colors.sortCheckboxBorder};
   border-radius: 2px;
+`;
+
+const SortDropdownContent = styled(DropdownContent)`
+  @media(max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+const SortDropdownItem = styled.li`
+  position: relative;
+
+  @media(max-width: 600px) {
+    min-width: 100%;
+  }
 `;

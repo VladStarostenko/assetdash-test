@@ -21,6 +21,13 @@ export const Th = styled.th`
   &:last-child {
     padding-right: 24px;
   }
+  
+  &:nth-child(3) {
+    text-align: left;
+  }
+  &:nth-child(4) {
+    text-align: left;
+  }
 `;
 
 export const Td = styled.td`
@@ -37,6 +44,18 @@ export const Td = styled.td`
   }
   &:last-child {
     padding-right: 24px;
+  }
+
+  &:nth-child(3) {
+    text-align: left;
+  }
+  &:nth-child(4) {
+    text-align: left;
+  }
+  
+  @media(max-width: 990px) {
+    font-size: 14px;
+    line-height: 17px;
   }
 `;
 

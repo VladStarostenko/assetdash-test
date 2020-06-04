@@ -18,6 +18,7 @@ export const TextWithIcon = ({ icon, text }: TextWithIconProps) => (
 const Row = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
 `;
 
 const IconWrapper = styled.div`

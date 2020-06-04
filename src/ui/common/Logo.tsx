@@ -17,4 +17,9 @@ const LogoText = styled.p`
   & span {
     font-weight: 700
   }
+
+  @media(max-width: 600px) {
+    font-size: 18px;
+    line-height: 22px;
+  }
 `;

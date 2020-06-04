@@ -23,6 +23,10 @@ const HeaderRow = styled.header`
   padding: 23px 24px;
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.colors.borderPrimary};
+
+  @media(max-width: 600px) {
+    padding: 10px;
+  }
 `;
 
 const ButtonsRow = styled.div`

@@ -30,10 +30,22 @@ const Main = styled.main`
   flex-direction: column;
   flex-grow: 1;
   padding-top: 56px;
+
+  @media(max-width: 990px) {
+    padding-top: 40px;
+  }
+
+  @media(max-width: 600px) {
+    padding-top: 24px;
+  }
 `;
 
 export const ScreenContent = styled.div`
   flex-grow: 1;
-  padding: 24px 0 40px;
+  padding: 32px 0;
   background: ${({ theme }) => theme.colors.backgroundSecondary};
+
+  @media(max-width: 990px) {
+    padding-top: 16px;
+  }
 `;

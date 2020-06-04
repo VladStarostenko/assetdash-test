@@ -13,4 +13,9 @@ export const IconButton = styled.button`
   border-color: ${({ theme }) => theme.colors.borderPrimary};
   border-radius: 2px;
   cursor: pointer;
+
+  @media(max-width: 600px) {
+    width: 36px;
+    height: 36px;
+  }
 `;

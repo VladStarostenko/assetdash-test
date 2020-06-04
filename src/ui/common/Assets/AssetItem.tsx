@@ -26,7 +26,6 @@ export const AssetItem = (props: AssetItemProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const onFavoriteButtonClick = () => {
-    console.log(isFavorite);
     setIsFavorite(!isFavorite);
   };
 
@@ -92,8 +91,8 @@ const AssetName = styled.p`
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 19px;
+  font-size: inherit;
+  line-height: inherit;
   color: inherit;
 
   img {
