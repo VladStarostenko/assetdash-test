@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ButtonTertiary } from './ButtonTertiary';
 import styled from 'styled-components';
-import arrowIcon from '../../../assets/icons/arrow-right.svg';
+import arrowDarkIcon from '../../../assets/icons/arrow-right.svg';
+import arrowLightIcon from '../../../assets/icons/arrow-right-light.svg';
+import { ThemeContext } from '../../Theme/ThemeContextProvider';
 
 interface ButtonArrowProps {
   children: string;
   direction: 'right' | 'left'
 }
 
-export const ButtonArrow = ({ children, direction }: ButtonArrowProps) => (
-  <Button>
-    {direction === 'left' && <ArrowLeftIcon src={arrowIcon} alt="arrow"/>}
-    {children}
-    {direction === 'right' && <ArrowRightIcon src={arrowIcon} alt="arrow"/>}
-  </Button>
-);
+export const ButtonArrow = ({ children, direction }: ButtonArrowProps) => {
+  const [theme] = useContext(ThemeContext);
+  const arrowIcon = theme === 'light' ? arrowDarkIcon : arrowLightIcon;
+
+  return (
+    <Button>
+      {direction === 'left' && <ArrowLeftIcon src={arrowIcon} alt="arrow"/>}
+      {children}
+      {direction === 'right' && <ArrowRightIcon src={arrowIcon} alt="arrow"/>}
+    </Button>
+  );
+};
 
 const Button = styled(ButtonTertiary)`
   margin-right: 16px;
