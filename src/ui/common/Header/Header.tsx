@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Logo } from '../Logo';
-import { HeaderNav } from './HeaderNav';
 import { ButtonSecondary } from '../Button/ButtonSecondary';
 import { ThemeToggle } from '../../Theme/ThemeToggle';
+import { SocialDropdown } from './SocialDropdown';
 
 export const Header = () => (
   <HeaderRow>
     <Logo/>
-    <HeaderNav/>
     <ButtonsRow>
       <LoginButton>Login</LoginButton>
       <ThemeToggle/>
+      <SocialDropdown/>
     </ButtonsRow>
   </HeaderRow>
 );

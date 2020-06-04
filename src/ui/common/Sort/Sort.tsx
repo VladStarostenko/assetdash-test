@@ -16,9 +16,10 @@ import goldIcon from '../../../assets/icons/gold.svg';
 import cryptoIcon from '../../../assets/icons/crypto.svg';
 import cannabisIcon from '../../../assets/icons/cannabis.svg';
 import cubeIcon from '../../../assets/icons/cube.svg';
-import { SortDropdownButton, SortDropdownContent } from './SortDropdown';
+import { SortDropdownButton } from './SortDropdown';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
 import { ThemeContext } from '../../Theme/ThemeContextProvider';
+import { DropdownContent } from '../DropdownContent';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
@@ -73,7 +74,7 @@ export const Sort = () => {
             More
           </SortDropdownButton>
           {isExpanded &&
-            <SortDropdownContent ref={sortDropdownRef}>
+            <DropdownContent ref={sortDropdownRef}>
               {checkboxes.slice(maxElements).map(({ icon, label, name }, index) => (
                 <li key={index}>
                   <SortCheckbox
@@ -85,7 +86,7 @@ export const Sort = () => {
                   />
                 </li>
               ))}
-            </SortDropdownContent>
+            </DropdownContent>
           }
         </li>
       </SortList>
