@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Tr, Td } from '../Table/Table';
-import angleIcon from '../../../assets/icons/angle-down-bright.svg';
-import { ButtonFavorite } from '../Button/ButtonFavorite';
+import { Tr, Td } from '../common/Table/Table';
+import angleIcon from '../../assets/icons/angle-down-bright.svg';
+import { ButtonFavorite } from '../common/Button/ButtonFavorite';
 
 interface AssetItemProps {
   asset: any

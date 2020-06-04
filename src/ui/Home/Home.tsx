@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Screen, ScreenContent } from '../common/Screen';
 import { Container } from '../common/Container';
 import { PageTitle } from '../common/Text/PageTitle';
 import { Search } from '../common/Search/Search';
 import { Sort } from '../common/Sort/Sort';
-import { Assets } from '../common/Assets/Assets';
+import { Assets } from '../Assets/Assets';
+import { WatchList } from '../WatchList/WatchList';
 
 export const Home = () => {
+  const [tab, setTab] = useState('Assets');
+  const tabs = ['Assets', 'Watchlist'];
+
   return (
     <Screen>
       <Container>
@@ -15,8 +19,20 @@ export const Home = () => {
         <Sort/>
       </Container>
       <ScreenContent>
-        <Container></Container>
-        <Assets/>
+        {tab === 'Assets' &&
+          <Assets
+            activeTab={tab}
+            setTab={setTab}
+            tabs={tabs}
+          />
+        }
+        {tab === 'Watchlist' &&
+          <WatchList
+            activeTab={tab}
+            setTab={setTab}
+            tabs={tabs}
+          />
+        }
       </ScreenContent>
     </Screen>
   );
