@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Tr, Td } from '../Table/Table';
 import angleIcon from '../../../assets/icons/angle-down-bright.svg';
@@ -94,7 +94,7 @@ const AssetName = styled.p`
   font-weight: bold;
   font-size: 16px;
   line-height: 19px;
-  color: #1F3840;
+  color: inherit;
 
   img {
     margin-right: 8px;

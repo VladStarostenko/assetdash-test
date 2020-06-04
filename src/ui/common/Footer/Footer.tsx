@@ -23,7 +23,7 @@ export const Footer = () => (
 const FooterView = styled.footer`
   display: flex;
   padding: 24px 0 123px;
-  background: #FFFFFF;
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
 `;
 
 const FooterRow = styled.div`
@@ -35,5 +35,5 @@ const CopyText = styled.p`
   margin-top: 8px;
   font-size: 16px;
   line-height: 19px;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
 `;

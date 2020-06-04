@@ -36,7 +36,7 @@ const CheckboxIconWrapper = styled.div`
   width: 32px;
   height: 32px;
   margin-right: 12px;
-  background: #e9faf5;
+  background: ${({ theme }) => theme.colors.sortIconBackground};
   border-radius: 2px;
 `;
 
@@ -44,6 +44,6 @@ const CheckboxText = styled.p`
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
   margin-right: auto;
 `;

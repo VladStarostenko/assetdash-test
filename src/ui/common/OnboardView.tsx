@@ -12,7 +12,7 @@ export const OnboardView = styled.div`
     bottom: 0;
     width: 100%;
     height: 58vh;
-    background: #f4fbfb;
-    z-index: -1;
+    background-color: ${({ theme }) => theme.colors.backgroundSecondary};
+    z-index: 0;
   }
 `;

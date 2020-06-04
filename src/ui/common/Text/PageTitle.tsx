@@ -6,5 +6,5 @@ export const PageTitle = styled.h1`
   font-size: 32px;
   line-height: 38px;
   text-align: center;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
 `;

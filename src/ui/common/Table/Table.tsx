@@ -12,7 +12,7 @@ export const Th = styled.th`
   font-size: 12px;
   line-height: 14px;
   text-align: right;
-  color: #8395AE;
+  color: ${({ theme }) => theme.colors.colorSecondary};
   white-space: nowrap;
 
   &:first-child {
@@ -29,8 +29,8 @@ export const Td = styled.td`
   font-size: 16px;
   line-height: 19px;
   text-align: right;
-  color: #1F3840;
-  background: #FFFFFF;
+  color: ${({ theme }) => theme.colors.colorPrimary};
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
 
   &:first-child {
     padding-left: 24px;

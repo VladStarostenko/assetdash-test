@@ -9,7 +9,7 @@ import { LoginCheckbox } from './LoginCheckbox';
 export const LoginForm = () => (
   <FormBox>
     <Label>
-      E-mail
+      Email
       <Input type="email" required/>
     </Label>
     <Label>
@@ -18,7 +18,7 @@ export const LoginForm = () => (
     </Label>
     <FormRow>
       <LoginCheckbox/>
-      <ForgotPasswordLink to="forgot-password">Forgot passoword?</ForgotPasswordLink>
+      <ForgotPasswordLink to="forgot-password">Forgot password</ForgotPasswordLink>
     </FormRow>
     <FormButton type="submit">Log In</FormButton>
     <FormBoxText>Don’t have an account? <Link to="/sign-up">Sign Up</Link></FormBoxText>

@@ -1,4 +1,4 @@
-import React, { useRef, useState, ChangeEvent, useEffect } from 'react';
+import React, { useRef, useState, ChangeEvent, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { SortCheckbox } from './SortCheckbox';
 import internetIcon from '../../../assets/icons/internet.svg';
@@ -18,8 +18,10 @@ import cannabisIcon from '../../../assets/icons/cannabis.svg';
 import cubeIcon from '../../../assets/icons/cube.svg';
 import { SortDropdownButton, SortDropdownContent } from './SortDropdown';
 import { useOutsideClick } from '../../hooks/useOutsideClick';
+import { ThemeContext } from '../../Theme/ThemeContextProvider';
 
 export const Sort = () => {
+  const [theme] = useContext(ThemeContext);
   const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
   const [maxElements, setMaxElements] = useState(5);
   const sortListRef = useRef<HTMLUListElement>(null);
@@ -63,7 +65,13 @@ export const Sort = () => {
           </SortItem>
         ))}
         <li style={{ width: dropDownWidth, position: 'relative' }}>
-          <SortDropdownButton isExpanded={isExpanded} onClick={() => setIsExpanded(!isExpanded)}>More</SortDropdownButton>
+          <SortDropdownButton
+            isExpanded={isExpanded}
+            onClick={() => setIsExpanded(!isExpanded)}
+            themeMode={theme}
+          >
+            More
+          </SortDropdownButton>
           {isExpanded &&
             <SortDropdownContent ref={sortDropdownRef}>
               {checkboxes.slice(maxElements).map(({ icon, label, name }, index) => (
@@ -190,7 +198,8 @@ const SortList = styled.ul`
 const SortItem = styled.li`
   position: relative;
   height: 48px;
-  background: #FFFFFF;
-  border: 1px solid #EEF2FA;
+  background-color: ${({ theme }) => theme.colors.sortCheckboxBackground};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.sortCheckboxBorder};
   border-radius: 2px;
 `;

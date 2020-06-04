@@ -1,8 +1,10 @@
 import styled from 'styled-components';
-import angleIcon from '../../../assets/icons/angle.svg';
+import angleDarkIcon from '../../../assets/icons/angle.svg';
+import angleLightIcon from '../../../assets/icons/angle-down-light.svg';
 
 interface SortDropdownButtonProps {
-  isExpanded: boolean
+  isExpanded: boolean;
+  themeMode: string
 }
 
 export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
@@ -14,9 +16,10 @@ export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
   font-size: 14px;
   line-height: 17px;
   text-align: left;
-  color: #1F3840;
-  background: #FFFFFF;
-  border: 1px solid #EEF2FA;
+  background: ${({ theme }) => theme.colors.sortCheckboxBackground};
+  color: ${({ theme }) => theme.colors.colorPrimary};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.borderSecondary};
   border-radius: 2px;
   cursor: pointer;
 
@@ -28,7 +31,9 @@ export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
     width: 10px;
     height: 6px;
     transform: ${({ isExpanded }) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
-    background: url(${angleIcon}) center no-repeat;
+    background-image: ${({ themeMode }) => themeMode === 'light' ? `url(${angleDarkIcon})` : `url(${angleLightIcon})`};
+    background-repeat: no-repeat;
+    background-position: center;
     background-size: contain;
   }
 `;
@@ -41,9 +46,10 @@ export const SortDropdownContent = styled.ul`
   width: 254px;
   max-height: 544px;
   padding: 8px;
-  background: #FFFFFF;
-  border: 1px solid #EEF2FA;
-  box-shadow: 0px 4px 8px #EBF3F5;
+  background: ${({ theme }) => theme.colors.sortCheckboxBackground};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.borderSecondary};
+  box-shadow: ${({ theme }) => theme.colors.boxShadowSecondary};
   border-radius: 2px;
   overflow-y: auto;
   z-index: 1;

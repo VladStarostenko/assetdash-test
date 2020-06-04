@@ -35,8 +35,8 @@ const Form = styled.form`
   max-width: 570px;
   margin: 0 auto;
   padding: 40px;
-  background: #FFFFFF;
-  box-shadow: 0px 4px 32px rgba(225, 242, 242, 0.59);
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  box-shadow: ${({ theme }) => theme.colors.boxShadowPrimary};
   border-radius: 2px;
 `;
 

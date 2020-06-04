@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export const SignUpForm = () => (
   <FormBox>
     <Label>
-      E-mail
+      Email
       <Input type="email" required/>
     </Label>
     <Label>
@@ -15,7 +15,7 @@ export const SignUpForm = () => (
       <Input type="password" required/>
     </Label>
     <Label>
-      Password
+      Confirm Password
       <Input type="password" required/>
     </Label>
     <FormButton type="submit">Sign Up</FormButton>

@@ -7,8 +7,9 @@ export const Input = styled.input`
   padding: 14px 16px 15px;
   font-size: 16px;
   line-height: 19px;
-  color: #1F3840;
-  background: #FFFFFF;
-  border: 1px solid #E7EBF2;
+  color: ${({ theme }) => theme.colors.colorPrimary};
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.borderPrimary};
   border-radius: 2px;
 `;

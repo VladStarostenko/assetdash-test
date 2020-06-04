@@ -8,7 +8,7 @@ export const LoginCheckbox = () => {
   return (
     <Row>
       <Checkbox id="login-checkbox" name="keep-login" value={checked} onChange={(event: ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked)}/>
-      <CheckboxLabel htmlFor="login-checkbox">Keep me login</CheckboxLabel>
+      <CheckboxLabel htmlFor="login-checkbox">Keep me logged in</CheckboxLabel>
     </Row>
   );
 };
@@ -23,5 +23,5 @@ const CheckboxLabel = styled.label`
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
 `;

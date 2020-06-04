@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import checkmark from '../../../assets/icons/checkmark.svg';
 
 export interface CheckboxProps {
@@ -37,14 +37,20 @@ interface StyledCheckboxProps {
   checked: boolean
 }
 
+const checkedStyles = css`
+  border-color: #21CE99;
+`;
+
 const StyledCheckbox = styled.div<StyledCheckboxProps>`
   width: 100%;
   height: 100%;
-  background-color: ${props => (props.checked ? `#21CE99` : '#fff')};
+  background-color: ${props => (props.checked ? `#21CE99` : 'none')};
   background-image: ${props => (props.checked ? `url(${checkmark})` : 'none')};
   background-position: center;
   background-repeat: no-repeat;
   border: 2px solid;
-  border-color: ${props => (props.checked ? `#21CE99` : '#D8E0E3')};
+  border-color: ${({ theme }) => theme.colors.checkboxBorder};
   border-radius: 2px;
+
+  ${props => props.checked && checkedStyles};
 `;

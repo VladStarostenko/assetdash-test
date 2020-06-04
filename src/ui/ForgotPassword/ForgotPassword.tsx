@@ -14,10 +14,10 @@ export const ForgotPassword = () => (
         <PageTitle>Forgot password</PageTitle>
         <FormBox>
           <Label>
-            E-mail
+            Email
             <Input type="email" required/>
           </Label>
-          <FormButton type="submit">Remember password</FormButton>
+          <FormButton type="submit">Reset password</FormButton>
         </FormBox>
       </Container>
     </OnboardView>

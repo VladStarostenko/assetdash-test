@@ -16,5 +16,5 @@ export const NavigationLink = styled(NavLink)`
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: #8395AE;
+  color: ${({ theme }) => theme.colors.navLinkColor};
 `;

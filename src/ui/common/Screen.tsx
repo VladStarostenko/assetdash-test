@@ -22,6 +22,7 @@ const ScreenView = styled.div`
   min-height: 100vh;
   display: flex;  
   flex-direction: column;
+  background: ${({ theme }) => theme.colors.backgroundPrimary};
 `;
 
 const Main = styled.main`
@@ -34,5 +35,5 @@ const Main = styled.main`
 export const ScreenContent = styled.div`
   flex-grow: 1;
   padding: 24px 0 40px;
-  background: #f4fbfb;
+  background: ${({ theme }) => theme.colors.backgroundSecondary};
 `;

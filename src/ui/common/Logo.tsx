@@ -12,7 +12,7 @@ const LogoText = styled.p`
   font-size: 22px;
   line-height: 26px;
   letter-spacing: -0.04em;
-  color: #000000;
+  color: ${({ theme }) => theme.colors.logoColor};
 
   & span {
     font-weight: 700

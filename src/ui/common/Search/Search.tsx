@@ -15,19 +15,20 @@ const SearchWrapper = styled.div`
   width: 100%;
   height: 64px;
   margin: 24px auto 48px;
-  border: 1px solid #E7EBF2;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.borderPrimary};
 `;
 
 const SearchInput = styled.input`
   width: 100%;
   height: 100%;
   padding: 22px 54px 22px 16px;
-  background: #FFFFFF;
+  background-color: ${({ theme }) => theme.colors.backgroundPrimary};
   border-radius: 2px;
   border: none;
   font-size: 16px;
   line-height: 19px;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
 
   &::-webkit-input-placeholder {
     font-size: 16px;
