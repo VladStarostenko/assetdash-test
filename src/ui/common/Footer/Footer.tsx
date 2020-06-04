@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Container } from '../Container';
 import { Logo } from '../Logo';
-import { FooterNav } from './FooterNav';
 import { ThemeToggle } from '../../Theme/ThemeToggle';
 
 export const Footer = () => (
@@ -43,13 +42,4 @@ const CopyText = styled.p`
   font-size: 16px;
   line-height: 19px;
   color: ${({ theme }) => theme.colors.colorPrimary};
-`;
-
-const Nav = styled(FooterNav)`
-  @media(max-width: 700px) {
-    order: 1;
-    width: 100%;
-    justify-content: center;
-    margin-top: 37px;
-  }
 `;
