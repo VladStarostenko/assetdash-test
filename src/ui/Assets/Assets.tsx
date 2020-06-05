@@ -18,12 +18,12 @@ export const Assets = (props: TabsProps) => {
       <Container>
         <ButtonsRow>
           <Tabs {...props}/>
-          <div>
+          <TableButtons>
             <ButtonArrow direction="right">
               Next 100
             </ButtonArrow>
             <ButtonTertiary>View all</ButtonTertiary>
-          </div>
+          </TableButtons>
         </ButtonsRow>
       </Container>
       <AssetsView>
@@ -113,4 +113,13 @@ const AssetsView = styled.div`
   padding: 0 20px;
   margin: 0 auto;
   overflow-x: scroll;
+`;
+
+const TableButtons = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media(max-width: 600px) {
+    display: none;
+  }
 `;
