@@ -11,6 +11,7 @@ import { Tabs, TabsProps } from '../common/Tabs';
 import { Container } from '../common/Container';
 import { ButtonArrow } from '../common/Button/ButtonArrow';
 import { ButtonsRow } from '../common/Button/ButtonsRow';
+import { Tooltip } from '../common/Tooltip';
 
 export const Assets = (props: TabsProps) => {
   return (
@@ -37,7 +38,14 @@ export const Assets = (props: TabsProps) => {
               <Th>Market Cap</Th>
               <Th>Price</Th>
               <Th>Today</Th>
-              <Th>Weekly Dash</Th>
+              <Th>
+                <Tooltip
+                  text="How many places an asset has moved up or down in the leaderboard over the course of the day (day, week, month, quarter). "
+                  link="#"
+                >
+                  <p>Weekly Dash</p>
+                </Tooltip>
+              </Th>
               <Th>Monthly Dash</Th>
               <Th>Quarterly Dash</Th>
               <Th></Th>
