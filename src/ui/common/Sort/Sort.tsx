@@ -30,6 +30,7 @@ export const Sort = () => {
   const dropDownRef = useRef<HTMLLIElement>(null);
   const itemWidth = 165;
   const marginRight = 16;
+  const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCheckedItems({ ...checkedItems, [event.target.name]: event.target.checked });
@@ -39,7 +40,7 @@ export const Sort = () => {
     const handleWindowResize = () => {
       if (sortListRef && sortListRef.current) {
         const containerWidth = sortListRef.current.offsetWidth;
-        if (document.documentElement.clientWidth < 600) setDropDownWidth(400);
+        if (document.documentElement.clientWidth <= 600) setDropDownWidth(400);
         else setDropDownWidth(145);
         setMaxElements(Math.floor((containerWidth - itemWidth) / (dropDownWidth + marginRight)));
       }
@@ -54,9 +55,28 @@ export const Sort = () => {
   const sortDropdownRef = useRef<HTMLUListElement>(null);
   useOutsideClick(sortDropdownRef, () => isExpanded && setIsExpanded(false));
 
+  const isResetButtonVisible = () => {
+    return [...Object.values(checkedItems)].some(value => !!value);
+  };
+
+  const [selectedDropdownCheckboxes, setSelectedDropdownCheckboxes] = useState(0);
+  useEffect(() => {
+    const displayCheckedCheckboxesAmount = () => {
+      let amount = 0;
+      checkboxes.slice(maxElements).forEach(checkbox => {
+        if (checkedItems[checkbox.name]) amount++;
+      });
+      setSelectedDropdownCheckboxes(amount);
+    };
+    displayCheckedCheckboxesAmount();
+  }, [checkedItems, maxElements]);
+
   return (
     <SortView>
-      <Title>Sort by sector:</Title>
+      <SortRow style={{ maxWidth }}>
+        <Title>Sort by sector:</Title>
+        {isResetButtonVisible() && <ResetButton onClick={() => setCheckedItems({})}>Reset filters</ResetButton>}
+      </SortRow>
       <SortList ref={sortListRef}>
         {checkboxes.slice(0, maxElements).map(({ icon, label, name }, index) => (
           <SortItem key={index} style={{ width: itemWidth, marginRight }}>
@@ -76,6 +96,10 @@ export const Sort = () => {
             themeMode={theme}
           >
             More
+            {selectedDropdownCheckboxes
+              ? <SelectedDropdownCheckboxes>{`${selectedDropdownCheckboxes} more selected`}</SelectedDropdownCheckboxes>
+              : null
+            }
           </SortDropdownButton>
           {isExpanded &&
             <SortDropdownContent ref={sortDropdownRef}>
@@ -137,12 +161,12 @@ const checkboxes: Array<CheckBox> = [
   },
   {
     icon: ecommerceIcon,
-    name: 'e-commerce',
+    name: 'eCommerce',
     label: 'E-commerce',
   },
   {
     icon: emergingIcon,
-    name: 'emerging-markets',
+    name: 'emergingMarkets',
     label: 'Emerging Markets ',
   },
   {
@@ -197,6 +221,28 @@ const SortView = styled.div`
   }
 `;
 
+const SortRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 600px) {
+    & {
+      max-width: 100% !important;
+    }
+  }
+`;
+
+const ResetButton = styled.button`
+  border: none;
+  background: none;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: right;
+  color: ${({ theme }) => theme.colors.colorPrimary};
+`;
+
 const SortList = styled.ul`
   display: flex;
   align-items: center;
@@ -225,4 +271,13 @@ const SortDropdownItem = styled.li`
   @media(max-width: 600px) {
     min-width: 100%;
   }
+`;
+
+const SelectedDropdownCheckboxes = styled.span`
+  display: block;
+  margin-top: 2px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  color: #21CE99;
 `;

@@ -29,4 +29,5 @@ const CheckboxLabel = styled.label`
   justify-content: space-between;
   width: 100%;
   padding: 8px;
+  cursor: pointer;
 `;

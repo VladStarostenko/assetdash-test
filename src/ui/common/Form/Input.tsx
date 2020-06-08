@@ -12,4 +12,12 @@ export const Input = styled.input`
   border: 1px solid;
   border-color: ${({ theme }) => theme.colors.borderPrimary};
   border-radius: 2px;
+
+  &:focus {
+    border: 1px solid #21CE99;
+  }
+
+  &:active {
+    border: 1px solid #21CE99;
+  }
 `;

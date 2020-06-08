@@ -14,9 +14,7 @@ const SearchWrapper = styled.div`
   max-width: 770px;
   width: 100%;
   height: 64px;
-  margin: 24px auto 48px;
-  border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.borderPrimary};
+  margin: 32px auto 48px;
 
   @media(max-width: 990px) {
     margin-bottom: 40px;
@@ -38,6 +36,8 @@ const SearchInput = styled.input`
   font-size: 16px;
   line-height: 19px;
   color: ${({ theme }) => theme.colors.colorPrimary};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.borderPrimary};
 
   &::-webkit-input-placeholder {
     font-size: 16px;
@@ -71,6 +71,7 @@ const SearchButton = styled.button`
   padding: 0;
   border-radius: 2px;
   background: #21CE99 url(${searchIcon}) center no-repeat;
+  box-shadow: 0px 4px 12px rgba(33, 206, 153, 0.4);
   border: none;
 
   @media(max-width: 600px) {

@@ -10,8 +10,8 @@ interface SortDropdownButtonProps {
 export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
   position: relative;
   width: 100%;
-  height: 100%;
-  padding: 15px 30px 16px 12px;
+  height: 48px;
+  padding: 0 30px 0 12px;
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
