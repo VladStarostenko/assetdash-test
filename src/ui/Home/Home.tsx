@@ -6,6 +6,7 @@ import { Search } from '../common/Search/Search';
 import { Sort } from '../common/Sort/Sort';
 import { Assets } from '../Assets/Assets';
 import { WatchList } from '../WatchList/WatchList';
+import { PageSubtitle } from '../common/Text/PageSubtitle';
 
 export const Home = () => {
   const [tab, setTab] = useState('Assets');
@@ -15,6 +16,7 @@ export const Home = () => {
     <Screen>
       <Container>
         <PageTitle>Top Asset by Market Cap</PageTitle>
+        <PageSubtitle/>
         <Search/>
         <Sort/>
       </Container>

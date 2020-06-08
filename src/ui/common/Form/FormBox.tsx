@@ -37,7 +37,7 @@ export const FormButton = styled(ButtonPrimary)`
 
 const Form = styled.form`
   max-width: 570px;
-  margin: 0 auto;
+  margin: 24px auto 0;
   padding: 40px 16px;
   background: ${({ theme }) => theme.colors.backgroundPrimary};
   box-shadow: ${({ theme }) => theme.colors.boxShadowPrimary};
