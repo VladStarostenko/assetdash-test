@@ -15,7 +15,7 @@ export const Home = () => {
   return (
     <Screen>
       <Container>
-        <PageTitle>Top Asset by Market Cap</PageTitle>
+        <PageTitle>Top Assets by Market Cap</PageTitle>
         <PageSubtitle/>
         <Search/>
         <Sort/>
