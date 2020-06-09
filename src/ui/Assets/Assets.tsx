@@ -32,7 +32,15 @@ export const Assets = (props: TabsProps) => {
           <thead>
             <tr>
               <Th>#</Th>
-              <Th>Daily Dash</Th>
+              <Th>
+                <Tooltip
+                  text="How many places an asset has moved up or down in the leaderboard over the course of the day."
+                  position="left"
+                  link="#"
+                >
+                  <p>Daily Dash</p>
+                </Tooltip>
+              </Th>
               <Th>Asset Name</Th>
               <Th>Symbol</Th>
               <Th>Market Cap</Th>
@@ -40,14 +48,29 @@ export const Assets = (props: TabsProps) => {
               <Th>Today</Th>
               <Th>
                 <Tooltip
-                  text="How many places an asset has moved up or down in the leaderboard over the course of the day (day, week, month, quarter). "
+                  text="How many places an asset has moved up or down in the leaderboard over the course of the week."
                   link="#"
                 >
                   <p>Weekly Dash</p>
                 </Tooltip>
               </Th>
-              <Th>Monthly Dash</Th>
-              <Th>Quarterly Dash</Th>
+              <Th>
+                <Tooltip
+                  text="How many places an asset has moved up or down in the leaderboard over the course of the month."
+                  link="#"
+                >
+                  <p>Monthly Dash</p>
+                </Tooltip>
+              </Th>
+              <Th>
+                <Tooltip
+                  text="How many places an asset has moved up or down in the leaderboard over the course of the quarter."
+                  position="right"
+                  link="#"
+                >
+                  <p>Quarterly Dash</p>
+                </Tooltip>
+              </Th>
               <Th></Th>
             </tr>
           </thead>

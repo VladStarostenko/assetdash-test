@@ -1,25 +1,57 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import angle from '../../assets/icons/angle-right-bright.svg';
 
-interface TooltipProps {
+interface TooltipProps extends TooltipBodyProps {
   text: string;
   link: string;
-  children: ReactNode;
-  position?: 'left' | 'top' | 'bottom' | 'right'
+  children: ReactNode
 }
 
 export const Tooltip = ({ text, link, children, position }: TooltipProps) => (
   <TooltipWrapper>
     {children}
-    <TooltipBody>
-      {text}
+    <TooltipBody position={position}>
+      <p>{text}</p>
       <TooltipLink href={link}>Learn more</TooltipLink>
     </TooltipBody>
   </TooltipWrapper>
 );
 
-const TooltipBody = styled.div`
+const tooltipRightPositionStyles = css`
+  left: auto;
+  transform: translate(0, 100%);
+  right: 0;
+
+  &::before {
+    left: auto;
+    right: 25px;
+  }
+
+  &::after {
+    left: auto;
+    right: 27px;
+  }
+`;
+
+const tooltipLefttPositionStyles = css`
+  left: 0;
+  transform: translate(0, 100%);
+
+  &::before {
+    left: 25px;
+  }
+
+  &::after {
+    left: 27px;
+  }
+`;
+
+interface TooltipBodyProps {
+  position?: 'left' | 'top' | 'bottom' | 'right'
+}
+
+const TooltipBody = styled.div<TooltipBodyProps>`
   display: none;
   position: absolute;
   bottom: -7px;
@@ -61,6 +93,9 @@ const TooltipBody = styled.div`
     border: 8px solid transparent;
     border-bottom-color: white;
   }
+
+  ${({ position }) => position === 'right' && tooltipRightPositionStyles}
+  ${({ position }) => position === 'left' && tooltipLefttPositionStyles}
 `;
 
 const TooltipWrapper = styled.div`

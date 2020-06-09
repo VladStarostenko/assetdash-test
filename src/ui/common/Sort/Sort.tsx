@@ -75,7 +75,7 @@ export const Sort = () => {
     <SortView>
       <SortRow style={{ maxWidth }}>
         <Title>Sort by sector:</Title>
-        {isResetButtonVisible() && <ResetButton onClick={() => setCheckedItems({})}>Reset filters</ResetButton>}
+        <ResetButton isVisible={isResetButtonVisible()} onClick={() => setCheckedItems({})}>Reset filters</ResetButton>
       </SortRow>
       <SortList ref={sortListRef}>
         {checkboxes.slice(0, maxElements).map(({ icon, label, name }, index) => (
@@ -233,7 +233,12 @@ const SortRow = styled.div`
   }
 `;
 
-const ResetButton = styled.button`
+interface ResetButtonProps {
+  isVisible: boolean
+}
+
+const ResetButton = styled.button<ResetButtonProps>`
+  visibility: ${({ isVisible }) => isVisible ? 'visible' : 'hidden'};
   padding: 0;
   border: none;
   background: none;
