@@ -9,9 +9,9 @@ export const OnboardView = styled.div`
     content: '';
     position: absolute;
     left: 0;
-    bottom: 0;
+    top: 220px;
     width: 100%;
-    height: 58vh;
+    height: 100%;
     background-color: ${({ theme }) => theme.colors.backgroundSecondary};
     z-index: 0;
   }

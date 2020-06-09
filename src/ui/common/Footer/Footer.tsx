@@ -19,6 +19,7 @@ export const Footer = () => (
 );
 
 const FooterView = styled.footer`
+  position: relative;
   display: flex;
   padding: 24px 0 123px;
   background: ${({ theme }) => theme.colors.backgroundPrimary};
