@@ -234,6 +234,7 @@ const SortRow = styled.div`
 `;
 
 const ResetButton = styled.button`
+  padding: 0;
   border: none;
   background: none;
   font-weight: bold;

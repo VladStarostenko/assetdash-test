@@ -20,7 +20,7 @@ const HeaderRow = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 23px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.colors.borderPrimary};
 
