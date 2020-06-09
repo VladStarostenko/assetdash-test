@@ -98,7 +98,7 @@ const placeholderData = [
     quarterlyDash: 2,
   },
   {
-    position: 1,
+    position: 2,
     icon: ethereumIcon,
     dailyDash: 2,
     name: 'Ethereum',
@@ -111,7 +111,7 @@ const placeholderData = [
     quarterlyDash: 2,
   },
   {
-    position: 1,
+    position: 3,
     icon: chainlinkIcon,
     dailyDash: 2,
     name: 'Chainlink',
@@ -124,7 +124,7 @@ const placeholderData = [
     quarterlyDash: 2,
   },
   {
-    position: 1,
+    position: 4,
     icon: rippleIcon,
     dailyDash: 2,
     name: 'Ripple',
