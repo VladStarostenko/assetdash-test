@@ -16,6 +16,8 @@ export const lightTheme = {
     sortCheckboxBorder: '#EEF2FA',
     sortIconBackground: '#e9faf5',
     checkboxBorder: '#D8E1EE',
+    tooltipBorder: '#E7EBF2',
+    tooltipBackground: '#fff',
   }
 };
 
@@ -37,5 +39,7 @@ export const darkTheme = {
     sortCheckboxBorder: '#22272F',
     sortIconBackground: '#22383a',
     checkboxBorder: '#5C697C',
+    tooltipBorder: '#161A20',
+    tooltipBackground: '#22272F',
   }
 };

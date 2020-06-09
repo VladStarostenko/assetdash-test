@@ -64,10 +64,11 @@ const TooltipBody = styled.div<TooltipBodyProps>`
   font-size: 14px;
   font-weight: normal;
   line-height: 17px;
-  color: #1F3840;
-  background: #FFFFFF;
-  border: 1px solid #E7EBF2;
-  box-shadow: 0px 4px 8px #EBF3F5;
+  color: ${({ theme }) => theme.colors.colorPrimary};
+  background: ${({ theme }) => theme.colors.tooltipBackground};
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.tooltipBorder};
+  box-shadow: ${({ theme }) => theme.colors.boxShadowSecondary};
   border-radius: 2px;
   z-index: 2;
 
@@ -80,7 +81,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-bottom-color: #EBF3F5;
+    border-bottom-color: ${({ theme }) => theme.colors.tooltipBorder};
   }
   &:after {
     content: '';
@@ -91,7 +92,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
     width: 0;
     height: 0;
     border: 8px solid transparent;
-    border-bottom-color: white;
+    border-bottom-color: ${({ theme }) => theme.colors.tooltipBackground};
   }
 
   ${({ position }) => position === 'right' && tooltipRightPositionStyles}
@@ -104,7 +105,7 @@ const TooltipWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 14px;
-  color: #8395AE;
+  color: ${({ theme }) => theme.colors.colorSecondary};
 
   &:hover ${TooltipBody} {
     display: inline-block;
@@ -119,7 +120,7 @@ const TooltipLink = styled.a`
   font-weight: bold;
   font-size: 14px;
   line-height: 17px;
-  color: #1F3840;
+  color: ${({ theme }) => theme.colors.colorPrimary};
 
   &::before {
     content: '';
