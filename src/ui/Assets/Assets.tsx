@@ -34,9 +34,8 @@ export const Assets = (props: TabsProps) => {
               <Th>#</Th>
               <Th>
                 <Tooltip
-                  text="How many places an asset has moved up or down in the leaderboard over the course of the day."
+                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the day."
                   position="left"
-                  link="#"
                 >
                   <p>Daily Dash</p>
                 </Tooltip>
@@ -48,25 +47,22 @@ export const Assets = (props: TabsProps) => {
               <Th>Today</Th>
               <Th>
                 <Tooltip
-                  text="How many places an asset has moved up or down in the leaderboard over the course of the week."
-                  link="#"
+                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the week."
                 >
                   <p>Weekly Dash</p>
                 </Tooltip>
               </Th>
               <Th>
                 <Tooltip
-                  text="How many places an asset has moved up or down in the leaderboard over the course of the month."
-                  link="#"
+                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the month."
                 >
                   <p>Monthly Dash</p>
                 </Tooltip>
               </Th>
               <Th>
                 <Tooltip
-                  text="How many places an asset has moved up or down in the leaderboard over the course of the quarter."
+                  text="Our leaderboard ranks assets by market capitalization. The Quarterly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the quarter."
                   position="right"
-                  link="#"
                 >
                   <p>Quarterly Dash</p>
                 </Tooltip>

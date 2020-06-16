@@ -1,19 +1,16 @@
 import React, { ReactNode } from 'react';
 import styled, { css } from 'styled-components';
-import angle from '../../assets/icons/angle-right-bright.svg';
 
 interface TooltipProps extends TooltipBodyProps {
   text: string;
-  link: string;
   children: ReactNode
 }
 
-export const Tooltip = ({ text, link, children, position }: TooltipProps) => (
+export const Tooltip = ({ text, children, position }: TooltipProps) => (
   <TooltipWrapper>
     {children}
     <TooltipBody position={position}>
       <p>{text}</p>
-      <TooltipLink href={link}>Learn more</TooltipLink>
     </TooltipBody>
   </TooltipWrapper>
 );
@@ -109,27 +106,5 @@ const TooltipWrapper = styled.div`
 
   &:hover ${TooltipBody} {
     display: inline-block;
-  }
-`;
-
-const TooltipLink = styled.a`
-  position: relative;
-  display: inline-block;
-  margin-top: 8px;
-  padding-right: 23px;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 17px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    right: 0;
-    width: 6px;
-    height: 10px;
-    background: url(${angle}) center no-repeat;
-    background-size: contain;
   }
 `;
