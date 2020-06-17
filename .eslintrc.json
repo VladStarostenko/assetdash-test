@@ -1,6 +1,5 @@
 {
   "env": {
-    "browser": true,
     "es6": true
   },
   "extends": [
@@ -9,18 +8,6 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:react/recommended"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "test/**/*.{js,ts,tsx}"
-      ],
-      "rules": {
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "no-unused-expressions": "off"
-      }
-    }
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -75,14 +62,15 @@
       {
         "multiline": {
           "delimiter": "semi",
-          "requireLast": false
+          "requireLast": true
         },
         "singleline": {
-          "delimiter": "comma",
+          "delimiter": "semi",
           "requireLast": false
         }
       }
     ],
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -94,6 +82,7 @@
     ],
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-useless-constructor": "error",
+    "@typescript-eslint/no-var-requires": "warn",
     "accessor-pairs": "error",
     "array-bracket-spacing": [
       "error",
@@ -121,11 +110,11 @@
     "comma-dangle": [
       "error",
       {
-        "arrays": "only-multiline",
-        "exports": "only-multiline",
-        "functions": "only-multiline",
-        "imports": "only-multiline",
-        "objects": "only-multiline"
+        "arrays": "never",
+        "exports": "never",
+        "functions": "never",
+        "imports": "never",
+        "objects": "never"
       }
     ],
     "comma-spacing": [
@@ -135,6 +124,17 @@
         "before": false
       }
     ],
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/display-name": "off",
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "beforeClosing": "never",
+        "beforeSelfClosing": "never"
+      }
+    ],
+    "react/prop-types": "off",
     "comma-style": [
       "error",
       "last"
@@ -175,7 +175,15 @@
       "error",
       "^(err|error)$"
     ],
-    "import/no-useless-path-segments": "error",
+    "import/default": "off",
+    "import/named": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": false
+      }
+    ],
+    "import/no-unresolved": "off",
     "indent": "off",
     "key-spacing": [
       "error",
@@ -200,6 +208,12 @@
       "always",
       {
         "exceptAfterSingleLine": true
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120
       }
     ],
     "new-cap": [
@@ -294,7 +308,7 @@
     "no-multiple-empty-lines": [
       "error",
       {
-        "max": 2,
+        "max": 1,
         "maxEOF": 0
       }
     ],
@@ -362,7 +376,7 @@
     "no-with": "error",
     "object-curly-spacing": [
       "error",
-      "always"
+      "never"
     ],
     "object-property-newline": [
       "error",
@@ -386,6 +400,14 @@
         }
       }
     ],
+    "padded-blocks": [
+      "error",
+      {
+        "blocks": "never",
+        "classes": "never",
+        "switches": "never"
+      }
+    ],
     "prefer-const": [
       "error",
       {
@@ -399,28 +421,15 @@
     ],
     "quotes": [
       "error",
-      "single",
-      {
-        "allowTemplateLiterals": true
-      }
+      "single"
     ],
-    "react-hooks/exhaustive-deps": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "react/display-name": "off",
-    "react/jsx-tag-spacing": [
-      "error",
-      {
-        "beforeClosing": "never",
-        "beforeSelfClosing": "never"
-      }
-    ],
-    "react/prop-types": "off",
     "rest-spread-spacing": [
       "error",
       "never"
     ],
     "semi": [
-      "error"
+      "error",
+      "always"
     ],
     "semi-spacing": [
       "error",
@@ -437,8 +446,8 @@
       "error",
       {
         "anonymous": "always",
-        "asyncArrow": "always",
-        "named": "never"
+        "named": "never",
+        "asyncArrow": "always"
       }
     ],
     "space-in-parens": [
@@ -518,6 +527,26 @@
       "never"
     ]
   },
+  "overrides": [
+    {
+      "files": [
+        "test/**/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "no-unused-expressions": "off",
+        "prefer-promise-reject-errors": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true
+          }
+        ]
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
