@@ -1,15 +1,15 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, {useContext, useState, useRef} from 'react';
 import styled from 'styled-components';
-import { IconButton } from '../Button/IconButton';
+import {IconButton} from '../Button/IconButton';
 import linkIconDark from '../../../assets/icons/external-link.svg';
 import linkIconLight from '../../../assets/icons/external-link-light.svg';
-import { ThemeContext } from '../../Theme/ThemeContextProvider';
-import { DropdownContent } from '../DropdownContent';
-import { TextWithIcon, TextWithIconProps } from '../Text/TextWithIcon';
+import {ThemeContext} from '../../Theme/ThemeContextProvider';
+import {DropdownContent} from '../DropdownContent';
+import {TextWithIcon, TextWithIconProps} from '../Text/TextWithIcon';
 import twitterIcon from '../../../assets/icons/twitter.svg';
 import telegramIcon from '../../../assets/icons/telegram.svg';
 import alphaIcon from '../../../assets/icons/alpha.svg';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
+import {useOutsideClick} from '../../hooks/useOutsideClick';
 
 export const SocialDropdown = () => {
   const [theme] = useContext(ThemeContext);
@@ -47,10 +47,10 @@ export const SocialDropdown = () => {
 };
 
 interface SocialItemProps extends TextWithIconProps {
-  href: string
+  href: string;
 }
 
-const SocialItem = ({ href, icon, text }: SocialItemProps) => (
+const SocialItem = ({href, icon, text}: SocialItemProps) => (
   <li>
     <SocialLink href={href}>
       <TextWithIcon

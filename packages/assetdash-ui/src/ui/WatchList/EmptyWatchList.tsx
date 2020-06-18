@@ -12,7 +12,7 @@ export const EmptyWatchList = () => (
 
 const EmptyView = styled.div`
   padding: 170px 16px;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  background: ${({theme}) => theme.colors.backgroundPrimary};
   border-radius: 2px;
   text-align: center;
 `;
@@ -23,7 +23,7 @@ const EmptyViewTitle = styled.h2`
   font-size: 24px;
   line-height: 29px;
   text-align: center;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
 `;
 
 const EmptyViewText = styled.p`
@@ -31,5 +31,5 @@ const EmptyViewText = styled.p`
   font-size: 16px;
   line-height: 19px;
   text-align: center;
-  color: ${({ theme }) => theme.colors.colorSecondary};
+  color: ${({theme}) => theme.colors.colorSecondary};
 `;

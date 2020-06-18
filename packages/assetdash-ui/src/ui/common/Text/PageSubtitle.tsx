@@ -15,7 +15,6 @@ const Row = styled.div`
   margin-top: 12px;
 `;
 
-
 const Text = styled.p`
   font-weight: 500;
   font-size: 16px;

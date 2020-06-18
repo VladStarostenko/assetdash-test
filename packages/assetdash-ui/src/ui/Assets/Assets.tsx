@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Table, Th } from '../common/Table/Table';
-import { AssetItem } from './AssetItem';
-import { ButtonTertiary } from '../common/Button/ButtonTertiary';
+import {Table, Th} from '../common/Table/Table';
+import {AssetItem} from './AssetItem';
+import {ButtonTertiary} from '../common/Button/ButtonTertiary';
 import bitcoinIcon from '../../assets/icons/crypto/bitcoin.svg';
 import ethereumIcon from '../../assets/icons/crypto/ethereum.svg';
 import chainlinkIcon from '../../assets/icons/crypto/chainlink.svg';
 import rippleIcon from '../../assets/icons/crypto/ripple.svg';
-import { Tabs, TabsProps } from '../common/Tabs';
-import { Container } from '../common/Container';
-import { ButtonArrow } from '../common/Button/ButtonArrow';
-import { ButtonsRow } from '../common/Button/ButtonsRow';
-import { Tooltip } from '../common/Tooltip';
+import {Tabs, TabsProps} from '../common/Tabs';
+import {Container} from '../common/Container';
+import {ButtonArrow} from '../common/Button/ButtonArrow';
+import {ButtonsRow} from '../common/Button/ButtonsRow';
+import {Tooltip} from '../common/Tooltip';
 
 export const Assets = (props: TabsProps) => {
   return (
@@ -34,7 +34,8 @@ export const Assets = (props: TabsProps) => {
               <Th>#</Th>
               <Th>
                 <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the day."
+                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
+                  an asset has moved up or down in the leaderboard over the course of the day."
                   position="left"
                 >
                   <p>Daily Dash</p>
@@ -47,21 +48,24 @@ export const Assets = (props: TabsProps) => {
               <Th>Today</Th>
               <Th>
                 <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the week."
+                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
+                   an asset has moved up or down in the leaderboard over the course of the week."
                 >
                   <p>Weekly Dash</p>
                 </Tooltip>
               </Th>
               <Th>
                 <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the month."
+                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
+                   an asset has moved up or down in the leaderboard over the course of the month."
                 >
                   <p>Monthly Dash</p>
                 </Tooltip>
               </Th>
               <Th>
                 <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Quarterly Dash tracks how many places an asset has moved up or down in the leaderboard over the course of the quarter."
+                  text="Our leaderboard ranks assets by market capitalization. The Quarterly Dash tracks how many places
+                   an asset has moved up or down in the leaderboard over the course of the quarter."
                   position="right"
                 >
                   <p>Quarterly Dash</p>
@@ -91,7 +95,7 @@ const placeholderData = [
     change: '4.35%',
     weeklyDash: 2,
     monthlyDash: 2,
-    quarterlyDash: 2,
+    quarterlyDash: 2
   },
   {
     position: 2,
@@ -104,7 +108,7 @@ const placeholderData = [
     change: '5.65%',
     weeklyDash: 2,
     monthlyDash: 2,
-    quarterlyDash: 2,
+    quarterlyDash: 2
   },
   {
     position: 3,
@@ -117,7 +121,7 @@ const placeholderData = [
     change: '1.53%',
     weeklyDash: 2,
     monthlyDash: 2,
-    quarterlyDash: 2,
+    quarterlyDash: 2
   },
   {
     position: 4,
@@ -130,8 +134,8 @@ const placeholderData = [
     change: '0.39%',
     weeklyDash: 2,
     monthlyDash: 2,
-    quarterlyDash: 2,
-  },
+    quarterlyDash: 2
+  }
 ];
 
 const AssetsView = styled.div`

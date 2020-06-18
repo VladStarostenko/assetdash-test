@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NavItem, NavList, NavigationLink } from '../Nav/Nav';
+import {NavItem, NavList, NavigationLink} from '../Nav/Nav';
 
 export const HeaderNav = () => (
   <NavList>

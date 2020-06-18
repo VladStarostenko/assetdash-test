@@ -1,8 +1,8 @@
 import React from 'react';
-import { FormBox, FormBoxText, FormButton } from '../common/Form/FormBox';
-import { Label } from '../common/Form/Label';
-import { Input } from '../common/Form/Input';
-import { Link } from 'react-router-dom';
+import {FormBox, FormBoxText, FormButton} from '../common/Form/FormBox';
+import {Label} from '../common/Form/Label';
+import {Input} from '../common/Form/Input';
+import {Link} from 'react-router-dom';
 
 export const SignUpForm = () => (
   <FormBox>

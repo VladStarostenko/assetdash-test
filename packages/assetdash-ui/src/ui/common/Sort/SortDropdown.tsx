@@ -4,7 +4,7 @@ import angleLightIcon from '../../../assets/icons/angle-down-light.svg';
 
 interface SortDropdownButtonProps {
   isExpanded: boolean;
-  themeMode: string
+  themeMode: string;
 }
 
 export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
@@ -16,10 +16,10 @@ export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
   font-size: 14px;
   line-height: 17px;
   text-align: left;
-  background: ${({ theme }) => theme.colors.sortCheckboxBackground};
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  background: ${({theme}) => theme.colors.sortCheckboxBackground};
+  color: ${({theme}) => theme.colors.colorPrimary};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.borderSecondary};
+  border-color: ${({theme}) => theme.colors.borderSecondary};
   border-radius: 2px;
   cursor: pointer;
 
@@ -30,8 +30,8 @@ export const SortDropdownButton = styled.button<SortDropdownButtonProps>`
     right: 22px;
     width: 10px;
     height: 6px;
-    transform: ${({ isExpanded }) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
-    background-image: ${({ themeMode }) => themeMode === 'light' ? `url(${angleDarkIcon})` : `url(${angleLightIcon})`};
+    transform: ${({isExpanded}) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
+    background-image: ${({themeMode}) => themeMode === 'light' ? `url(${angleDarkIcon})` : `url(${angleLightIcon})`};
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;

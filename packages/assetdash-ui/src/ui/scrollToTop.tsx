@@ -1,11 +1,11 @@
-import React, { useEffect, ReactNode } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import React, {useEffect, ReactNode} from 'react';
+import {withRouter, useHistory} from 'react-router-dom';
 
 interface ScrollToTopProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
-function ScrollToTop({ children }: ScrollToTopProps) {
+function ScrollToTop({children}: ScrollToTopProps) {
   const history = useHistory();
 
   useEffect(() => {

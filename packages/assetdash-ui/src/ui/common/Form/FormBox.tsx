@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, {ReactNode} from 'react';
 import styled from 'styled-components';
-import { ButtonPrimary } from '../Button/ButtonPrimary';
+import {ButtonPrimary} from '../Button/ButtonPrimary';
 
 interface FormBoxProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-export const FormBox = ({ children }: FormBoxProps) => (
+export const FormBox = ({children}: FormBoxProps) => (
   <Form>
     <FormInner>
       {children}
@@ -39,8 +39,8 @@ const Form = styled.form`
   max-width: 570px;
   margin: 24px auto 0;
   padding: 40px 16px;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
-  box-shadow: ${({ theme }) => theme.colors.boxShadowPrimary};
+  background: ${({theme}) => theme.colors.backgroundPrimary};
+  box-shadow: ${({theme}) => theme.colors.boxShadowPrimary};
   border-radius: 2px;
 
   @media(max-width: 990px) {

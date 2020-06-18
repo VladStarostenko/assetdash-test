@@ -1,14 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, {ReactNode} from 'react';
 import styled from 'styled-components';
-import { Header } from './Header/Header';
-import { Footer } from './Footer/Footer';
-
+import {Header} from './Header/Header';
+import {Footer} from './Footer/Footer';
 
 interface ScreenProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-export const Screen = ({ children }: ScreenProps) => (
+export const Screen = ({children}: ScreenProps) => (
   <ScreenView>
     <Header/>
     <Main>
@@ -22,7 +21,7 @@ const ScreenView = styled.div`
   min-height: 100vh;
   display: flex;  
   flex-direction: column;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  background: ${({theme}) => theme.colors.backgroundPrimary};
 `;
 
 const Main = styled.main`
@@ -43,7 +42,7 @@ const Main = styled.main`
 export const ScreenContent = styled.div`
   flex-grow: 1;
   padding: 32px 0;
-  background: ${({ theme }) => theme.colors.backgroundSecondary};
+  background: ${({theme}) => theme.colors.backgroundSecondary};
 
   @media(max-width: 990px) {
     padding-top: 16px;

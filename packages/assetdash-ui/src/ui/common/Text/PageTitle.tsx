@@ -5,7 +5,7 @@ export const PageTitle = styled.h1`
   font-size: 32px;
   line-height: 38px;
   text-align: center;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
 
   @media(max-width: 990px) {
     font-size: 24px;

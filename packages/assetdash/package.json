@@ -10,7 +10,7 @@
     "start": "node dist/index.js",
     "dev:watch": "nodemon --watch 'src/**/*.{js,ts}' --exec 'ts-node -T' src/index.ts",
     "dev:start": "NODE_ENV=dev ts-node src/index.ts",
-    "lint": "eslint ./src/**/*.ts ./test/**/*.ts"
+    "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'"
   },
   "devDependencies": {
     "@types/express": "^4.17.3",

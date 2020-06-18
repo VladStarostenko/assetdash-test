@@ -3,10 +3,10 @@ import styled from 'styled-components';
 
 export interface TextWithIconProps {
   icon: string;
-  text: string
+  text: string;
 }
 
-export const TextWithIcon = ({ icon, text }: TextWithIconProps) => (
+export const TextWithIcon = ({icon, text}: TextWithIconProps) => (
   <Row>
     <IconWrapper>
       <img src={icon}/>
@@ -28,7 +28,7 @@ const IconWrapper = styled.div`
   width: 32px;
   height: 32px;
   margin-right: 12px;
-  background: ${({ theme }) => theme.colors.sortIconBackground};
+  background: ${({theme}) => theme.colors.sortIconBackground};
   border-radius: 2px;
 `;
 
@@ -36,6 +36,6 @@ const Text = styled.p`
   font-weight: bold;
   font-size: 14px;
   line-height: 18px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
   margin-right: auto;
 `;

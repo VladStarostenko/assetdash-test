@@ -1,13 +1,14 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import styled from 'styled-components';
-import { Checkbox } from '../common/Checkbox/Checkbox';
+import {Checkbox} from '../common/Checkbox/Checkbox';
 
 export const LoginCheckbox = () => {
   const [checked, setChecked] = useState(false);
 
   return (
     <Row>
-      <Checkbox id="login-checkbox" name="keep-login" value={checked} onChange={(event: ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked)}/>
+      <Checkbox id="login-checkbox" name="keep-login" value={checked}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setChecked(event.target.checked)}/>
       <CheckboxLabel htmlFor="login-checkbox">Keep me logged in</CheckboxLabel>
     </Row>
   );
@@ -23,5 +24,5 @@ const CheckboxLabel = styled.label`
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
 `;

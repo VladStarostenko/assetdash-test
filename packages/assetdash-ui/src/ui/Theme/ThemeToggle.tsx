@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import moon from '../../assets/icons/moon.svg';
 import sun from '../../assets/icons/sun.svg';
-import { ThemeContext } from './ThemeContextProvider';
-import { IconButton } from '../common/Button/IconButton';
+import {ThemeContext} from './ThemeContextProvider';
+import {IconButton} from '../common/Button/IconButton';
 
 export const ThemeToggle = () => {
   const [theme, toggleTheme] = useContext(ThemeContext);

@@ -7,10 +7,10 @@ export const Input = styled.input`
   padding: 14px 16px 15px;
   font-size: 16px;
   line-height: 19px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
+  background: ${({theme}) => theme.colors.backgroundPrimary};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.borderPrimary};
+  border-color: ${({theme}) => theme.colors.borderPrimary};
   border-radius: 2px;
 
   &:focus {
