@@ -1,0 +1,58 @@
+version: 2.1
+
+commands:
+  install_dependencies:
+    description: "Install dependencies and save cache"
+    parameters:
+      key:
+        type: integer
+    steps:
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-assetdash-<< parameters.key >>-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-assetdash-<< parameters.key >>-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+jobs:
+  lint:
+    docker:
+      - image: circleci/node:11.15
+    steps:
+      - checkout
+      - install_dependencies:
+          key: 11
+      - run: yarn lint
+
+  test_node_10:
+    docker:
+      - image: circleci/node:10.18
+    steps:
+      - checkout
+      - install_dependencies:
+          key: 10
+      - run: yarn build
+      - run: yarn test
+
+  test_node_11:
+    docker:
+      - image: circleci/node:11.15
+    steps:
+      - checkout
+      - install_dependencies:
+          key: 11
+      - run: yarn build
+      - run: yarn test
+
+workflows:
+  assetdash_all:
+    jobs:
+      - lint
+      - test_node_10
+      - test_node_11
