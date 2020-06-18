@@ -22,6 +22,7 @@ const config: Configuration = {
     },
     modules: [
       path.resolve('./node_modules'),
+      path.resolve('../../node_modules'),
       path.resolve('.'),
     ],
   },
