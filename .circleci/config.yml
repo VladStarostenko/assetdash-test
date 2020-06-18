@@ -38,21 +38,9 @@ jobs:
       - install_dependencies:
           key: 10
       - run: yarn build
-      - run: yarn test
-
-  test_node_11:
-    docker:
-      - image: circleci/node:11.15
-    steps:
-      - checkout
-      - install_dependencies:
-          key: 11
-      - run: yarn build
-      - run: yarn test
 
 workflows:
   assetdash_all:
     jobs:
       - lint
       - test_node_10
-      - test_node_11
