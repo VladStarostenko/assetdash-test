@@ -1,13 +1,13 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled, {css} from 'styled-components';
 
 export interface TabsProps {
   activeTab: string;
   tabs: Array<string>;
-  setTab: (tab: string) => void
+  setTab: (tab: string) => void;
 }
 
-export const Tabs = ({ activeTab, setTab, tabs }: TabsProps) => (
+export const Tabs = ({activeTab, setTab, tabs}: TabsProps) => (
   <TabsRow>
     {tabs.map((tab, index) => (
       <TabButton
@@ -25,12 +25,12 @@ const TabsRow = styled.div`
   display: flex;
   height: 48px;
   padding: 4px;
-  background-color: ${({ theme }) => theme.colors.backgroundPrimary};
+  background-color: ${({theme}) => theme.colors.backgroundPrimary};
   border-radius: 2px;
 `;
 
 interface TabButtonProps {
-  isActive: boolean
+  isActive: boolean;
 }
 
 const activeTabButtonStyles = css`
@@ -44,12 +44,12 @@ const TabButton = styled.button<TabButtonProps>`
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: ${({ theme }) => theme.colors.colorSecondary};
-  background-color: ${({ theme }) => theme.colors.backgroundPrimary};
+  color: ${({theme}) => theme.colors.colorSecondary};
+  background-color: ${({theme}) => theme.colors.backgroundPrimary};
   border-radius: 2px;
   border: none;
   outline: none;
   cursor: pointer;
 
-  ${({ isActive }) => isActive && activeTabButtonStyles}
+  ${({isActive}) => isActive && activeTabButtonStyles}
 `;

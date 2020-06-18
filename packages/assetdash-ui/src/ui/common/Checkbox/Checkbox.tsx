@@ -1,15 +1,15 @@
-import React, { ChangeEvent } from 'react';
-import styled, { css } from 'styled-components';
+import React, {ChangeEvent} from 'react';
+import styled, {css} from 'styled-components';
 import checkmark from '../../../assets/icons/checkmark.svg';
 
 export interface CheckboxProps {
   value: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   name: string;
-  id?: string
+  id?: string;
 }
 
-export const Checkbox = ({ id, value, name, onChange }: CheckboxProps) => (
+export const Checkbox = ({id, value, name, onChange}: CheckboxProps) => (
   <CheckboxWrapper>
     <HiddenCheckbox
       name={name}
@@ -26,7 +26,7 @@ const CheckboxWrapper = styled.div`
   height: 16px;
 `;
 
-const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
+const HiddenCheckbox = styled.input.attrs({type: 'checkbox'})`
   position: absolute;
   height: 0;
   z-index: -1;
@@ -34,7 +34,7 @@ const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
 `;
 
 interface StyledCheckboxProps {
-  checked: boolean
+  checked: boolean;
 }
 
 const checkedStyles = css`
@@ -44,12 +44,12 @@ const checkedStyles = css`
 const StyledCheckbox = styled.div<StyledCheckboxProps>`
   width: 100%;
   height: 100%;
-  background-color: ${props => (props.checked ? `#21CE99` : 'none')};
+  background-color: ${props => (props.checked ? '#21CE99' : 'none')};
   background-image: ${props => (props.checked ? `url(${checkmark})` : 'none')};
   background-position: center;
   background-repeat: no-repeat;
   border: 2px solid;
-  border-color: ${({ theme }) => theme.colors.checkboxBorder};
+  border-color: ${({theme}) => theme.colors.checkboxBorder};
   border-radius: 2px;
 
   ${props => props.checked && checkedStyles};

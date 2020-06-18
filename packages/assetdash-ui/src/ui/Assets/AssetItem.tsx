@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-import { Tr, Td } from '../common/Table/Table';
+import {Tr, Td} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
-import { ButtonFavorite } from '../common/Button/ButtonFavorite';
+import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 
 interface AssetItemProps {
-  asset: any
+  asset: any;
 }
 
 export const AssetItem = (props: AssetItemProps) => {
@@ -20,7 +20,7 @@ export const AssetItem = (props: AssetItemProps) => {
     change,
     weeklyDash,
     monthlyDash,
-    quarterlyDash,
+    quarterlyDash
   } = props.asset;
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -66,7 +66,7 @@ export const AssetItem = (props: AssetItemProps) => {
 };
 
 interface DashProps {
-  direction: 'up' | 'down'
+  direction: 'up' | 'down';
 }
 
 const Dash = styled.p<DashProps>`
@@ -101,9 +101,9 @@ const AssetName = styled.p`
 `;
 
 interface ChangeProps {
-  isPositive: boolean
+  isPositive: boolean;
 }
 
 const Change = styled.span<ChangeProps>`
-  color: ${({ isPositive }) => isPositive ? '#24BD8F' : '#BD4924'};
+  color: ${({isPositive}) => isPositive ? '#24BD8F' : '#BD4924'};
 `;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 
 export const NavList = styled.ul`
   display: flex;
@@ -16,5 +16,5 @@ export const NavigationLink = styled(NavLink)`
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: ${({ theme }) => theme.colors.navLinkColor};
+  color: ${({theme}) => theme.colors.navLinkColor};
 `;

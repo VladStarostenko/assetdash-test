@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
-import styled, { css } from 'styled-components';
+import React, {ReactNode} from 'react';
+import styled, {css} from 'styled-components';
 
 interface TooltipProps extends TooltipBodyProps {
   text: string;
-  children: ReactNode
+  children: ReactNode;
 }
 
-export const Tooltip = ({ text, children, position }: TooltipProps) => (
+export const Tooltip = ({text, children, position}: TooltipProps) => (
   <TooltipWrapper>
     {children}
     <TooltipBody position={position}>
@@ -45,7 +45,7 @@ const tooltipLefttPositionStyles = css`
 `;
 
 interface TooltipBodyProps {
-  position?: 'left' | 'top' | 'bottom' | 'right'
+  position?: 'left' | 'top' | 'bottom' | 'right';
 }
 
 const TooltipBody = styled.div<TooltipBodyProps>`
@@ -61,11 +61,11 @@ const TooltipBody = styled.div<TooltipBodyProps>`
   font-size: 14px;
   font-weight: normal;
   line-height: 17px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
-  background: ${({ theme }) => theme.colors.tooltipBackground};
+  color: ${({theme}) => theme.colors.colorPrimary};
+  background: ${({theme}) => theme.colors.tooltipBackground};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.tooltipBorder};
-  box-shadow: ${({ theme }) => theme.colors.boxShadowSecondary};
+  border-color: ${({theme}) => theme.colors.tooltipBorder};
+  box-shadow: ${({theme}) => theme.colors.boxShadowSecondary};
   border-radius: 2px;
   z-index: 2;
 
@@ -78,7 +78,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
     width: 0;
     height: 0;
     border: 10px solid transparent;
-    border-bottom-color: ${({ theme }) => theme.colors.tooltipBorder};
+    border-bottom-color: ${({theme}) => theme.colors.tooltipBorder};
   }
   &:after {
     content: '';
@@ -89,11 +89,11 @@ const TooltipBody = styled.div<TooltipBodyProps>`
     width: 0;
     height: 0;
     border: 8px solid transparent;
-    border-bottom-color: ${({ theme }) => theme.colors.tooltipBackground};
+    border-bottom-color: ${({theme}) => theme.colors.tooltipBackground};
   }
 
-  ${({ position }) => position === 'right' && tooltipRightPositionStyles}
-  ${({ position }) => position === 'left' && tooltipLefttPositionStyles}
+  ${({position}) => position === 'right' && tooltipRightPositionStyles}
+  ${({position}) => position === 'left' && tooltipLefttPositionStyles}
 `;
 
 const TooltipWrapper = styled.div`
@@ -102,7 +102,7 @@ const TooltipWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 14px;
-  color: ${({ theme }) => theme.colors.colorSecondary};
+  color: ${({theme}) => theme.colors.colorSecondary};
 
   &:hover ${TooltipBody} {
     display: inline-block;

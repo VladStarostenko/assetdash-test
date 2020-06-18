@@ -30,14 +30,14 @@ const SearchInput = styled.input`
   width: 100%;
   height: 100%;
   padding: 22px 54px 22px 16px;
-  background-color: ${({ theme }) => theme.colors.backgroundPrimary};
+  background-color: ${({theme}) => theme.colors.backgroundPrimary};
   border-radius: 2px;
   border: none;
   font-size: 16px;
   line-height: 19px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.borderPrimary};
+  border-color: ${({theme}) => theme.colors.borderPrimary};
 
   &::-webkit-input-placeholder {
     font-size: 16px;

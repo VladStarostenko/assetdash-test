@@ -7,7 +7,7 @@ export const ButtonSecondary = styled.button`
   font-size: 14px;
   line-height: 17px;
   color: #21CE99;
-  background: ${({ theme }) => theme.colors.buttonPrimaryBackground};
+  background: ${({theme}) => theme.colors.buttonPrimaryBackground};
   border-radius: 2px;
   border: none;
   cursor: pointer;

@@ -5,10 +5,10 @@ import starFilledIcon from '../../../assets/icons/star-filled.svg';
 
 export interface CheckboxProps {
   checked: boolean;
-  onChange: () => void
+  onChange: () => void;
 }
 
-export const ButtonFavorite = ({ checked, onChange }: CheckboxProps) => (
+export const ButtonFavorite = ({checked, onChange}: CheckboxProps) => (
   <CheckboxWrapper>
     <HiddenCheckbox onChange={onChange} checked={checked}/>
     <StyledCheckbox checked={checked}/>
@@ -22,7 +22,7 @@ const CheckboxWrapper = styled.label`
   height: 20px;
 `;
 
-const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
+const HiddenCheckbox = styled.input.attrs({type: 'checkbox'})`
   position: absolute;
   top: 0;
   left: 0;
@@ -33,7 +33,7 @@ const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
 `;
 
 interface StyledCheckboxProps {
-  checked: boolean
+  checked: boolean;
 }
 
 const StyledCheckbox = styled.div<StyledCheckboxProps>`

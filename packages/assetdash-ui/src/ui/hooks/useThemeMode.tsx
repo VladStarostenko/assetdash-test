@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 export const useThemeMode = () => {
   const [theme, setTheme] = useState('light');
@@ -27,5 +27,5 @@ export const useThemeMode = () => {
     setComponentMounted(true);
   }, []);
 
-  return { theme, toggleTheme, componentMounted };
+  return {theme, toggleTheme, componentMounted};
 };

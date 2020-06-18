@@ -1,5 +1,5 @@
 
-import { useEffect, RefObject } from 'react';
+import {useEffect, RefObject} from 'react';
 
 export const useOutsideClick = (ref: RefObject<HTMLDivElement | HTMLUListElement>, callback: () => void) => {
   const handleClick = (e: MouseEvent) => {

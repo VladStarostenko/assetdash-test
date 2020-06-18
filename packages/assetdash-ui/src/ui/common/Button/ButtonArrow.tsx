@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { ButtonTertiary } from './ButtonTertiary';
+import React, {useContext} from 'react';
+import {ButtonTertiary} from './ButtonTertiary';
 import styled from 'styled-components';
 import arrowDarkIcon from '../../../assets/icons/arrow-right.svg';
 import arrowLightIcon from '../../../assets/icons/arrow-right-light.svg';
-import { ThemeContext } from '../../Theme/ThemeContextProvider';
+import {ThemeContext} from '../../Theme/ThemeContextProvider';
 
 interface ButtonArrowProps {
   children: string;
-  direction: 'right' | 'left'
+  direction: 'right' | 'left';
 }
 
-export const ButtonArrow = ({ children, direction }: ButtonArrowProps) => {
+export const ButtonArrow = ({children, direction}: ButtonArrowProps) => {
   const [theme] = useContext(ThemeContext);
   const arrowIcon = theme === 'light' ? arrowDarkIcon : arrowLightIcon;
 

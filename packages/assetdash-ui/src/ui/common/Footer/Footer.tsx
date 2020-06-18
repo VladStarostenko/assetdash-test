@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Container } from '../Container';
-import { Logo } from '../Logo';
-import { ThemeToggle } from '../../Theme/ThemeToggle';
+import {Container} from '../Container';
+import {Logo} from '../Logo';
+import {ThemeToggle} from '../../Theme/ThemeToggle';
 
 export const Footer = () => (
   <FooterView>
@@ -22,7 +22,7 @@ const FooterView = styled.footer`
   position: relative;
   display: flex;
   padding: 24px 0 123px;
-  background: ${({ theme }) => theme.colors.backgroundPrimary};
+  background: ${({theme}) => theme.colors.backgroundPrimary};
 
   @media(max-width: 700px) {
     padding-bottom: 24px;
@@ -42,5 +42,5 @@ const CopyText = styled.p`
   margin-top: 8px;
   font-size: 16px;
   line-height: 19px;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
 `;

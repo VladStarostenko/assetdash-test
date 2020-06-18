@@ -1,6 +1,6 @@
-import React, { useRef, useState, ChangeEvent, useEffect, useContext } from 'react';
+import React, {useRef, useState, ChangeEvent, useEffect, useContext} from 'react';
 import styled from 'styled-components';
-import { SortCheckbox } from './SortCheckbox';
+import {SortCheckbox} from './SortCheckbox';
 import internetIcon from '../../../assets/icons/internet.svg';
 import financeIcon from '../../../assets/icons/finance.svg';
 import homeIcon from '../../../assets/icons/home.svg';
@@ -16,10 +16,10 @@ import goldIcon from '../../../assets/icons/gold.svg';
 import cryptoIcon from '../../../assets/icons/crypto.svg';
 import cannabisIcon from '../../../assets/icons/cannabis.svg';
 import cubeIcon from '../../../assets/icons/cube.svg';
-import { SortDropdownButton } from './SortDropdown';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
-import { ThemeContext } from '../../Theme/ThemeContextProvider';
-import { DropdownContent } from '../DropdownContent';
+import {SortDropdownButton} from './SortDropdown';
+import {useOutsideClick} from '../../hooks/useOutsideClick';
+import {ThemeContext} from '../../Theme/ThemeContextProvider';
+import {DropdownContent} from '../DropdownContent';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
@@ -33,7 +33,7 @@ export const Sort = () => {
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckedItems({ ...checkedItems, [event.target.name]: event.target.checked });
+    setCheckedItems({...checkedItems, [event.target.name]: event.target.checked});
   };
 
   useEffect(() => {
@@ -73,13 +73,13 @@ export const Sort = () => {
 
   return (
     <SortView>
-      <SortRow style={{ maxWidth }}>
+      <SortRow style={{maxWidth}}>
         <Title>Sort by sector:</Title>
         <ResetButton isVisible={isResetButtonVisible()} onClick={() => setCheckedItems({})}>Reset filters</ResetButton>
       </SortRow>
       <SortList ref={sortListRef}>
-        {checkboxes.slice(0, maxElements).map(({ icon, label, name }, index) => (
-          <SortItem key={index} style={{ width: itemWidth, marginRight }}>
+        {checkboxes.slice(0, maxElements).map(({icon, label, name}, index) => (
+          <SortItem key={index} style={{width: itemWidth, marginRight}}>
             <SortCheckbox
               icon={icon}
               label={label}
@@ -89,7 +89,7 @@ export const Sort = () => {
             />
           </SortItem>
         ))}
-        <SortDropdownItem ref={dropDownRef} style={{ width: dropDownWidth }}>
+        <SortDropdownItem ref={dropDownRef} style={{width: dropDownWidth}}>
           <SortDropdownButton
             isExpanded={isExpanded}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -103,7 +103,7 @@ export const Sort = () => {
           </SortDropdownButton>
           {isExpanded &&
             <SortDropdownContent ref={sortDropdownRef}>
-              {checkboxes.slice(maxElements).map(({ icon, label, name }, index) => (
+              {checkboxes.slice(maxElements).map(({icon, label, name}, index) => (
                 <li key={index}>
                   <SortCheckbox
                     icon={icon}
@@ -125,85 +125,85 @@ export const Sort = () => {
 export interface CheckBox {
   name: string;
   icon: string;
-  label: string
+  label: string;
 }
 
 const checkboxes: Array<CheckBox> = [
   {
     icon: internetIcon,
     name: 'internet',
-    label: 'Internet',
+    label: 'Internet'
   },
   {
     icon: financeIcon,
     name: 'finance',
-    label: 'Finance',
+    label: 'Finance'
   },
   {
     icon: homeIcon,
     name: 'hospitality',
-    label: 'Hospitality',
+    label: 'Hospitality'
   },
   {
     icon: cartIcon,
     name: 'retail',
-    label: 'Retail',
+    label: 'Retail'
   },
   {
     icon: healthIcon,
     name: 'health',
-    label: 'Health',
+    label: 'Health'
   },
   {
     icon: cloudIcon,
     name: 'cloud',
-    label: 'Cloud',
+    label: 'Cloud'
   },
   {
     icon: ecommerceIcon,
     name: 'eCommerce',
-    label: 'E-commerce',
+    label: 'E-commerce'
   },
   {
     icon: emergingIcon,
     name: 'emergingMarkets',
-    label: 'Emerging Markets ',
+    label: 'Emerging Markets '
   },
   {
     icon: airlinesIcon,
     name: 'airlines',
-    label: 'Airlines ',
+    label: 'Airlines '
   },
   {
     icon: carIcon,
     name: 'cars',
-    label: 'Cars ',
+    label: 'Cars '
   },
   {
     icon: gambleIcon,
     name: 'gamble',
-    label: 'Gamble ',
+    label: 'Gamble '
   },
   {
     icon: goldIcon,
     name: 'gold',
-    label: 'Gold ',
+    label: 'Gold '
   },
   {
     icon: cryptoIcon,
     name: 'cryptocurrencies',
-    label: 'Cryptocurrencies ',
+    label: 'Cryptocurrencies '
   },
   {
     icon: cannabisIcon,
     name: 'cannabis',
-    label: 'Cannabis ',
+    label: 'Cannabis '
   },
   {
     icon: cubeIcon,
     name: 'etfs',
-    label: 'ETFs ',
-  },
+    label: 'ETFs '
+  }
 ];
 
 const Title = styled.p`
@@ -234,11 +234,11 @@ const SortRow = styled.div`
 `;
 
 interface ResetButtonProps {
-  isVisible: boolean
+  isVisible: boolean;
 }
 
 const ResetButton = styled.button<ResetButtonProps>`
-  visibility: ${({ isVisible }) => isVisible ? 'visible' : 'hidden'};
+  visibility: ${({isVisible}) => isVisible ? 'visible' : 'hidden'};
   padding: 0;
   border: none;
   background: none;
@@ -246,7 +246,7 @@ const ResetButton = styled.button<ResetButtonProps>`
   font-size: 14px;
   line-height: 17px;
   text-align: right;
-  color: ${({ theme }) => theme.colors.colorPrimary};
+  color: ${({theme}) => theme.colors.colorPrimary};
 `;
 
 const SortList = styled.ul`
@@ -259,9 +259,9 @@ const SortList = styled.ul`
 const SortItem = styled.li`
   position: relative;
   height: 48px;
-  background-color: ${({ theme }) => theme.colors.sortCheckboxBackground};
+  background-color: ${({theme}) => theme.colors.sortCheckboxBackground};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.sortCheckboxBorder};
+  border-color: ${({theme}) => theme.colors.sortCheckboxBorder};
   border-radius: 2px;
 `;
 

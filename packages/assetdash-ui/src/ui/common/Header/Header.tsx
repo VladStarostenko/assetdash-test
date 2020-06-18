@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Logo } from '../Logo';
-import { ButtonSecondary } from '../Button/ButtonSecondary';
-import { ThemeToggle } from '../../Theme/ThemeToggle';
-import { SocialDropdown } from './SocialDropdown';
+import {Logo} from '../Logo';
+import {ButtonSecondary} from '../Button/ButtonSecondary';
+import {ThemeToggle} from '../../Theme/ThemeToggle';
+import {SocialDropdown} from './SocialDropdown';
 
 export const Header = () => (
   <HeaderRow>
@@ -22,7 +22,7 @@ const HeaderRow = styled.header`
   align-items: center;
   padding: 16px 24px;
   border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.colors.borderPrimary};
+  border-color: ${({theme}) => theme.colors.borderPrimary};
 
   @media(max-width: 600px) {
     padding: 10px;
