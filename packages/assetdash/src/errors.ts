@@ -1,6 +1,6 @@
-export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    Object.setPrototypeOf(this, NotFoundError.prototype);
+export class ResourceNotFound extends Error {
+  constructor(resourceName: string, resourceId: number) {
+    super(`No ${resourceName} was found by "${resourceId}"`);
+    Object.setPrototypeOf(this, ResourceNotFound.prototype);
   }
 }

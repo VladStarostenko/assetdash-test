@@ -5,7 +5,7 @@ exports.up = async (knex) => {
       table.string('ticker').notNullable();
       table.string('name').notNullable();
       table.string('image_url').notNullable();
-      table.integer('current_price').notNullable();
+      table.decimal('current_price', 36, 18).notNullable();
       table.integer('current_marketcap').notNullable();
       table.integer('current_change').notNullable();
       table.string('type').notNullable();
