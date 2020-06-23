@@ -27,6 +27,7 @@
     "knex": "^0.20.11",
     "pg": "^8.2.1",
     "@restless/restless": "^0.4.2",
-    "@restless/sanitizers": "^0.2.4"
+    "@restless/sanitizers": "^0.2.4",
+    "fast-csv": "^4.3.0"
   }
 }
