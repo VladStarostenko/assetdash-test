@@ -1,13 +1,13 @@
 import path from 'path';
 
-export const getDevConfig = () => {
+export const getTestConfig = () => {
   return {
     port: 3000,
     database: {
       client: 'pg',
       connection: {
         host: '127.0.0.1',
-        database: 'assetdash_dev',
+        database: 'assetdash_test',
         user: 'postgres',
         password: 'root'
       },

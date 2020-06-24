@@ -15,7 +15,7 @@ const getCryptoAssetsFromCSV = () => new Promise<string[][]>(resolve => {
 });
 
 const getImageUrlFor = (ticker) => {
-  return `src/assets/crypto-icons/${ticker.toLowerCase()}.svg`;
+  return `../../assets/crypto-icons/${ticker.toLowerCase()}.svg`;
 };
 
 exports.seed = async function (knex, Promise) {
