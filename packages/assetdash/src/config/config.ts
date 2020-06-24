@@ -11,10 +11,10 @@ export const config = Object.freeze({
       password: process.env.DB_PASS || 'root'
     },
     migrations: {
-      directory: path.join(__dirname, '../integration/db/migrations/')
+      directory: path.join('dist/integration/db/migrations/')
     },
     seeds: {
-      directory: path.join(__dirname, '../integration/db/seeds/')
+      directory: path.join('src/integration/db/seeds/')
     }
   }
 });

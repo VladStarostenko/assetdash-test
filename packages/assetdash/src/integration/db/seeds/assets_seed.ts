@@ -4,7 +4,7 @@ import * as csv from 'fast-csv';
 
 const getCryptoAssetsFromCSV = () => new Promise<string[][]>(resolve => {
   const csvData: string[][] = [];
-  fs.createReadStream(path.resolve('seeds/Crypto_list.csv'))
+  fs.createReadStream(path.resolve('src/integration/db/seeds/Crypto_list.csv'))
     .pipe(csv.parse({headers: false}))
     .on('data', row => {
       csvData.push(row);
@@ -14,13 +14,8 @@ const getCryptoAssetsFromCSV = () => new Promise<string[][]>(resolve => {
     });
 });
 
-const rareImagesMapping = {};
-
 const getImageUrlFor = (ticker) => {
-  if (ticker in rareImagesMapping) {
-    return rareImagesMapping[ticker];
-  }
-  return `https://cryptoicons.org/api/icon/${ticker.toLowerCase()}/32`;
+  return `src/assets/crypto-icons/${ticker.toLowerCase()}.svg`;
 };
 
 exports.seed = async function (knex, Promise) {
