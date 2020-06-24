@@ -1,6 +1,6 @@
-import {config} from './config';
+import {config} from '../config/config';
 import {buildApp} from './app';
-import {createServices} from './services';
+import {createServices} from '../core/createServices';
 
 export const startServer = async () => {
   const services = createServices(config);

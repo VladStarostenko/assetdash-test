@@ -7,10 +7,11 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "start": "node dist/index.js",
-    "dev:watch": "nodemon --watch 'src/**/*.{js,ts}' --exec 'ts-node -T' src/index.ts",
-    "dev:start": "NODE_ENV=dev ts-node src/index.ts",
-    "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'"
+    "start": "node dist/ui/startServer.js",
+    "dev:watch": "nodemon --watch 'src/**/*.{js,ts}' --exec 'ts-node -T' src/ui/startServer.ts",
+    "dev:start": "NODE_ENV=dev ts-node src/ui/startServer.ts",
+    "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'",
+    "db:bootstrap": "knex seed:run"
   },
   "devDependencies": {
     "@types/express": "^4.17.3",
@@ -27,6 +28,7 @@
     "knex": "^0.20.11",
     "pg": "^8.2.1",
     "@restless/restless": "^0.4.2",
-    "@restless/sanitizers": "^0.2.4"
+    "@restless/sanitizers": "^0.2.4",
+    "fast-csv": "^4.3.0"
   }
 }

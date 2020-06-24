@@ -1,4 +1,4 @@
-import {Services} from '../services';
+import {Services} from '../../core/createServices';
 import {Router as expressRouter} from 'express';
 import {asyncHandler, sanitize, responseOf} from '@restless/restless';
 import {asNumber} from '@restless/sanitizers';

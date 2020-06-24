@@ -1,4 +1,4 @@
-import {Services} from '../services';
+import {Services} from '../../core/createServices';
 import {Router as expressRouter} from 'express';
 import {assets} from './assets';
 

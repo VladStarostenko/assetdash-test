@@ -1,5 +1,5 @@
 import express from 'express';
-import {Services} from './services';
+import {Services} from '../core/createServices';
 import {router} from './routes';
 
 export const buildApp = (services: Services) => {
