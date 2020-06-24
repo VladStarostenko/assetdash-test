@@ -1,6 +1,6 @@
 import knex from 'knex';
-import {Config} from '../config';
-import {AssetRepository} from '../repositories/AssetRepository';
+import {Config} from '../config/config';
+import {AssetRepository} from '../integration/db/repositories/AssetRepository';
 
 export const createServices = (config: Config) => {
   const db = knex(config.database);

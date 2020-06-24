@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 export const config = Object.freeze({
   port: Number(process.env.PORT) || 3000,
   database: {
@@ -7,6 +9,12 @@ export const config = Object.freeze({
       database: process.env.DB_NAME || 'assetdash',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASS || 'root'
+    },
+    migrations: {
+      directory: path.join(__dirname, '../integration/db/migrations/')
+    },
+    seeds: {
+      directory: path.join(__dirname, '../integration/db/seeds/')
     }
   }
 });

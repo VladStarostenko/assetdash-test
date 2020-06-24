@@ -1,7 +1,7 @@
 import Knex from 'knex';
-import {Asset} from '../models/asset';
-import {ResourceNotFound} from '../errors';
-import {ensure} from '../utils';
+import {Asset} from '../../../core/models/asset';
+import {ResourceNotFound} from '../../../core/errors';
+import {ensure} from '../../../core/utils';
 
 export class AssetRepository {
   constructor(private db: Knex) {}

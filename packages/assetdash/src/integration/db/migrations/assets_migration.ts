@@ -5,14 +5,14 @@ exports.up = async (knex) => {
       table.string('ticker').notNullable();
       table.string('name').notNullable();
       table.string('image_url').notNullable();
-      table.decimal('current_price', 36, 18).notNullable();
-      table.decimal('current_marketcap', 36, 18).notNullable();
-      table.decimal('current_change', 36, 18).notNullable();
+      table.decimal('current_price', 36, 18).notNullable().defaultTo(0);
+      table.decimal('current_marketcap', 36, 18).notNullable().defaultTo(0);
+      table.decimal('current_change', 36, 18).notNullable().defaultTo(0);
       table.string('type').notNullable();
-      table.integer('dash_daily').notNullable();
-      table.integer('dash_weekly').notNullable();
-      table.integer('dash_monthly').notNullable();
-      table.integer('dash_quarterly').notNullable();
+      table.integer('dash_daily').notNullable().defaultTo(0);
+      table.integer('dash_weekly').notNullable().defaultTo(0);
+      table.integer('dash_monthly').notNullable().defaultTo(0);
+      table.integer('dash_quarterly').notNullable().defaultTo(0);
     })
     .createTable('ranks', (table) => {
       table.increments('id').primary();
