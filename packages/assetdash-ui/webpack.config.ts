@@ -7,7 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 const config: Configuration = {
   entry: [
     'react-hot-loader/patch',
-    './src/index.tsx'
+    './src/ui/index.tsx'
   ],
 
   output: {
@@ -78,7 +78,7 @@ const config: Configuration = {
       chunkFilename: '[id].[hash].css',
     }),
     new HtmlWebpackPlugin({
-      template: 'src/index.html'
+      template: 'src/ui/index.html'
     }),
     new IgnorePlugin(/\/iconv-loader$/),
     new DefinePlugin({

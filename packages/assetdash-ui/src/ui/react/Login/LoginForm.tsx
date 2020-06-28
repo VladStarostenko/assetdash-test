@@ -26,7 +26,7 @@ export const LoginForm = () => (
 );
 
 const FormRow = styled.div`
-  display: flex;  
+  display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 16px 0 0;

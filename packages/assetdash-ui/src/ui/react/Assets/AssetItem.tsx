@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {Tr, Td} from '../common/Table/Table';
+import {Td, Tr} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 
@@ -10,17 +10,17 @@ interface AssetItemProps {
 
 export const AssetItem = (props: AssetItemProps) => {
   const {
-    position,
-    dailyDash,
-    icon,
+    id,
+    ticker,
     name,
-    symbol,
-    marketCap,
-    price,
-    change,
-    weeklyDash,
-    monthlyDash,
-    quarterlyDash
+    image_url,
+    current_price,
+    current_marketcap,
+    current_change,
+    dash_daily,
+    dash_weekly,
+    dash_monthly,
+    dash_quarterly
   } = props.asset;
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -31,30 +31,30 @@ export const AssetItem = (props: AssetItemProps) => {
 
   return (
     <Tr>
-      <Td>{position}</Td>
+      <Td>{id}</Td>
       <Td>
-        <Dash direction="down">{dailyDash}</Dash>
+        <Dash direction="down">{dash_daily}</Dash>
       </Td>
       <Td>
         <AssetName>
-          <img src={icon} alt={`${name} logo`}/>
+          <img src={image_url} alt={`${name} logo`}/>
           {name}
         </AssetName>
       </Td>
-      <Td>{symbol}</Td>
-      <Td>${marketCap}</Td>
-      <Td>${price}</Td>
+      <Td>{ticker}</Td>
+      <Td>${current_marketcap}</Td>
+      <Td>${current_price}</Td>
       <Td>
-        <Change isPositive>{change}</Change>
+        <Change isPositive>{current_change}</Change>
       </Td>
       <Td>
-        <Dash direction="down">{weeklyDash}</Dash>
+        <Dash direction="down">{dash_weekly}</Dash>
       </Td>
       <Td>
-        <Dash direction="down">{monthlyDash}</Dash>
+        <Dash direction="down">{dash_monthly}</Dash>
       </Td>
       <Td>
-        <Dash direction="down">{quarterlyDash}</Dash>
+        <Dash direction="down">{dash_quarterly}</Dash>
       </Td>
       <Td>
         <ButtonFavorite

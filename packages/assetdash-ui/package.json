@@ -6,7 +6,8 @@
     "start": "webpack-dev-server --mode development --progress --hot",
     "prebuild": "rm -rf dist",
     "build": "webpack --mode production",
-    "postbuild": "cp src/_redirects dist/_redirects",
+    "dev:build": "webpack --mode development",
+    "postbuild": "cp src/ui/_redirects dist/_redirects",
     "test": "jest",
     "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'",
     "clean": "rimraf dist"
@@ -16,7 +17,8 @@
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.12.15",
     "react-router-dom": "^5.1.2",
-    "styled-components": "^4.4.0"
+    "styled-components": "^4.4.0",
+    "axios": "^0.19.2"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
