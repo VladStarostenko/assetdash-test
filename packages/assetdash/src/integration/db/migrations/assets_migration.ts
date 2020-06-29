@@ -4,37 +4,37 @@ exports.up = async (knex) => {
       table.increments('id').primary();
       table.string('ticker').notNullable();
       table.string('name').notNullable();
-      table.string('image_url').notNullable();
-      table.decimal('current_price', 36, 18).notNullable().defaultTo(0);
-      table.decimal('current_marketcap', 36, 18).notNullable().defaultTo(0);
-      table.decimal('current_change', 36, 18).notNullable().defaultTo(0);
+      table.string('imageUrl').notNullable();
+      table.decimal('currentPrice', 36, 18).notNullable().defaultTo(0);
+      table.decimal('currentMarketcap', 36, 18).notNullable().defaultTo(0);
+      table.decimal('currentChange', 36, 18).notNullable().defaultTo(0);
       table.string('type').notNullable();
-      table.integer('dash_daily').notNullable().defaultTo(0);
-      table.integer('dash_weekly').notNullable().defaultTo(0);
-      table.integer('dash_monthly').notNullable().defaultTo(0);
-      table.integer('dash_quarterly').notNullable().defaultTo(0);
+      table.integer('dashDaily').notNullable().defaultTo(0);
+      table.integer('dashWeekly').notNullable().defaultTo(0);
+      table.integer('dashMonthly').notNullable().defaultTo(0);
+      table.integer('dashQuarterly').notNullable().defaultTo(0);
     })
     .createTable('ranks', (table) => {
       table.increments('id').primary();
-      table.integer('asset_id').references('id').inTable('assets').notNullable();
+      table.integer('assetId').references('id').inTable('assets').notNullable();
       table.timestamp('date').notNullable();
       table.integer('position').notNullable();
     })
     .createTable('tags', (table) => {
       table.increments('id').primary();
       table.string('name').notNullable();
-      table.string('image_url').notNullable();
+      table.string('imageUrl').notNullable();
     })
-    .createTable('assets_tags', (table) => {
+    .createTable('assetsTags', (table) => {
       table.increments('id').primary();
-      table.integer('tag_id').references('id').inTable('tags').notNullable();
-      table.integer('asset_id').references('id').inTable('assets').notNullable();
+      table.integer('tagId').references('id').inTable('tags').notNullable();
+      table.integer('assetId').references('id').inTable('assets').notNullable();
     });
 };
 
 exports.down = async (knex) => {
   await knex.schema
-    .dropTable('assets_tags')
+    .dropTable('assetsTags')
     .dropTable('tags')
     .dropTable('ranks')
     .dropTable('assets');

@@ -23,7 +23,7 @@ exports.seed = async function (knex, Promise) {
   const assets = assetDataFromCSV.map(([ticker, name, type]) => ({
     ticker,
     name,
-    image_url: getImageUrlFor(ticker),
+    imageUrl: getImageUrlFor(ticker),
     type
   }));
   return knex('assets').insert(assets);
