@@ -14,17 +14,41 @@ const getCryptoAssetsFromCSV = () => new Promise<string[][]>(resolve => {
     });
 });
 
-const getImageUrlFor = (ticker) => {
+const getStocksAssetsFromCSV = () => new Promise<string[][]>(resolve => {
+  const csvData: string[][] = [];
+  fs.createReadStream(path.resolve('src/integration/db/seeds/MAIN_SHEET.csv'))
+    .pipe(csv.parse({headers: false}))
+    .on('data', row => {
+      csvData.push(row);
+    })
+    .on('end', () => {
+      resolve(csvData);
+    });
+});
+
+const getImageUrlForCrypto = (ticker) => {
   return `../../assets/crypto-icons/${ticker.toLowerCase()}.svg`;
 };
 
+const getImageUrlForStocks = (ticker) => {
+  return `https://storage.googleapis.com/iex/api/logos/${ticker}.png`;
+};
+
 exports.seed = async function (knex, Promise) {
-  const assetDataFromCSV = await getCryptoAssetsFromCSV();
-  const assets = assetDataFromCSV.map(([ticker, name, type]) => ({
+  const cryptoAssetDataFromCSV = await getCryptoAssetsFromCSV();
+  const stocksAssetDataFromCSV = await getStocksAssetsFromCSV();
+  const cryptoAssets = cryptoAssetDataFromCSV.map(([ticker, name, type]) => ({
     ticker,
     name,
-    imageUrl: getImageUrlFor(ticker),
+    imageUrl: getImageUrlForCrypto(ticker),
     type
   }));
+  const stocksAssets = stocksAssetDataFromCSV.map(([ticker, name]) => ({
+    ticker,
+    name,
+    imageUrl: getImageUrlForStocks(ticker),
+    type: 'Stocks'
+  }));
+  const assets = cryptoAssets.concat(stocksAssets);
   return knex('assets').insert(assets);
 };
