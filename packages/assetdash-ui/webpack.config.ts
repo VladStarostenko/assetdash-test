@@ -40,17 +40,7 @@ const config: Configuration = {
         }
       },
       {
-        test: /\.svg$/,
-        use: ['@svgr/webpack', 'url-loader'],
-        exclude: /@universal-login\/react/,
-      },
-      {
-        test: /\.svg$/,
-        use: 'file-loader',
-        include: /@universal-login\/react/,
-      },
-      {
-        test: /\.(png|jpg|gif|ttf|woff|woff2|eot)$/,
+        test: /\.(png|jpg|gif|ttf|woff|woff2|eot|svg)$/,
         use: [
           {
             loader: 'file-loader',

@@ -13,7 +13,6 @@ export const AssetItem = (props: AssetItemProps) => {
     id,
     ticker,
     name,
-    image_url,
     current_price,
     current_marketcap,
     current_change,
@@ -37,7 +36,7 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <AssetName>
-          <img src={image_url} alt={`${name} logo`}/>
+          <img src={require(`../../assets/crypto-icons/${ticker.toLowerCase()}.svg`)} alt={`${name} logo`}/>
           {name}
         </AssetName>
       </Td>
