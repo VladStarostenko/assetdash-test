@@ -1,23 +1,23 @@
-let baseURL;
+import {getProdConfig} from './production';
+import {getDevConfig} from './development';
+import {getTestConfig} from './test';
 
-console.log(process.env.NODE_ENV);
+let configObject;
 
 switch (process.env.NODE_ENV) {
   case 'production':
-    baseURL = process.env.BACKEND_HOST;
+    configObject = getProdConfig();
     break;
   case 'test':
-    baseURL = 'http://localhost:3000/';
+    configObject = getTestConfig();
     break;
   case 'development':
-    baseURL = 'http://localhost:3000/';
+    configObject = getDevConfig();
     break;
   default:
     throw TypeError('Invalid environment');
 }
 
-console.log(baseURL);
-
-export const config = Object.freeze({baseURL: baseURL});
+export const config = Object.freeze(configObject);
 
 export type Config = typeof config;
