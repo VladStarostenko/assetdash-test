@@ -17,6 +17,7 @@ export const getTestConfig = () => {
       seeds: {
         directory: path.join('src/integration/db/seeds/')
       }
-    }
+    },
+    accessControlAllowOrigin: '*'
   };
 };

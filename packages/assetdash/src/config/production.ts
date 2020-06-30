@@ -17,6 +17,7 @@ export const getProdConfig = () => {
       seeds: {
         directory: path.join('src/integration/db/seeds/')
       }
-    }
+    },
+    accessControlAllowOrigin: 'https://assetdash2020.netlify.app/'
   };
 };
