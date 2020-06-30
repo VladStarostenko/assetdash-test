@@ -19,12 +19,12 @@ switch (process.env.NODE_ENV) {
     throw TypeError('Invalid environment');
 }
 
+export const config = Object.freeze(configObject);
+
 export const setHeaders = (req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', config.accessControlAllowOrigin);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 };
-
-export const config = Object.freeze(configObject);
 
 export type Config = typeof config;
