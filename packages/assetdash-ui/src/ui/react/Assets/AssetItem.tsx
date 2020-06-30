@@ -13,9 +13,11 @@ export const AssetItem = (props: AssetItemProps) => {
     id,
     ticker,
     name,
+    imageUrl,
     current_price,
     current_marketcap,
     current_change,
+    type,
     dash_daily,
     dash_weekly,
     dash_monthly,
@@ -28,6 +30,15 @@ export const AssetItem = (props: AssetItemProps) => {
     setIsFavorite(!isFavorite);
   };
 
+  const missingImages = ['VWAGY', 'TTNDY', 'BMWYY', 'Ticker'];
+  const getImageUrl = () => {
+    if (missingImages.includes(ticker)) {
+      return 'https://storage.googleapis.com/iex/api/logos/NFLX.png';
+    } else {
+      return imageUrl;
+    }
+  };
+
   return (
     <Tr>
       <Td>{id}</Td>
@@ -36,7 +47,15 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <AssetName>
-          <img src={require(`../../assets/crypto-icons/${ticker.toLowerCase()}.svg`)} alt={`${name} logo`}/>
+          <img
+            src={
+              (type === 'Cryptocurrency'
+                ? require(`../../assets/crypto-icons/${ticker.toLowerCase()}.svg`)
+                : getImageUrl())
+            }
+            width="32"
+            alt={`${name} logo`}
+          />
           {name}
         </AssetName>
       </Td>

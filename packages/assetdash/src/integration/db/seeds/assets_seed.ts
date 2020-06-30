@@ -14,17 +14,21 @@ const getCryptoAssetsFromCSV = () => new Promise<string[][]>(resolve => {
     });
 });
 
-const getStocksAssetsFromCSV = () => new Promise<string[][]>(resolve => {
-  const csvData: string[][] = [];
-  fs.createReadStream(path.resolve('src/integration/db/seeds/MAIN_SHEET.csv'))
-    .pipe(csv.parse({headers: false}))
-    .on('data', row => {
-      csvData.push(row);
-    })
-    .on('end', () => {
-      resolve(csvData);
-    });
-});
+const getStocksAssetsFromCSV = () => {
+  return new Promise<string[][]>(resolve => {
+    const csvData: string[][] = [];
+    fs.createReadStream(path.resolve('src/integration/db/seeds/MAIN_SHEET.csv'))
+      .pipe(csv.parse({headers: false}))
+      .on('data', row => {
+        if (row[0] !== 'Ticker') {
+          csvData.push(row);
+        }
+      })
+      .on('end', () => {
+        resolve(csvData);
+      });
+  });
+};
 
 const getImageUrlForCrypto = (ticker) => {
   return `../../assets/crypto-icons/${ticker.toLowerCase()}.svg`;
