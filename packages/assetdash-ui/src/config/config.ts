@@ -1,5 +1,7 @@
 let baseURL;
 
+console.log(process.env.NODE_ENV);
+
 switch (process.env.NODE_ENV) {
   case 'production':
     baseURL = process.env.BACKEND_HOST;
@@ -13,6 +15,8 @@ switch (process.env.NODE_ENV) {
   default:
     throw TypeError('Invalid environment');
 }
+
+console.log(baseURL);
 
 export const config = Object.freeze({baseURL: baseURL});
 
