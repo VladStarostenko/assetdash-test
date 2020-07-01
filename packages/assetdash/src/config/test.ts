@@ -18,6 +18,8 @@ export const getTestConfig = () => {
         directory: path.join('src/integration/db/seeds/')
       }
     },
-    accessControlAllowOrigin: '*'
+    accessControlAllowOrigin: '*',
+    coinmarketCapBaseUrl: 'https://pro-api.coinmarketcap.com',
+    coinmarketCapKey: process.env.COINMARKETCAP_KEY
   };
 };

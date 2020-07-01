@@ -18,6 +18,8 @@ export const getProdConfig = () => {
         directory: path.join('src/integration/db/seeds/')
       }
     },
-    accessControlAllowOrigin: 'https://assetdash2020.netlify.app'
+    accessControlAllowOrigin: 'https://assetdash2020.netlify.app',
+    coinmarketCapBaseUrl: 'https://pro-api.coinmarketcap.com',
+    coinmarketCapKey: process.env.COINMARKETCAP_KEY
   };
 };
