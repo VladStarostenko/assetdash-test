@@ -9,7 +9,7 @@ export class CoinmarketCapService {
     this.fetch = http(fetch)(config.coinmarketCapBaseUrl);
   }
 
-  async getCoinsQuotes(tickers: string[]): Promise<string> {
+  async getAssetsData(tickers: string[]): Promise<string> {
     try {
       return await this.fetch(this.getPath(tickers));
     } catch (err) {
