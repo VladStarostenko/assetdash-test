@@ -1,6 +1,8 @@
 import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {AssetRepository} from '../integration/db/repositories/AssetRepository';
 import {convertAssetDataToAssetPricingData} from '../core/utils';
+import {config} from '../config/config';
+import {sleep} from '../core/models/utils';
 
 export class PricingDataUpdater {
   get running(): boolean {
@@ -29,13 +31,18 @@ export class PricingDataUpdater {
     this._running = false;
   }
 
-  updateAssetPrices = async (tickers: string[]) => {
+  loop = async (tickers: string[]) => {
     while (this._running) {
-      const assets = (await this.coinmarketCapService.getAssetsData(tickers))['data'];
-      for (const asset in assets) {
-        const pricingData = await convertAssetDataToAssetPricingData(assets[asset]);
-        await this.assetRepository.updatePrice(pricingData);
-      }
+      await sleep(config.priceUpdateTime);
+      await this.updateAssetPrices(tickers);
+    }
+  }
+
+  updateAssetPrices = async (tickers: string[]) => {
+    const assets = (await this.coinmarketCapService.getAssetsData(tickers))['data'];
+    for (const asset in assets) {
+      const pricingData = await convertAssetDataToAssetPricingData(assets[asset]);
+      await this.assetRepository.updatePrice(pricingData);
     }
   }
 }

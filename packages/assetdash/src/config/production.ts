@@ -20,6 +20,7 @@ export const getProdConfig = () => {
     },
     accessControlAllowOrigin: 'https://assetdash2020.netlify.app',
     coinmarketCapBaseUrl: 'https://pro-api.coinmarketcap.com',
-    coinmarketCapKey: process.env.COINMARKETCAP_KEY
+    coinmarketCapKey: process.env.COINMARKETCAP_KEY,
+    priceUpdateTime: 180000
   };
 };

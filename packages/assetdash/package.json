@@ -12,7 +12,8 @@
     "dev:start": "NODE_ENV=dev ts-node src/ui/startServer.ts",
     "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'",
     "db:bootstrap": "knex seed:run",
-    "test": "NODE_ENV=test mocha -r ts-node/register/transpile-only -t 10000 'test/**/*.ts'"
+    "test": "NODE_ENV=test mocha -r ts-node/register/transpile-only -t 10000 'test/**/*.ts'",
+    "bg:start": "node dist/ui/runBackGroundProcesses.js"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

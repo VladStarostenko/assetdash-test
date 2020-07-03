@@ -3,6 +3,8 @@ import {Asset} from '../../../core/models/asset';
 import {ResourceNotFound} from '../../../core/errors';
 import {ensure} from '../../../core/utils';
 import {AssetPricingData} from '../../../core/models/assetPricingData';
+import {AssetType} from '../../../core/models/assetType';
+import {AssetTicker} from '../../../core/models/assetTicker';
 
 export class AssetRepository {
   constructor(private db: Knex) {}
@@ -36,5 +38,11 @@ export class AssetRepository {
     for (const assetPrice of assetPrices) {
       await this.updatePrice(assetPrice);
     }
+  }
+
+  async getTickers(type: AssetType): Promise<AssetTicker[]> {
+    return this.db('assets')
+      .select('ticker')
+      .where('type', type);
   }
 }

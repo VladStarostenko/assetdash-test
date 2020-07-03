@@ -20,6 +20,7 @@ export const getTestConfig = () => {
     },
     accessControlAllowOrigin: '*',
     coinmarketCapBaseUrl: 'https://pro-api.coinmarketcap.com',
-    coinmarketCapKey: process.env.COINMARKETCAP_KEY
+    coinmarketCapKey: process.env.COINMARKETCAP_KEY,
+    priceUpdateTime: 180000
   };
 };
