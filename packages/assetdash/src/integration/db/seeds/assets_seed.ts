@@ -47,11 +47,11 @@ exports.seed = async function (knex, Promise) {
     imageUrl: getImageUrlForCrypto(ticker),
     type
   }));
-  const stocksAssets = stocksAssetDataFromCSV.map(([ticker, name]) => ({
+  const stocksAssets = stocksAssetDataFromCSV.map(([ticker, name, tag]) => ({
     ticker,
     name,
     imageUrl: getImageUrlForStocks(ticker),
-    type: 'Stocks'
+    type: tag === 'ETFs' ? 'ETFs' : 'Stocks'
   }));
   const assets = cryptoAssets.concat(stocksAssets);
   return knex('assets').insert(assets);
