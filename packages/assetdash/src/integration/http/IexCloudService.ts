@@ -2,7 +2,7 @@ import {http, HttpFunction} from './utils';
 import {config} from '../../config/config';
 import fetch from 'node-fetch';
 
-export class CoinmarketCapService {
+export class IexCloudService {
   private readonly fetch: HttpFunction;
 
   constructor() {
@@ -18,8 +18,8 @@ export class CoinmarketCapService {
   }
 
   getPath(tickers: string[]) {
-    const {coinmarketCapKey} = config;
+    const {iexCloudKey} = config;
     const tickersAsString = tickers.join(',');
-    return `/v1/cryptocurrency/quotes/latest?CMC_PRO_API_KEY=${coinmarketCapKey}&symbol=${tickersAsString}`;
+    return `/stable/stock/market/batch?symbols=${tickersAsString}&types=quote&token=${iexCloudKey}`;
   }
 }

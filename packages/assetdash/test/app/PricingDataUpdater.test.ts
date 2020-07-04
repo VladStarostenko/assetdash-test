@@ -28,7 +28,7 @@ describe('PricingDataUpdater', () => {
     });
 
     it('Update price', async () => {
-      await pricingDataUpdater.updateAssetPrices(['ETH']);
+      await pricingDataUpdater.updateCryptoAssetPrices(['ETH']);
       expect((await assetRepository.findById(1)).currentPrice).to.not.be.undefined;
     });
   });

@@ -11,10 +11,18 @@ export function ensure<T extends any[]>(condition: boolean, ErrorToThrow: ErrorC
   }
 }
 
-export function convertAssetDataToAssetPricingData(assetData: object): AssetPricingData {
+export function cryptoDataToCryptoPricingData(assetData: object): AssetPricingData {
   return {
     ticker: assetData['symbol'],
     price: assetData['quote']['USD']['price'],
     marketcap: assetData['quote']['USD']['market_cap']
+  };
+}
+
+export function stocksAndETFsDataToStocksAndETFsPricingData(assetData: object): AssetPricingData {
+  return {
+    ticker: assetData['quote']['symbol'],
+    price: assetData['quote']['latestPrice'],
+    marketcap: assetData['quote']['marketCap']
   };
 }

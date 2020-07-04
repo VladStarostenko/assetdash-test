@@ -21,6 +21,8 @@ export const getTestConfig = () => {
     accessControlAllowOrigin: '*',
     coinmarketCapBaseUrl: 'https://pro-api.coinmarketcap.com',
     coinmarketCapKey: process.env.COINMARKETCAP_KEY,
-    priceUpdateTime: 180000
+    priceUpdateTime: 180000,
+    iexCloudBaseUrl: 'https://cloud.iexapis.com',
+    iexCloudKey: process.env.IEXCLOUD_KEY
   };
 };

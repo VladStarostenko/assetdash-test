@@ -1,1 +1,1 @@
-export type AssetType = 'Cryptocurrency' | 'Stocks' | 'ETF';
+export type AssetType = 'Cryptocurrency' | 'Stocks' | 'ETFs';
