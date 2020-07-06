@@ -8,8 +8,8 @@ const pricingDataUpdater = new PricingDataUpdater(iexCloudService, coinmarketCap
 const run = async () => {
   const cryptoTickers = await assetRepository.getTickers('Cryptocurrency');
   const arrayCryptoTickers = cryptoTickers.map(ticker => ticker['ticker']);
-  const stocksAndETFsTickers = (await assetRepository.getTickers('Stocks'))
-    .concat(await assetRepository.getTickers('ETFs'));
+  const stocksAndETFsTickers = (await assetRepository.getTickers('Stock'))
+    .concat(await assetRepository.getTickers('ETF'));
   const arrayStocksAndETFsTickers = stocksAndETFsTickers.map(ticker => ticker['ticker']);
   await pricingDataUpdater.loop(arrayCryptoTickers, arrayStocksAndETFsTickers);
 };
