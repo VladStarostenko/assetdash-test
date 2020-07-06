@@ -51,7 +51,7 @@ exports.seed = async function (knex, Promise) {
     ticker,
     name,
     imageUrl: getImageUrlForStocks(ticker),
-    type: tag === 'ETFs' ? 'ETFs' : 'Stocks'
+    type: tag === 'ETFs' ? 'ETF' : 'Stock'
   }));
   const assets = cryptoAssets.concat(stocksAssets);
   return knex('assets').insert(assets);
