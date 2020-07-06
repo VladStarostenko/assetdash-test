@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import {Td, Tr} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
+import {Asset} from '../../../core/models/asset';
 
 interface AssetItemProps {
-  asset: any;
+  asset: Asset;
 }
 
 export const AssetItem = (props: AssetItemProps) => {
@@ -14,14 +15,14 @@ export const AssetItem = (props: AssetItemProps) => {
     ticker,
     name,
     imageUrl,
-    current_price,
-    current_marketcap,
-    current_change,
+    currentPrice,
+    currentMarketcap,
+    currentChange,
     type,
-    dash_daily,
-    dash_weekly,
-    dash_monthly,
-    dash_quarterly
+    dashDaily,
+    dashWeekly,
+    dashMonthly,
+    dashQuarterly
   } = props.asset;
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -43,7 +44,7 @@ export const AssetItem = (props: AssetItemProps) => {
     <Tr>
       <Td>{id}</Td>
       <Td>
-        <Dash direction="down">{dash_daily}</Dash>
+        <Dash direction="down">{dashDaily}</Dash>
       </Td>
       <Td>
         <AssetName>
@@ -60,19 +61,19 @@ export const AssetItem = (props: AssetItemProps) => {
         </AssetName>
       </Td>
       <Td>{ticker}</Td>
-      <Td>${current_marketcap}</Td>
-      <Td>${current_price}</Td>
+      <Td>${currentMarketcap}</Td>
+      <Td>${currentPrice}</Td>
       <Td>
-        <Change isPositive>{current_change}</Change>
+        <Change isPositive>{currentChange}</Change>
       </Td>
       <Td>
-        <Dash direction="down">{dash_weekly}</Dash>
+        <Dash direction="down">{dashWeekly}</Dash>
       </Td>
       <Td>
-        <Dash direction="down">{dash_monthly}</Dash>
+        <Dash direction="down">{dashMonthly}</Dash>
       </Td>
       <Td>
-        <Dash direction="down">{dash_quarterly}</Dash>
+        <Dash direction="down">{dashQuarterly}</Dash>
       </Td>
       <Td>
         <ButtonFavorite
