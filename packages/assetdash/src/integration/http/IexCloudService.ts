@@ -6,12 +6,19 @@ export class IexCloudService {
   private readonly fetch: HttpFunction;
 
   constructor() {
-    this.fetch = http(fetch)(config.coinmarketCapBaseUrl);
+    this.fetch = http(fetch)(config.iexCloudBaseUrl);
   }
 
   async getAssetsData(tickers: string[]): Promise<object> {
     try {
-      return await this.fetch(this.getPath(tickers));
+      let tempArray: string[];
+      let resp = {};
+      for (let i = 0; i < tickers.length; i += 100) {
+        tempArray = tickers.slice(i, i + 100);
+        const tempResp = await this.fetch(this.getPath(tempArray));
+        resp = Object.assign(resp, tempResp);
+      }
+      return resp;
     } catch (err) {
       throw new Error(err);
     }
