@@ -4,21 +4,22 @@ import fetch from 'node-fetch';
 
 export class IexCloudService {
   private readonly fetch: HttpFunction;
+  private readonly batchSize: number;
 
-  constructor() {
-    this.fetch = http(fetch)(config.iexCloudBaseUrl);
+  constructor(iexCloudBaseUrl: any, batchSize: any = 100) {
+    this.fetch = http(fetch)(iexCloudBaseUrl);
+    this.batchSize = batchSize;
   }
 
   async getAssetsData(tickers: string[]): Promise<object> {
     try {
-      let tempArray: string[];
-      let resp = {};
-      for (let i = 0; i < tickers.length; i += 100) {
-        tempArray = tickers.slice(i, i + 100);
-        const tempResp = await this.fetch(this.getPath(tempArray));
-        resp = Object.assign(resp, tempResp);
+      let result = {};
+      for (let i = 0; i < tickers.length; i += this.batchSize) {
+        const tickersBatch = tickers.slice(i, i + this.batchSize);
+        const batchResponse = await this.fetch(this.getPath(tickersBatch));
+        result = Object.assign(result, batchResponse);
       }
-      return resp;
+      return result;
     } catch (err) {
       throw new Error(err);
     }

@@ -10,7 +10,7 @@ export const createServices = (config: Config) => {
     db,
     assetRepository: new AssetRepository(db),
     coinmarketCapService: new CoinmarketCapService(),
-    iexCloudService: new IexCloudService()
+    iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
   };
 };
 
