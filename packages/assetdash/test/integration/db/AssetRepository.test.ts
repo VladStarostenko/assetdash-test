@@ -1,14 +1,12 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import knex from 'knex';
 import {config} from '../../../src/config/config';
-import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
+import {createServices} from '../../../src/core/createServices';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
-  const db = knex(config.database);
-  const assetRepository = new AssetRepository(db);
+  const {db, assetRepository} = createServices(config);
   const asset = {
     ticker: 'ETH',
     name: 'Ethereum',
@@ -25,10 +23,10 @@ describe('Asset Repository', () => {
     it('Update price', async () => {
       await assetRepository.updatePrice({
         ticker: 'ETH',
-        price: 10,
+        price: 10.54,
         marketcap: 1000
       });
-      expect((await assetRepository.findById(1)).currentPrice).to.deep.eq('10.000000000000000000');
+      expect((await assetRepository.findById(1)).currentPrice).to.deep.eq(10.54);
     });
   });
 

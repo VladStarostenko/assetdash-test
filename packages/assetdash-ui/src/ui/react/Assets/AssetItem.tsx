@@ -4,6 +4,7 @@ import {Td, Tr} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
+import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
 
 interface AssetItemProps {
   asset: Asset;
@@ -31,7 +32,7 @@ export const AssetItem = (props: AssetItemProps) => {
     setIsFavorite(!isFavorite);
   };
 
-  const missingImages = ['VWAGY', 'TTNDY', 'BMWYY', 'Ticker'];
+  const missingImages = ['VWAGY', 'TTNDY', 'BMWYY'];
   const getImageUrl = () => {
     if (missingImages.includes(ticker)) {
       return 'https://storage.googleapis.com/iex/api/logos/NFLX.png';
@@ -61,10 +62,10 @@ export const AssetItem = (props: AssetItemProps) => {
         </AssetName>
       </Td>
       <Td>{ticker}</Td>
-      <Td>${currentMarketcap}</Td>
-      <Td>${currentPrice}</Td>
+      <Td>${formatMarketcap(currentMarketcap)}</Td>
+      <Td>${formatPrice(currentPrice)}</Td>
       <Td>
-        <Change isPositive>{currentChange}</Change>
+        <Change isPositive>{formatChange(currentChange)}</Change>
       </Td>
       <Td>
         <Dash direction="down">{dashWeekly}</Dash>
