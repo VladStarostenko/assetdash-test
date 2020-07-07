@@ -6,6 +6,7 @@ export const startServer = async () => {
   const services = createServices(config);
   const app = buildApp(services);
 
+
   await services.db.migrate.latest();
 
   const server = app.listen(config.port, () => console.log(`Server listening on ${config.port}`));
