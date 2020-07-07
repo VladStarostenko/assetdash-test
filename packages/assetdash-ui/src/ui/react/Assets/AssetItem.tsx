@@ -4,6 +4,7 @@ import {Td, Tr} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
+import {formatMarketcap, formatPrice} from '../../../core/utils';
 
 interface AssetItemProps {
   asset: Asset;
@@ -61,8 +62,8 @@ export const AssetItem = (props: AssetItemProps) => {
         </AssetName>
       </Td>
       <Td>{ticker}</Td>
-      <Td>${currentMarketcap}</Td>
-      <Td>${currentPrice}</Td>
+      <Td>${formatMarketcap(currentMarketcap)}</Td>
+      <Td>${formatPrice(currentPrice)}</Td>
       <Td>
         <Change isPositive>{currentChange}</Change>
       </Td>
