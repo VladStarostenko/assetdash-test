@@ -3,8 +3,11 @@ export const formatMarketcap = (marketcap: number) => {
 };
 
 export const formatPrice = (price: number) => {
-  const priceAsString = price > 1.1 ? price.toFixed(2) : price.toFixed(6);
-  return addSeparators(priceAsString);
+  if (price > 1.1) {
+    return addSeparators(price.toFixed(2));
+  } else {
+    return price.toFixed(6);
+  }
 };
 
 export const formatChange = (change: number) => {
