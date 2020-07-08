@@ -23,9 +23,8 @@ exports.up = async (knex) => {
     .createTable('tags', (table) => {
       table.increments('id').primary();
       table.string('name').notNullable();
-      table.string('imageUrl').notNullable();
     })
-    .createTable('assetsTags', (table) => {
+    .createTable('assets_tags', (table) => {
       table.increments('id').primary();
       table.integer('tagId').references('id').inTable('tags').notNullable();
       table.integer('assetId').references('id').inTable('assets').notNullable();
@@ -34,7 +33,7 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
   await knex.schema
-    .dropTable('assetsTags')
+    .dropTable('assets_tags')
     .dropTable('tags')
     .dropTable('ranks')
     .dropTable('assets');

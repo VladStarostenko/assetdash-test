@@ -5,6 +5,7 @@ import {CoinmarketCapService} from '../../src/integration/http/CoinmarketCapServ
 import {AssetRepository} from '../../src/integration/db/repositories/AssetRepository';
 import knex from 'knex';
 import {config} from '../../src/config/config';
+import {IexCloudService} from '../../src/integration/http/IexCloudService';
 
 chai.use(chaiAsPromised);
 
@@ -14,7 +15,7 @@ describe('PricingDataUpdater', () => {
   const assetRepository = new AssetRepository(db);
 
   beforeEach(() => {
-    pricingDataUpdater = new PricingDataUpdater(new CoinmarketCapService(), assetRepository);
+    pricingDataUpdater = new PricingDataUpdater(new IexCloudService(''), new CoinmarketCapService(), assetRepository);
   });
 
   describe('updateAssetPrices', () => {
