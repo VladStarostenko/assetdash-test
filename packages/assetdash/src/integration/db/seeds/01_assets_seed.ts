@@ -19,7 +19,7 @@ export const seed = async function (knex) {
   }));
   const stocksAssets = stocksAssetDataFromCSV.map(([ticker, name, tag]) => ({
     ticker,
-    name,
+    name: name.slice(1, -1),
     imageUrl: getImageUrlForStocks(ticker),
     type: tag === 'ETFs' ? 'ETF' : 'Stock'
   }));
