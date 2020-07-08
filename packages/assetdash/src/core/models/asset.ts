@@ -10,5 +10,4 @@ export interface Asset {
   dash_daily: number;
   dashWeekly: number;
   dashMonthly: number;
-  dashQuarterly: number;
 }

@@ -12,7 +12,6 @@ exports.up = async (knex) => {
       table.integer('dashDaily').notNullable().defaultTo(0);
       table.integer('dashWeekly').notNullable().defaultTo(0);
       table.integer('dashMonthly').notNullable().defaultTo(0);
-      table.integer('dashQuarterly').notNullable().defaultTo(0);
     })
     .createTable('ranks', (table) => {
       table.increments('id').primary();

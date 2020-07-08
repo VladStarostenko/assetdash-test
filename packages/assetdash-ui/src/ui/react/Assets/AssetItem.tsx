@@ -22,8 +22,7 @@ export const AssetItem = (props: AssetItemProps) => {
     type,
     dashDaily,
     dashWeekly,
-    dashMonthly,
-    dashQuarterly
+    dashMonthly
   } = props.asset;
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -72,9 +71,6 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <Dash direction="down">{dashMonthly}</Dash>
-      </Td>
-      <Td>
-        <Dash direction="down">{dashQuarterly}</Dash>
       </Td>
       <Td>
         <ButtonFavorite
