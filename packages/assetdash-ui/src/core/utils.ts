@@ -1,11 +1,19 @@
 export const formatMarketcap = (marketcap: number) => {
-  return marketcap.toFixed(0);
+  return addSeparators(marketcap.toFixed(0));
 };
 
 export const formatPrice = (price: number) => {
-  return price > 1.1 ? price.toFixed(2) : price.toFixed(6);
+  if (price > 1.1) {
+    return addSeparators(price.toFixed(2));
+  } else {
+    return price.toFixed(6);
+  }
 };
 
 export const formatChange = (change: number) => {
-  return change.toFixed(2);
+  return addSeparators(change.toFixed(2));
+};
+
+export const addSeparators = (numberAsString: string) => {
+  return numberAsString.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 };
