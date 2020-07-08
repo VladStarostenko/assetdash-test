@@ -1,8 +1,6 @@
 import {tagNames} from '../utils';
 
-exports.seed = async function (knex, Promise) {
-  const tags: object[] = tagNames.map(tagname => {
-    return {name: tagname};
-  });
+export const seed = async function (knex) {
+  const tags: object[] = tagNames.map(tagname => ({name: tagname}));
   return knex('tags').insert(tags);
 };

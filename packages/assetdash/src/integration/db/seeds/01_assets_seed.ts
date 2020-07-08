@@ -8,7 +8,7 @@ const getImageUrlForStocks = (ticker) => {
   return `https://storage.googleapis.com/iex/api/logos/${ticker}.png`;
 };
 
-exports.seed = async function (knex, Promise) {
+export const seed = async function (knex) {
   const cryptoAssetDataFromCSV = await getAssetsFromCSV('src/integration/db/seeds/Crypto_list.csv');
   const stocksAssetDataFromCSV = await getAssetsFromCSV('src/integration/db/seeds/MAIN_SHEET.csv');
   const cryptoAssets = cryptoAssetDataFromCSV.map(([ticker, name, type]) => ({

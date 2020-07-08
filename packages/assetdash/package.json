@@ -12,6 +12,7 @@
     "dev:start": "NODE_ENV=dev ts-node src/ui/startServer.ts",
     "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'",
     "db:bootstrap": "knex seed:run",
+    "db:migrate": "knex migrate:latest",
     "test": "NODE_ENV=test mocha",
     "bg:start": "node dist/ui/runBackGroundProcesses.js"
   },
