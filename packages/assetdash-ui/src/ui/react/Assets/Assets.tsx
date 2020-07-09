@@ -68,15 +68,6 @@ export const Assets = (props: TabsProps) => {
                   <p>Monthly Dash</p>
                 </Tooltip>
               </Th>
-              <Th>
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Quarterly Dash tracks how many places
-                       an asset has moved up or down in the leaderboard over the course of the quarter."
-                  position="right"
-                >
-                  <p>Quarterly Dash</p>
-                </Tooltip>
-              </Th>
               <Th></Th>
             </tr>
           </thead>
