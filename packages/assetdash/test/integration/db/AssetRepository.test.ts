@@ -2,6 +2,7 @@ import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {config} from '../../../src/config/config';
 import {createServices} from '../../../src/core/createServices';
+import {clearDatabase} from '../../helpers/clear-db';
 
 chai.use(chaiAsPromised);
 
@@ -16,7 +17,7 @@ describe('Asset Repository', () => {
   };
 
   beforeEach(async () => {
-    await db.raw('truncate table assets cascade');
+    await clearDatabase(db);
     await assetRepository.insertAsset(asset);
   });
 

@@ -33,11 +33,19 @@ jobs:
   test_node_10:
     docker:
       - image: circleci/node:10.18
+      - image: circleci/postgres:9.6-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: assetdash_test
     steps:
       - checkout
       - install_dependencies:
           key: 10
       - run: yarn build
+      - run: yarn workspace assetdash db:migrate
+      - run: yarn test
+    environment:
+      NODE_ENV=test
 
 workflows:
   assetdash_all:

@@ -6,6 +6,7 @@ import {AssetRepository} from '../../src/integration/db/repositories/AssetReposi
 import knex from 'knex';
 import {config} from '../../src/config/config';
 import {IexCloudService} from '../../src/integration/http/IexCloudService';
+import {clearDatabase} from '../helpers/clear-db';
 
 chai.use(chaiAsPromised);
 
@@ -19,12 +20,14 @@ describe('PricingDataUpdater', () => {
   });
 
   describe('updateAssetPrices', () => {
-    before(async () => {
+    beforeEach(async () => {
+      await clearDatabase(db);
       await assetRepository.insertAsset({
         ticker: 'ETH',
         name: 'Ethereum',
         imageUrl: 'eth.img',
-        type: 'Cryptocurrency'
+        type: 'Cryptocurrency',
+        id: 1
       });
     });
 

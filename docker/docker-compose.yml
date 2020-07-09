@@ -6,5 +6,5 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=assetdash_test
+    volumes:
+      - ./init-dbs:/docker-entrypoint-initdb.d
