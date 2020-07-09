@@ -17,5 +17,13 @@ export const assets = ({assetRepository}: Services) => {
     async ({id}) => responseOf(await assetRepository.findById(id))
   ));
 
+  router.get('/page/:currentPage/:perPage', asyncHandler(
+    sanitize({
+      currentPage: asNumber,
+      perPage: asNumber
+    }),
+    async ({currentPage, perPage}) => responseOf(await assetRepository.findPage(currentPage, perPage))
+  ));
+
   return router;
 };

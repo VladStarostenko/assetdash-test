@@ -12,7 +12,7 @@ interface AssetItemProps {
 
 export const AssetItem = (props: AssetItemProps) => {
   const {
-    id,
+    rank,
     ticker,
     name,
     imageUrl,
@@ -42,7 +42,7 @@ export const AssetItem = (props: AssetItemProps) => {
 
   return (
     <Tr>
-      <Td>{id}</Td>
+      <Td>{rank}</Td>
       <Td>
         <Dash direction="down">{dashDaily}</Dash>
       </Td>

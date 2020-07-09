@@ -8,17 +8,24 @@ chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   const {db, assetRepository} = createServices(config);
-  const asset = {
+
+  const assets = [{
     id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
     imageUrl: 'eth.img',
     type: 'Cryptocurrency'
-  };
+  }, {
+    id: 2,
+    ticker: 'BTC',
+    name: 'Bitcoin',
+    imageUrl: 'btc.img',
+    type: 'Cryptocurrency'
+  }];
 
   beforeEach(async () => {
     await clearDatabase(db);
-    await assetRepository.insertAsset(asset);
+    await assetRepository.insertAssets(assets);
   });
 
   describe('Update', () => {
@@ -35,7 +42,29 @@ describe('Asset Repository', () => {
 
   describe('getTickers', () => {
     it('get cryptocurrency tickers', async () => {
-      expect(await assetRepository.getTickers('Cryptocurrency')).to.deep.eq([{ticker: 'ETH'}]);
+      expect(await assetRepository.getTickers('Cryptocurrency'))
+        .to.deep.eq([{ticker: 'ETH'}, {ticker: 'BTC'}]);
+    });
+  });
+
+  describe('findPage', () => {
+    it('return selected page of assets', async () => {
+      expect(await assetRepository.findPage(1, 1)).to.deep.eq(
+        [{
+          currentChange: 0,
+          currentMarketcap: 0,
+          currentPrice: 0,
+          dashDaily: 0,
+          dashMonthly: 0,
+          dashWeekly: 0,
+          id: 1,
+          rank: 1,
+          imageUrl: 'eth.img',
+          name: 'Ethereum',
+          ticker: 'ETH',
+          type: 'Cryptocurrency'
+        }
+        ]);
     });
   });
 });
