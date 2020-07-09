@@ -4,11 +4,13 @@ import {AssetRepository} from '../integration/db/repositories/AssetRepository';
 import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import pg from 'pg';
+import {attachPaginate} from 'knex-paginate';
 
 const PG_DECIMAL_OID = 1700;
 
 export const createServices = (config: Config) => {
   const db = knex(config.database);
+  attachPaginate();
   pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
   return {
     db,

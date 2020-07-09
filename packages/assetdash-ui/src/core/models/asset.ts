@@ -1,5 +1,6 @@
 export interface Asset {
   id: number;
+  rank: number;
   ticker: string;
   name: string;
   imageUrl: string;

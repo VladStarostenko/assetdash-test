@@ -8,15 +8,15 @@ import {Container} from '../common/Container';
 import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
-import {getAllAssets} from '../../../integration/http/api';
+import {getPage} from '../../../integration/http/api';
 import {Asset} from '../../../core/models/asset';
 import {AssetResponse} from '../../../core/models/assetResponse';
 
 export const Assets = (props: TabsProps) => {
-  const [placeholderData, setPlaceholderData] = useState<Asset[]>([]);
+  const [pageData, setPageData] = useState<Asset[]>([]);
   useEffect(() => {
-    getAllAssets().then((res: AssetResponse) => {
-      setPlaceholderData(res.data);
+    getPage(1).then((res: AssetResponse) => {
+      setPageData(res.data);
     });
   });
 
@@ -72,7 +72,7 @@ export const Assets = (props: TabsProps) => {
             </tr>
           </thead>
           <tbody>
-            {placeholderData.map((asset, index) => <AssetItem key={index} asset={asset}/>)}
+            {pageData.map((asset, index) => <AssetItem key={asset.id} asset={asset}/>)}
           </tbody>
         </Table>
       </AssetsView>

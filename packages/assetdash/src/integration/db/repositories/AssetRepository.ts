@@ -13,8 +13,25 @@ export class AssetRepository {
     return this.db('assets').insert(asset);
   }
 
+  async insertAssets(assets: object[]) {
+    return this.db('assets').insert(assets);
+  }
+
   async findAll(): Promise<Asset[]> {
     return this.db('assets').select();
+  }
+
+  async findPage(currentPage: number, perPage: number) {
+    const paginator = await this.db('assets').orderBy('currentMarketcap', 'desc')
+      .paginate({perPage, currentPage});
+    return this.addRanks(paginator.data, currentPage, perPage);
+  }
+
+  private addRanks(data: Asset[], currentPage: number, perPage: number) {
+    return data.map((asset, index) => ({
+      ...asset,
+      rank: (index + 1) + (currentPage - 1) * perPage
+    }));
   }
 
   async findById(id: number): Promise<Asset> {

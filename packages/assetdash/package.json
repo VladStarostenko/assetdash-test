@@ -13,7 +13,7 @@
     "lint": "eslint '{src,test}/**/*.{js,ts,tsx}'",
     "db:bootstrap": "knex seed:run",
     "db:migrate": "knex migrate:latest",
-    "db:refresh": "knex migrate:down $$ knex migrate:latest",
+    "db:refresh": "knex migrate:down && knex migrate:latest",
     "test": "NODE_ENV=test mocha",
     "bg:start": "node dist/ui/runBackGroundProcesses.js"
   },
@@ -41,6 +41,7 @@
     "@restless/restless": "^0.4.2",
     "@restless/sanitizers": "^0.2.4",
     "fast-csv": "^4.3.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "knex-paginate": "^1.2.1"
   }
 }
