@@ -8,6 +8,7 @@ chai.use(chaiAsPromised);
 describe('Asset Repository', () => {
   const {db, assetRepository} = createServices(config);
   const asset = {
+    id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
     imageUrl: 'eth.img',
@@ -15,7 +16,7 @@ describe('Asset Repository', () => {
   };
 
   beforeEach(async () => {
-    db('assets').truncate();
+    await db.raw('truncate table assets cascade');
     await assetRepository.insertAsset(asset);
   });
 
@@ -32,7 +33,7 @@ describe('Asset Repository', () => {
 
   describe('getTickers', () => {
     it('get cryptocurrency tickers', async () => {
-      expect(await assetRepository.getTickers('Cryptocurrency')).to.deep.include({ticker: 'ETH'});
+      expect(await assetRepository.getTickers('Cryptocurrency')).to.deep.eq([{ticker: 'ETH'}]);
     });
   });
 });
