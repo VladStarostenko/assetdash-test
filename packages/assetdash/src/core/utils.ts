@@ -15,7 +15,8 @@ export function cryptoDataToCryptoPricingData(assetData: object): AssetPricingDa
   return {
     ticker: assetData['symbol'],
     price: assetData['quote']['USD']['price'],
-    marketcap: assetData['quote']['USD']['market_cap']
+    marketcap: assetData['quote']['USD']['market_cap'],
+    change: assetData['quote']['USD']['percent_change_24h']
   };
 }
 
@@ -23,6 +24,7 @@ export function stocksAndETFsDataToStocksAndETFsPricingData(assetData: object): 
   return {
     ticker: assetData['quote']['symbol'],
     price: assetData['quote']['latestPrice'],
-    marketcap: assetData['quote']['marketCap']
+    marketcap: assetData['quote']['marketCap'],
+    change: assetData['quote']['changePercent'] * 100
   };
 }

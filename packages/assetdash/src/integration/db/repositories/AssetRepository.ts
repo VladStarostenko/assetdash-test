@@ -30,7 +30,8 @@ export class AssetRepository {
       .where({ticker: assetPrice.ticker})
       .update({
         currentPrice: assetPrice.price,
-        currentMarketcap: assetPrice.marketcap
+        currentMarketcap: assetPrice.marketcap,
+        currentChange: assetPrice.change
       });
   }
 
