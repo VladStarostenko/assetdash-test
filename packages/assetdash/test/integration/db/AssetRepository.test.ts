@@ -2,12 +2,14 @@ import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {config} from '../../../src/config/config';
 import {createServices} from '../../../src/core/createServices';
+import {clearDatabase} from '../../helpers/clear-db';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   const {db, assetRepository} = createServices(config);
   const asset = {
+    id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
     imageUrl: 'eth.img',
@@ -15,7 +17,7 @@ describe('Asset Repository', () => {
   };
 
   beforeEach(async () => {
-    db('assets').truncate();
+    await clearDatabase(db);
     await assetRepository.insertAsset(asset);
   });
 
@@ -32,7 +34,7 @@ describe('Asset Repository', () => {
 
   describe('getTickers', () => {
     it('get cryptocurrency tickers', async () => {
-      expect(await assetRepository.getTickers('Cryptocurrency')).to.deep.include({ticker: 'ETH'});
+      expect(await assetRepository.getTickers('Cryptocurrency')).to.deep.eq([{ticker: 'ETH'}]);
     });
   });
 });
