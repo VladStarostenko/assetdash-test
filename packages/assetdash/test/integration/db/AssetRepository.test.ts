@@ -14,13 +14,15 @@ describe('Asset Repository', () => {
     ticker: 'ETH',
     name: 'Ethereum',
     imageUrl: 'eth.img',
-    type: 'Cryptocurrency'
+    type: 'Cryptocurrency',
+    currentMarketcap: 10
   }, {
     id: 2,
     ticker: 'BTC',
     name: 'Bitcoin',
     imageUrl: 'btc.img',
-    type: 'Cryptocurrency'
+    type: 'Cryptocurrency',
+    currentMarketcap: 20
   }];
 
   beforeEach(async () => {
@@ -49,16 +51,16 @@ describe('Asset Repository', () => {
 
   describe('findPage', () => {
     it('return selected page of assets', async () => {
-      expect(await assetRepository.findPage(1, 1)).to.deep.eq(
+      expect(await assetRepository.findPage(2, 1)).to.deep.eq(
         [{
           currentChange: 0,
-          currentMarketcap: 0,
+          currentMarketcap: 10,
           currentPrice: 0,
           dashDaily: 0,
           dashMonthly: 0,
           dashWeekly: 0,
           id: 1,
-          rank: 1,
+          rank: 2,
           imageUrl: 'eth.img',
           name: 'Ethereum',
           ticker: 'ETH',

@@ -24,10 +24,14 @@ export class AssetRepository {
   async findPage(currentPage: number, perPage: number) {
     const paginator = await this.db('assets').orderBy('currentMarketcap', 'desc')
       .paginate({perPage, currentPage});
-    paginator.data.map((asset, index) => {
-      asset['rank'] = (index + 1) + (currentPage - 1) * perPage;
-    });
-    return paginator.data;
+    return this.addRanks(paginator.data, currentPage, perPage);
+  }
+
+  private addRanks(data: Asset[], currentPage: number, perPage: number) {
+    return data.map((asset, index) => ({
+      ...asset,
+      rank: (index + 1) + (currentPage - 1) * perPage
+    }));
   }
 
   async findById(id: number): Promise<Asset> {
