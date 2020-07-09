@@ -1,3 +1,5 @@
+import {Asset} from './models/asset';
+
 export const formatMarketcap = (marketcap: number) => {
   return addSeparators(marketcap.toFixed(0));
 };
@@ -16,4 +18,32 @@ export const formatChange = (change: number) => {
 
 export const addSeparators = (numberAsString: string) => {
   return numberAsString.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+};
+
+export const sortByAssetName = (assets: Asset[], dir: number) => {
+  const result = [...assets];
+  result.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    }
+    if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  });
+  if (dir === 1) {
+    return result;
+  } else {
+    return result.reverse();
+  }
+};
+
+export const sortByRank = (assets: Asset[], dir: number) => {
+  const result = [...assets];
+  result.sort((a, b) => a.rank - b.rank);
+  if (dir === 1) {
+    return result;
+  } else {
+    return result.reverse();
+  }
 };

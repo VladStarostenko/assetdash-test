@@ -11,14 +11,44 @@ import {Tooltip} from '../common/Tooltip';
 import {getPage} from '../../../integration/http/api';
 import {Asset} from '../../../core/models/asset';
 import {AssetResponse} from '../../../core/models/assetResponse';
+import {sortByAssetName, sortByRank} from '../../../core/utils';
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
+  const [isSortByAssetName, setIsSortByAssetName] = useState(0);
+  const [isSortByRank, setIsSortByRank] = useState(0);
+
   useEffect(() => {
     getPage(1).then((res: AssetResponse) => {
       setPageData(res.data);
     });
-  });
+  }, []);
+
+  useEffect(() => {
+    if (isSortByAssetName !== 0) {
+      setPageData(sortByAssetName(pageData, isSortByAssetName));
+    } else {
+      setPageData(sortByRank(pageData, isSortByRank));
+    }
+  }, [isSortByAssetName, isSortByRank]);
+
+  const onAssetNameClick = () => {
+    if (isSortByAssetName === 0) {
+      setIsSortByRank(0);
+      setIsSortByAssetName(1);
+    } else {
+      setIsSortByAssetName(0 - isSortByAssetName);
+    }
+  };
+
+  const onRankClick = () => {
+    if (isSortByRank === 0) {
+      setIsSortByAssetName(0);
+      setIsSortByRank(1);
+    } else {
+      setIsSortByRank(0 - isSortByRank);
+    }
+  };
 
   return (
     <>
@@ -37,7 +67,7 @@ export const Assets = (props: TabsProps) => {
         <Table>
           <thead>
             <tr>
-              <Th>Rank</Th>
+              <Th onClick={onRankClick}>Rank</Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
@@ -47,7 +77,7 @@ export const Assets = (props: TabsProps) => {
                   <p>Daily Dash</p>
                 </Tooltip>
               </Th>
-              <Th>Asset Name</Th>
+              <Th onClick={onAssetNameClick}>Asset Name</Th>
               <Th>Symbol</Th>
               <Th>Market Cap</Th>
               <Th>Price</Th>
