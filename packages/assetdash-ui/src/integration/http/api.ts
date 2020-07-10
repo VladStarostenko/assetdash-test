@@ -1,12 +1,16 @@
-import axios from 'axios';
-import {config} from '../../config/config';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 
-const instance = axios.create(config);
+export class Api {
+  private instance: AxiosInstance;
+  constructor(config: AxiosRequestConfig) {
+    this.instance = axios.create(config);
+  }
 
-export const getAllAssets = () => {
-  return instance.get('assets');
-};
+  getAllAssets = () => {
+    return this.instance.get('assets');
+  };
 
-export const getPage = (currentPage: number, perPage = 100) => {
-  return instance.get('assets/page/' + currentPage + '/' + perPage);
-};
+  getPage = (currentPage: number, perPage = 100) => {
+    return this.instance.get('assets/page/' + currentPage + '/' + perPage);
+  };
+}

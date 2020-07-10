@@ -67,6 +67,11 @@
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2",
     "chai": "^4.2.0",
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "@testing-library/react": "^10.4.5",
+    "nock": "^13.0.2",
+    "jsdom": "^16.3.0",
+    "jsdom-global": "^3.0.2",
+    "mock-local-storage": "^1.1.11"
   }
 }

@@ -47,7 +47,7 @@ export const AssetItem = (props: AssetItemProps) => {
         <Dash direction="down">{dashDaily}</Dash>
       </Td>
       <Td>
-        <AssetName>
+        <AssetName data-testid={'asset-row-name'}>
           <img
             src={
               (type === 'Cryptocurrency'

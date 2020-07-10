@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {Table, Th} from '../common/Table/Table';
+import {useServices} from '../hooks/useServices';
 import {AssetItem} from './AssetItem';
 import {ButtonTertiary} from '../common/Button/ButtonTertiary';
 import {Tabs, TabsProps} from '../common/Tabs';
@@ -8,19 +9,24 @@ import {Container} from '../common/Container';
 import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
-import {getPage} from '../../../integration/http/api';
 import {Asset} from '../../../core/models/asset';
 import {AssetResponse} from '../../../core/models/assetResponse';
 import {sortByAssetName, sortByRank} from '../../../core/utils';
+
+type AssetsSort = {
+  column: 'rank' | 'name';
+  order: 'desc' | 'asc';
+} | 'off'
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
   const [isSortByAssetName, setIsSortByAssetName] = useState(0);
   const [isSortByRank, setIsSortByRank] = useState(0);
-
+  const [assetsSort, setAssetsSort] = useState<AssetsSort>('off');
+  const {api} = useServices();
   useEffect(() => {
-    getPage(1).then((res: AssetResponse) => {
-      setPageData(res.data);
+    api.getPage(1).then((res: AssetResponse) => {
+      setPageData(sortByRank(res.data, 1));
     });
   }, []);
 
@@ -33,6 +39,7 @@ export const Assets = (props: TabsProps) => {
   }, [isSortByAssetName, isSortByRank]);
 
   const onAssetNameClick = () => {
+    setAssetsSort({column: 'name', order: 'asc'});
     if (isSortByAssetName === 0) {
       setIsSortByRank(0);
       setIsSortByAssetName(1);
