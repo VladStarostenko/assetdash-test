@@ -11,50 +11,93 @@ import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {AssetResponse} from '../../../core/models/assetResponse';
-import {sortByAssetName, sortByRank} from '../../../core/utils';
+import {sortByRank} from '../../../core/utils';
 
 type AssetsSort = {
-  column: 'rank' | 'name';
+  column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
   order: 'desc' | 'asc';
-} | 'off'
+}
+
+function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
+  function sort(assets: Asset[], compare: (a: Asset, b: Asset) => number, order: 'desc' | 'asc') {
+    const result = [...assets];
+    result.sort(compare);
+    return order === 'asc' ? result : result.reverse();
+  }
+
+  const compareByStringOrNumber = (column: keyof Asset) => (a: Asset, b: Asset) => {
+    if (a[column] > b[column]) {
+      return 1;
+    }
+    if (a[column] < b[column]) {
+      return -1;
+    }
+    return 0;
+  };
+
+  switch (assetsSort.column) {
+    case 'name':
+      return sort(assets, compareByStringOrNumber('name'), assetsSort.order);
+    case 'rank':
+      return sort(assets, compareByStringOrNumber('rank'), assetsSort.order);
+    case 'ticker':
+      return sort(assets, compareByStringOrNumber('ticker'), assetsSort.order);
+    case 'currentMarketcap':
+      return sort(assets, compareByStringOrNumber('currentMarketcap'), assetsSort.order);
+    case 'currentPrice':
+      return sort(assets, compareByStringOrNumber('currentPrice'), assetsSort.order);
+    case 'currentChange':
+      return sort(assets, compareByStringOrNumber('currentChange'), assetsSort.order);
+    default:
+      return assets;
+  }
+}
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
-  const [isSortByAssetName, setIsSortByAssetName] = useState(0);
-  const [isSortByRank, setIsSortByRank] = useState(0);
-  const [assetsSort, setAssetsSort] = useState<AssetsSort>('off');
+  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'none', order: 'desc'});
   const {api} = useServices();
   useEffect(() => {
     api.getPage(1).then((res: AssetResponse) => {
       setPageData(sortByRank(res.data, 1));
     });
-  }, []);
+  }, [api]);
 
   useEffect(() => {
-    if (isSortByAssetName !== 0) {
-      setPageData(sortByAssetName(pageData, isSortByAssetName));
-    } else {
-      setPageData(sortByRank(pageData, isSortByRank));
-    }
-  }, [isSortByAssetName, isSortByRank]);
+    setPageData(sortAssets(pageData, assetsSort));
+  }, [assetsSort]);
+
+  const setAssetsSortForColumn =
+    (column: 'name' | 'rank' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange') => {
+      if (assetsSort.column === column && assetsSort.order === 'asc') {
+        setAssetsSort({column: column, order: 'desc'});
+      } else {
+        setAssetsSort({column: column, order: 'asc'});
+      }
+    };
 
   const onAssetNameClick = () => {
-    setAssetsSort({column: 'name', order: 'asc'});
-    if (isSortByAssetName === 0) {
-      setIsSortByRank(0);
-      setIsSortByAssetName(1);
-    } else {
-      setIsSortByAssetName(0 - isSortByAssetName);
-    }
+    setAssetsSortForColumn('name');
   };
 
   const onRankClick = () => {
-    if (isSortByRank === 0) {
-      setIsSortByAssetName(0);
-      setIsSortByRank(1);
-    } else {
-      setIsSortByRank(0 - isSortByRank);
-    }
+    setAssetsSortForColumn('rank');
+  };
+
+  const onSymbolClick = () => {
+    setAssetsSortForColumn('ticker');
+  };
+
+  const onMarketcapClick = () => {
+    setAssetsSortForColumn('currentMarketcap');
+  };
+
+  const onPriceClick = () => {
+    setAssetsSortForColumn('currentPrice');
+  };
+
+  const onTodayClick = () => {
+    setAssetsSortForColumn('currentChange');
   };
 
   return (
@@ -74,7 +117,7 @@ export const Assets = (props: TabsProps) => {
         <Table>
           <thead>
             <tr>
-              <Th onClick={onRankClick}>Rank</Th>
+              <Th data-testid='rank-column-header' onClick={onRankClick}>Rank</Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
@@ -84,11 +127,11 @@ export const Assets = (props: TabsProps) => {
                   <p>Daily Dash</p>
                 </Tooltip>
               </Th>
-              <Th onClick={onAssetNameClick}>Asset Name</Th>
-              <Th>Symbol</Th>
-              <Th>Market Cap</Th>
-              <Th>Price</Th>
-              <Th>Today</Th>
+              <Th data-testid='name-column-header' onClick={onAssetNameClick}>Asset Name</Th>
+              <Th data-testid='symbol-column-header' onClick={onSymbolClick}>Symbol</Th>
+              <Th data-testid='marketcap-column-header' onClick={onMarketcapClick}>Market Cap</Th>
+              <Th data-testid='price-column-header' onClick={onPriceClick}>Price</Th>
+              <Th data-testid='today-column-header' onClick={onTodayClick}>Today</Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
@@ -109,7 +152,7 @@ export const Assets = (props: TabsProps) => {
             </tr>
           </thead>
           <tbody>
-            {pageData.map((asset, index) => <AssetItem key={asset.id} asset={asset}/>)}
+            {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
           </tbody>
         </Table>
       </AssetsView>

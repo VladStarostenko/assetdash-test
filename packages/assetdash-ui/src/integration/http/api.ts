@@ -6,11 +6,11 @@ export class Api {
     this.instance = axios.create(config);
   }
 
-  getAllAssets = () => {
+  getAllAssets() {
     return this.instance.get('assets');
   };
 
-  getPage = (currentPage: number, perPage = 100) => {
+  getPage(currentPage: number, perPage = 100) {
     return this.instance.get('assets/page/' + currentPage + '/' + perPage);
   };
 }
