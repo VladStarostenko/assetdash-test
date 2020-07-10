@@ -37,7 +37,7 @@ export const Assets = (props: TabsProps) => {
         <Table>
           <thead>
             <tr>
-              <Th>#</Th>
+              <Th>Rank</Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
