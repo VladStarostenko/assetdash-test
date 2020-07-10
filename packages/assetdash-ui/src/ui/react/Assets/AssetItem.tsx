@@ -64,7 +64,7 @@ export const AssetItem = (props: AssetItemProps) => {
       <Td>${formatMarketcap(currentMarketcap)}</Td>
       <Td>${formatPrice(currentPrice)}</Td>
       <Td>
-        <Change {...{isPositive: currentChange > 0}}>{formatChange(currentChange)}</Change>
+        <Change {...{isPositive: currentChange > 0}}>{formatChange(currentChange)}%</Change>
       </Td>
       <Td>
         <Dash direction="down">{dashWeekly}</Dash>
