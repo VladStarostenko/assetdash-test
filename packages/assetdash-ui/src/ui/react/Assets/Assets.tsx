@@ -11,7 +11,6 @@ import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {AssetResponse} from '../../../core/models/assetResponse';
-import {sortByRank} from '../../../core/utils';
 
 type AssetsSort = {
   column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
@@ -59,7 +58,7 @@ export const Assets = (props: TabsProps) => {
   const {api} = useServices();
   useEffect(() => {
     api.getPage(1).then((res: AssetResponse) => {
-      setPageData(sortByRank(res.data, 1));
+      setPageData(sortAssets(res.data, {column: 'rank', order: 'asc'}));
     });
   }, [api]);
 
