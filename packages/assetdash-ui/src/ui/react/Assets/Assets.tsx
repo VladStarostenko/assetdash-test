@@ -34,21 +34,10 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
     return 0;
   };
 
-  switch (assetsSort.column) {
-    case 'name':
-      return sort(assets, compareByStringOrNumber('name'), assetsSort.order);
-    case 'rank':
-      return sort(assets, compareByStringOrNumber('rank'), assetsSort.order);
-    case 'ticker':
-      return sort(assets, compareByStringOrNumber('ticker'), assetsSort.order);
-    case 'currentMarketcap':
-      return sort(assets, compareByStringOrNumber('currentMarketcap'), assetsSort.order);
-    case 'currentPrice':
-      return sort(assets, compareByStringOrNumber('currentPrice'), assetsSort.order);
-    case 'currentChange':
-      return sort(assets, compareByStringOrNumber('currentChange'), assetsSort.order);
-    default:
-      return assets;
+  if (assetsSort.column === 'none') {
+    return assets;
+  } else {
+    return sort(assets, compareByStringOrNumber(assetsSort.column), assetsSort.order);
   }
 }
 
