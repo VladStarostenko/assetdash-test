@@ -30,7 +30,7 @@ const Button = styled(ButtonTertiary)`
 `;
 
 const ArrowLeftIcon = styled.img`
-  margin-left: 13px;
+  margin-right: 13px;
   transform: rotate(180deg);
 `;
 

@@ -42,24 +42,30 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   }
 }
 
-function getPaginationFromLocalStorage(): Pagination {
-  return JSON.parse(localStorage.getItem('pagination') || '{"currentPage": 1}');
+const getDefaultPagination = (isViewAll: boolean) => {
+  const perPage = isViewAll ? 200 : 100;
+  return `{"currentPage": 1, "perPage": ${perPage}, "lastPage": 2}`;
+};
+
+function getPagination(isViewAll: boolean): Pagination {
+  return JSON.parse(localStorage.getItem('pagination') || getDefaultPagination(isViewAll));
 }
 
-function setPagintaionToLocalStorage(pagination: Pagination): void {
+function setPaginationToLocalStorage(pagination: Pagination): void {
   localStorage.setItem('pagination', JSON.stringify(pagination));
 }
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
-  const [pagination, setPagination] = useState<Pagination>(getPaginationFromLocalStorage());
+  const [isViewAll, setIsViewAll] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination>(getPagination(isViewAll));
 
   const {api} = useServices();
   useEffect(() => {
-    api.getPage(pagination.currentPage).then((res: GetPageResponse) => {
+    api.getPage(pagination.currentPage, pagination.perPage).then((res: GetPageResponse) => {
       setPageData(sortAssets(res.data.data, assetsSort));
-      setPagintaionToLocalStorage(res.data.pagination);
+      setPaginationToLocalStorage(res.data.pagination);
     });
   }, [api, pagination]);
 
@@ -68,11 +74,25 @@ export const Assets = (props: TabsProps) => {
   }, [assetsSort]);
 
   const onNextClick = () => {
+    setCurrentPage(pagination.currentPage + 1);
+  };
+
+  const onPreviousClick = () => {
+    setCurrentPage(pagination.currentPage - 1);
+  };
+
+  const setCurrentPage = (currentPage: number) => {
     const currentPagination = {
-      ...getPaginationFromLocalStorage(),
-      currentPage: pagination.currentPage + 1
+      ...getPagination(isViewAll),
+      currentPage
     };
     setPagination(currentPagination);
+  };
+
+  const onViewAllOrBackToTopClick = () => {
+    localStorage.removeItem('pagination');
+    setIsViewAll(!isViewAll);
+    setPagination(getPagination(!isViewAll));
   };
 
   const setAssetsSortForColumn =
@@ -114,10 +134,23 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            <ButtonArrow onClick={onNextClick} direction="right">
-              Next 100
-            </ButtonArrow>
-            <ButtonTertiary>View all</ButtonTertiary>
+            { isViewAll
+              ? <ButtonArrow onClick={onViewAllOrBackToTopClick} direction="left">
+                Back to Top 100
+              </ButtonArrow>
+              : <>
+                { pagination.currentPage > 1
+                  ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                    Previous 100
+                  </ButtonArrow>
+                  : null }
+                { pagination.currentPage < pagination.lastPage
+                  ? <ButtonArrow onClick={onNextClick} direction="right">
+                    Next 100
+                  </ButtonArrow>
+                  : null }
+                <ButtonTertiary onClick={onViewAllOrBackToTopClick}>View all</ButtonTertiary>
+              </>}
           </TableButtons>
         </ButtonsRow>
       </Container>
