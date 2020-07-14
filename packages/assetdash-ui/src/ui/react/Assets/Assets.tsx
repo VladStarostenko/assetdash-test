@@ -10,7 +10,8 @@ import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
-import {AssetResponse} from '../../../core/models/assetResponse';
+import {GetPageResponse} from '../../../core/models/getPageResponse';
+import {Pagination} from '../../../core/models/pagination';
 
 type AssetsSort = {
   column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
@@ -41,19 +42,38 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   }
 }
 
+function getPaginationFromLocalStorage(): Pagination {
+  return JSON.parse(localStorage.getItem('pagination') || '{"currentPage": 1}');
+}
+
+function setPagintaionToLocalStorage(pagination: Pagination): void {
+  localStorage.setItem('pagination', JSON.stringify(pagination));
+}
+
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
-  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'none', order: 'desc'});
+  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
+  const [pagination, setPagination] = useState<Pagination>(getPaginationFromLocalStorage());
+
   const {api} = useServices();
   useEffect(() => {
-    api.getPage(1).then((res: AssetResponse) => {
-      setPageData(sortAssets(res.data, {column: 'rank', order: 'asc'}));
+    api.getPage(pagination.currentPage).then((res: GetPageResponse) => {
+      setPageData(sortAssets(res.data.data, assetsSort));
+      setPagintaionToLocalStorage(res.data.pagination);
     });
-  }, [api]);
+  }, [api, pagination]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
+
+  const onNextClick = () => {
+    const currentPagination = {
+      ...getPaginationFromLocalStorage(),
+      currentPage: pagination.currentPage + 1
+    };
+    setPagination(currentPagination);
+  };
 
   const setAssetsSortForColumn =
     (column: 'name' | 'rank' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange') => {
@@ -94,7 +114,7 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            <ButtonArrow direction="right">
+            <ButtonArrow onClick={onNextClick} direction="right">
               Next 100
             </ButtonArrow>
             <ButtonTertiary>View all</ButtonTertiary>

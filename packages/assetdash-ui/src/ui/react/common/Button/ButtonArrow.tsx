@@ -8,14 +8,15 @@ import {ThemeContext} from '../../Theme/ThemeContextProvider';
 interface ButtonArrowProps {
   children: string;
   direction: 'right' | 'left';
+  onClick(): void;
 }
 
-export const ButtonArrow = ({children, direction}: ButtonArrowProps) => {
+export const ButtonArrow = ({children, direction, onClick}: ButtonArrowProps) => {
   const [theme] = useContext(ThemeContext);
   const arrowIcon = theme === 'light' ? arrowDarkIcon : arrowLightIcon;
 
   return (
-    <Button>
+    <Button onClick={onClick}>
       {direction === 'left' && <ArrowLeftIcon src={arrowIcon} alt="arrow"/>}
       {children}
       {direction === 'right' && <ArrowRightIcon src={arrowIcon} alt="arrow"/>}

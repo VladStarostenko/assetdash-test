@@ -11,6 +11,6 @@ export class Api {
   };
 
   getPage(currentPage: number, perPage = 100) {
-    return this.instance.get('assets/page/' + currentPage + '/' + perPage);
+    return this.instance.get('assets?currentPage=' + currentPage + '&perPage=' + perPage);
   };
 }
