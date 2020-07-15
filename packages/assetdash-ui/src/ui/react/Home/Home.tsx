@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Screen, ScreenContent} from '../common/Screen';
 import {Container} from '../common/Container';
 import {PageTitle} from '../common/Text/PageTitle';
@@ -8,7 +9,9 @@ import {Assets} from '../Assets/Assets';
 import {WatchList} from '../WatchList/WatchList';
 import {PageSubtitle} from '../common/Text/PageSubtitle';
 
-export const Home = () => {
+type Props = RouteComponentProps<{ currentPage: string }>;
+
+const Home = ({match: {params: {currentPage}}}: Props) => {
   const [tab, setTab] = useState('Assets');
   const tabs = ['Assets', 'Watchlist'];
 
@@ -26,6 +29,7 @@ export const Home = () => {
             activeTab={tab}
             setTab={setTab}
             tabs={tabs}
+            currentPage={currentPage || '1'}
           />
         }
         {tab === 'Watchlist' &&
@@ -39,3 +43,5 @@ export const Home = () => {
     </Screen>
   );
 };
+
+export default withRouter(Home);
