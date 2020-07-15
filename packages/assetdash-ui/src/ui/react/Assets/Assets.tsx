@@ -12,7 +12,6 @@ import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
-import {Pagination} from '../../../core/models/pagination';
 
 type AssetsSort = {
   column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
@@ -43,30 +42,24 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   }
 }
 
-const getDefaultPagination = (currentPage: string) => {
-  if (currentPage === 'all') {
-    return {currentPage: 1, perPage: 200, lastPage: 1};
-  } else {
-    return {currentPage: Number(currentPage), perPage: 100, lastPage: Number(currentPage) + 1};
-  }
-};
-
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
-  const [pagination, setPagination] = useState<Pagination>(getDefaultPagination(props.currentPage || '1'));
+  const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
+  const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 2);
+  const [perPage, setPerPage] = useState<number>(100);
 
   const {api} = useServices();
   useEffect(() => {
-    api.getPage(pagination.currentPage, pagination.perPage).then((res: GetPageResponse) => {
-      if (pagination.currentPage > 1 && pagination.perPage === 200) {
+    api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
+      if (currentPage > 1 && perPage === 200) {
         setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
       } else {
         setPageData(sortAssets(res.data.data, assetsSort));
       }
-      setPagination(res.data.pagination);
+      setLastPage(res.data.pagination.lastPage);
     });
-  }, [api, pagination.currentPage, pagination.perPage]);
+  }, [api, currentPage, perPage]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
@@ -78,44 +71,32 @@ export const Assets = (props: TabsProps) => {
   };
 
   const routeForNextAndPrevious = (newPage: number) => {
-    setPagination({
-      ...pagination,
-      currentPage: newPage
-    });
+    setCurrentPage(newPage);
     newPage === 1 ? routeChange('/') : routeChange(`/${newPage}`);
   };
 
   const onNextClick = () => {
-    routeForNextAndPrevious(pagination.currentPage + 1);
+    routeForNextAndPrevious(currentPage + 1);
   };
 
   const onPreviousClick = () => {
-    routeForNextAndPrevious(pagination.currentPage - 1);
+    routeForNextAndPrevious(currentPage - 1);
   };
 
   const onBackToTopClick = () => {
-    setPagination({
-      ...pagination,
-      currentPage: 1,
-      perPage: 100
-    });
+    setCurrentPage(1);
+    setPerPage(100);
     routeChange('/');
   };
 
   const onViewAllClick = () => {
-    setPagination({
-      ...pagination,
-      currentPage: 1,
-      perPage: 200
-    });
+    setCurrentPage(1);
+    setPerPage(200);
     routeChange('/all');
   };
 
   const onLoadMoreCLick = () => {
-    setPagination({
-      ...pagination,
-      currentPage: pagination.currentPage + 1
-    });
+    setCurrentPage(currentPage + 1);
   };
 
   const setAssetsSortForColumn =
@@ -157,17 +138,17 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            { pagination.perPage > 100
+            { perPage > 100
               ? <ButtonArrow onClick={onBackToTopClick} direction="left">
                 Back to Top 100
               </ButtonArrow>
               : <>
-                { pagination.currentPage > 1
+                { currentPage > 1
                   ? <ButtonArrow onClick={onPreviousClick} direction="left">
                     Previous 100
                   </ButtonArrow>
                   : null }
-                { pagination.currentPage < pagination.lastPage
+                { currentPage < lastPage
                   ? <ButtonArrow onClick={onNextClick} direction="right">
                     Next 100
                   </ButtonArrow>
@@ -221,7 +202,7 @@ export const Assets = (props: TabsProps) => {
           </tbody>
         </Table>
       </AssetsView>
-      {pagination.perPage > 100
+      { perPage > 100
         ? <Container>
           <TableButtons>
             <ButtonTertiary onClick={onLoadMoreCLick}>
@@ -229,7 +210,7 @@ export const Assets = (props: TabsProps) => {
             </ButtonTertiary>
           </TableButtons>
         </Container>
-        : null}
+        : null }
     </>
   );
 };
