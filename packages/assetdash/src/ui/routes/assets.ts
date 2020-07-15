@@ -6,10 +6,6 @@ import {asNumber, asObject} from '@restless/sanitizers';
 export const assets = ({assetRepository}: Services) => {
   const router = expressRouter();
 
-  // router.get('/', asyncHandler(
-  //   async () => responseOf(await assetRepository.findAll())
-  // ));
-
   router.get('/:id', asyncHandler(
     sanitize({
       id: asNumber
@@ -24,7 +20,9 @@ export const assets = ({assetRepository}: Services) => {
         perPage: asNumber
       })
     }),
-    async ({query}) => responseOf(await assetRepository.findPage(query.currentPage, query.perPage))
+    async ({query}) => responseOf(query.perPage && query.currentPage
+      ? await assetRepository.findPage(query.currentPage, query.perPage)
+      : await assetRepository.findAll())
   ));
 
   return router;
