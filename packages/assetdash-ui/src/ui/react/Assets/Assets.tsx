@@ -59,7 +59,11 @@ export const Assets = (props: TabsProps) => {
   const {api} = useServices();
   useEffect(() => {
     api.getPage(pagination.currentPage, pagination.perPage).then((res: GetPageResponse) => {
-      setPageData(sortAssets(res.data.data, assetsSort));
+      if (pagination.currentPage > 1 && pagination.perPage === 200) {
+        setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+      } else {
+        setPageData(sortAssets(res.data.data, assetsSort));
+      }
       setPagination(res.data.pagination);
     });
   }, [api, pagination.currentPage, pagination.perPage]);
@@ -92,6 +96,7 @@ export const Assets = (props: TabsProps) => {
   const onBackToTopClick = () => {
     setPagination({
       ...pagination,
+      currentPage: 1,
       perPage: 100
     });
     routeChange('/');
@@ -104,6 +109,13 @@ export const Assets = (props: TabsProps) => {
       perPage: 200
     });
     routeChange('/all');
+  };
+
+  const onLoadMoreCLick = () => {
+    setPagination({
+      ...pagination,
+      currentPage: pagination.currentPage + 1
+    });
   };
 
   const setAssetsSortForColumn =
@@ -209,6 +221,15 @@ export const Assets = (props: TabsProps) => {
           </tbody>
         </Table>
       </AssetsView>
+      {pagination.perPage > 100
+        ? <Container>
+          <TableButtons>
+            <ButtonTertiary onClick={onLoadMoreCLick}>
+              Load More
+            </ButtonTertiary>
+          </TableButtons>
+        </Container>
+        : null}
     </>
   );
 };
@@ -224,6 +245,7 @@ const AssetsView = styled.div`
 const TableButtons = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 
   @media(max-width: 600px) {
     display: none;
