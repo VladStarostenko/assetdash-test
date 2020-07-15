@@ -29,7 +29,7 @@ const Home = ({match: {params: {currentPage}}}: Props) => {
             activeTab={tab}
             setTab={setTab}
             tabs={tabs}
-            currentPage={currentPage || '1'}
+            currentPage={currentPage}
           />
         }
         {tab === 'Watchlist' &&

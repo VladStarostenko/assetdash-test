@@ -43,14 +43,18 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   }
 }
 
-const getDefaultPagination = (currentPage: number) => {
-  return {currentPage, perPage: 100, lastPage: currentPage + 1};
+const getDefaultPagination = (currentPage: string) => {
+  if (currentPage === 'all') {
+    return {currentPage: 1, perPage: 200, lastPage: 1};
+  } else {
+    return {currentPage: Number(currentPage), perPage: 100, lastPage: Number(currentPage) + 1};
+  }
 };
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
-  const [pagination, setPagination] = useState<Pagination>(getDefaultPagination(Number(props.currentPage)));
+  const [pagination, setPagination] = useState<Pagination>(getDefaultPagination(props.currentPage || '1'));
 
   const {api} = useServices();
   useEffect(() => {
@@ -58,30 +62,48 @@ export const Assets = (props: TabsProps) => {
       setPageData(sortAssets(res.data.data, assetsSort));
       setPagination(res.data.pagination);
     });
-  }, [api, pagination.currentPage]);
+  }, [api, pagination.currentPage, pagination.perPage]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
 
+  const history = useHistory();
+  const routeChange = (path: string) => {
+    history.push(path);
+  };
+
+  const routeForNextAndPrevious = (newPage: number) => {
+    setPagination({
+      ...pagination,
+      currentPage: newPage
+    });
+    newPage === 1 ? routeChange('/') : routeChange(`/${newPage}`);
+  };
+
   const onNextClick = () => {
-    routeChange(pagination.currentPage + 1);
+    routeForNextAndPrevious(pagination.currentPage + 1);
   };
 
   const onPreviousClick = () => {
-    routeChange(pagination.currentPage - 1);
+    routeForNextAndPrevious(pagination.currentPage - 1);
   };
 
-  const history = useHistory();
-
-  const routeChange = (newPage: number) => {
-    const path = `/${newPage}`;
-    const currentPagination = {
+  const onBackToTopClick = () => {
+    setPagination({
       ...pagination,
-      currentPage: newPage
-    };
-    setPagination(currentPagination);
-    history.push(path);
+      perPage: 100
+    });
+    routeChange('/');
+  };
+
+  const onViewAllClick = () => {
+    setPagination({
+      ...pagination,
+      currentPage: 1,
+      perPage: 200
+    });
+    routeChange('/all');
   };
 
   const setAssetsSortForColumn =
@@ -123,17 +145,24 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            { pagination.currentPage > 1
-              ? <ButtonArrow onClick={onPreviousClick} direction="left">
+            { pagination.perPage > 100
+              ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+                Back to Top 100
+              </ButtonArrow>
+              : <>
+                { pagination.currentPage > 1
+                  ? <ButtonArrow onClick={onPreviousClick} direction="left">
                     Previous 100
-              </ButtonArrow>
-              : null }
-            { pagination.currentPage < pagination.lastPage
-              ? <ButtonArrow onClick={onNextClick} direction="right">
+                  </ButtonArrow>
+                  : null }
+                { pagination.currentPage < pagination.lastPage
+                  ? <ButtonArrow onClick={onNextClick} direction="right">
                     Next 100
-              </ButtonArrow>
-              : null }
-            <ButtonTertiary>View all</ButtonTertiary>
+                  </ButtonArrow>
+                  : null }
+                <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+              </>
+            }
           </TableButtons>
         </ButtonsRow>
       </Container>
