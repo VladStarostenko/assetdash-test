@@ -1,13 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import searchIcon from '../../../assets/icons/search.svg';
+import {useServices} from '../../hooks/useServices';
 
-export const Search = () => (
-  <SearchWrapper>
-    <SearchInput placeholder="Search asset"/>
-    <SearchButton/>
-  </SearchWrapper>
-);
+export const Search = () => {
+  const {api} = useServices();
+  const onChangeInput = (e: string) => {
+    api.searchAssets(e).then(res => console.log(res));
+  };
+
+  return (
+    <SearchWrapper>
+      <SearchInput onChange={e => onChangeInput(e.target.value)} placeholder="Search asset"/>
+      <SearchButton/>
+    </SearchWrapper>
+  );
+};
 
 const SearchWrapper = styled.div`
   position: relative;
