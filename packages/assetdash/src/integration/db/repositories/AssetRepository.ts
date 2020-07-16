@@ -67,4 +67,12 @@ export class AssetRepository {
       .select('ticker')
       .where('type', type);
   }
+
+  async findByString(string: string): Promise<Asset[]> {
+    return this.db('assets')
+      .orderBy('currentMarketcap', 'desc')
+      .select()
+      .where('name', 'like', `%${string}%`)
+      .orWhere('ticker', 'like', `%${string}%`);
+  }
 }

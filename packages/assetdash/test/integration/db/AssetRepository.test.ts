@@ -23,7 +23,15 @@ describe('Asset Repository', () => {
     imageUrl: 'btc.img',
     type: 'Cryptocurrency',
     currentMarketcap: 20
-  }];
+  }, {
+    id: 3,
+    ticker: 'BCH',
+    name: 'Bitcoin Cash',
+    imageUrl: 'bch.img',
+    type: 'Cryptocurrency',
+    currentMarketcap: 5
+  }
+  ];
 
   beforeEach(async () => {
     await clearDatabase(db);
@@ -31,7 +39,7 @@ describe('Asset Repository', () => {
   });
 
   describe('Update', () => {
-    it('Update price', async () => {
+    it('updates price', async () => {
       await assetRepository.updatePrice({
         ticker: 'ETH',
         price: 10.54,
@@ -43,14 +51,14 @@ describe('Asset Repository', () => {
   });
 
   describe('getTickers', () => {
-    it('get cryptocurrency tickers', async () => {
+    it('gets cryptocurrency tickers', async () => {
       expect(await assetRepository.getTickers('Cryptocurrency'))
-        .to.deep.eq([{ticker: 'ETH'}, {ticker: 'BTC'}]);
+        .to.deep.eq([{ticker: 'ETH'}, {ticker: 'BTC'}, {ticker: 'BCH'}]);
     });
   });
 
   describe('findPage', () => {
-    it('return selected page of assets', async () => {
+    it('returns selected page of assets', async () => {
       expect(await assetRepository.findPage(2, 1)).to.deep.eq({
         data: [{
           currentChange: 0,
@@ -69,12 +77,45 @@ describe('Asset Repository', () => {
         pagination: {
           currentPage: 2,
           from: 1,
-          lastPage: 2,
+          lastPage: 3,
           perPage: 1,
           to: 2,
-          total: 2
+          total: 3
         }
       });
+    });
+  });
+
+  describe('findByString', () => {
+    it('returns assets with string in name or ticker', async () => {
+      expect(await assetRepository.findByString('h'))
+        .to.deep.eq([
+          {
+            currentChange: 0,
+            currentMarketcap: 10,
+            currentPrice: 0,
+            dashDaily: 0,
+            dashMonthly: 0,
+            dashWeekly: 0,
+            id: 1,
+            imageUrl: 'eth.img',
+            name: 'Ethereum',
+            ticker: 'ETH',
+            type: 'Cryptocurrency'
+          }, {
+            currentChange: 0,
+            currentMarketcap: 5,
+            currentPrice: 0,
+            dashDaily: 0,
+            dashMonthly: 0,
+            dashWeekly: 0,
+            id: 3,
+            imageUrl: 'bch.img',
+            name: 'Bitcoin Cash',
+            ticker: 'BCH',
+            type: 'Cryptocurrency'
+          }]
+        );
     });
   });
 });
