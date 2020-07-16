@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import {Table, Th} from '../common/Table/Table';
 import {useServices} from '../hooks/useServices';
@@ -10,7 +11,7 @@ import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
-import {AssetResponse} from '../../../core/models/assetResponse';
+import {GetPageResponse} from '../../../core/models/getPageResponse';
 
 type AssetsSort = {
   column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
@@ -43,17 +44,60 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
 
 export const Assets = (props: TabsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
-  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'none', order: 'desc'});
+  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
+  const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
+  const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 2);
+  const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
+
   const {api} = useServices();
   useEffect(() => {
-    api.getPage(1).then((res: AssetResponse) => {
-      setPageData(sortAssets(res.data, {column: 'rank', order: 'asc'}));
+    api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
+      if (currentPage > 1 && perPage === 200) {
+        setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+      } else {
+        setPageData(sortAssets(res.data.data, assetsSort));
+      }
+      setLastPage(res.data.pagination.lastPage);
     });
-  }, [api]);
+  }, [api, currentPage, perPage]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
+
+  const history = useHistory();
+  const routeChange = (path: string) => {
+    history.push(path);
+  };
+
+  const routeForNextAndPrevious = (newPage: number) => {
+    setCurrentPage(newPage);
+    newPage === 1 ? routeChange('/') : routeChange(`/${newPage}`);
+  };
+
+  const onNextClick = () => {
+    routeForNextAndPrevious(currentPage + 1);
+  };
+
+  const onPreviousClick = () => {
+    routeForNextAndPrevious(currentPage - 1);
+  };
+
+  const onBackToTopClick = () => {
+    setCurrentPage(1);
+    setPerPage(100);
+    routeChange('/');
+  };
+
+  const onViewAllClick = () => {
+    setCurrentPage(1);
+    setPerPage(200);
+    routeChange('/all');
+  };
+
+  const onLoadMoreCLick = () => {
+    setCurrentPage(currentPage + 1);
+  };
 
   const setAssetsSortForColumn =
     (column: 'name' | 'rank' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange') => {
@@ -94,10 +138,24 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            <ButtonArrow direction="right">
-              Next 100
-            </ButtonArrow>
-            <ButtonTertiary>View all</ButtonTertiary>
+            { perPage > 100
+              ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+                Back to Top 100
+              </ButtonArrow>
+              : <>
+                { currentPage > 1
+                  ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                    Previous 100
+                  </ButtonArrow>
+                  : null }
+                { currentPage < lastPage
+                  ? <ButtonArrow onClick={onNextClick} direction="right">
+                    Next 100
+                  </ButtonArrow>
+                  : null }
+                <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+              </>
+            }
           </TableButtons>
         </ButtonsRow>
       </Container>
@@ -144,6 +202,15 @@ export const Assets = (props: TabsProps) => {
           </tbody>
         </Table>
       </AssetsView>
+      { props.path === '/all'
+        ? <Container>
+          <TableButtons>
+            <ButtonTertiary onClick={onLoadMoreCLick}>
+              Load More
+            </ButtonTertiary>
+          </TableButtons>
+        </Container>
+        : null }
     </>
   );
 };
@@ -159,6 +226,7 @@ const AssetsView = styled.div`
 const TableButtons = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 
   @media(max-width: 600px) {
     display: none;

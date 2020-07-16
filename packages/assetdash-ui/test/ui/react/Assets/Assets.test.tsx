@@ -22,57 +22,65 @@ function createTestServices(): Services {
 describe('Assets', () => {
   beforeEach(() => {
     nock('http://127.0.0.1/')
-      .get('/assets/page/1/100')
-      .reply(200, [
-        {
-          id: 210,
-          ticker: 'MSFT',
-          name: 'Microsoft Corporation',
-          imageUrl: 'https://storage.googleapis.com/iex/api/logos/MSFT.png',
-          currentPrice: 214.32,
-          currentMarketcap: 1625282860800,
-          currentChange: 0.7000000000000001,
-          type: 'Stock',
-          dashDaily: 0,
-          dashWeekly: 0,
-          dashMonthly: 0,
-          rank: 2
-        },
-        {
-          id: 1093,
-          ticker: 'AAPL',
-          name: 'Apple Inc.',
-          imageUrl: 'https://storage.googleapis.com/iex/api/logos/AAPL.png',
-          currentPrice: 382.73,
-          currentMarketcap: 1658881948200,
-          currentChange: 0.357,
-          type: 'Stock',
-          dashDaily: 0,
-          dashWeekly: 0,
-          dashMonthly: 0,
-          rank: 1
-        }, {
-          id: 160,
-          ticker: 'AMZN',
-          name: 'Amazon.com, Inc.',
-          imageUrl: 'https://storage.googleapis.com/iex/api/logos/AMZN.png',
-          currentPrice: 3182.63,
-          currentMarketcap: 1587419460880,
-          currentChange: 3.295,
-          type: 'Stock',
-          dashDaily: 0,
-          dashWeekly: 0,
-          dashMonthly: 0,
-          rank: 3
-        }
-      ]);
+      .get('/assets?currentPage=1&perPage=100')
+      .reply(200, {
+        data: [
+          {
+            id: 210,
+            ticker: 'MSFT',
+            name: 'Microsoft Corporation',
+            imageUrl: 'https://storage.googleapis.com/iex/api/logos/MSFT.png',
+            currentPrice: 214.32,
+            currentMarketcap: 1625282860800,
+            currentChange: 0.7000000000000001,
+            type: 'Stock',
+            dashDaily: 0,
+            dashWeekly: 0,
+            dashMonthly: 0,
+            rank: 2
+          },
+          {
+            id: 1093,
+            ticker: 'AAPL',
+            name: 'Apple Inc.',
+            imageUrl: 'https://storage.googleapis.com/iex/api/logos/AAPL.png',
+            currentPrice: 382.73,
+            currentMarketcap: 1658881948200,
+            currentChange: 0.357,
+            type: 'Stock',
+            dashDaily: 0,
+            dashWeekly: 0,
+            dashMonthly: 0,
+            rank: 1
+          }, {
+            id: 160,
+            ticker: 'AMZN',
+            name: 'Amazon.com, Inc.',
+            imageUrl: 'https://storage.googleapis.com/iex/api/logos/AMZN.png',
+            currentPrice: 3182.63,
+            currentMarketcap: 1587419460880,
+            currentChange: 3.295,
+            type: 'Stock',
+            dashDaily: 0,
+            dashWeekly: 0,
+            dashMonthly: 0,
+            rank: 3
+          }],
+        pagination: {
+          total: 3,
+          lastPage: 1,
+          perPage: 100,
+          currentPage: 1,
+          from: 0,
+          to: 3}
+      });
   });
 
   function renderAssets() {
     return render(
       <ServiceContext.Provider value={createTestServices()}><ThemeContextProvider>
         <Assets activeTab='Assets' setTab={() => { /**/
-        }} tabs={['Assets']}/>
+        }} tabs={['Assets']} currentPage='1'/>
       </ThemeContextProvider></ServiceContext.Provider>);
   }
 
@@ -89,7 +97,6 @@ describe('Assets', () => {
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('rank-column-header');
-    fireEvent.click(node);
     fireEvent.click(node);
 
     const names = await findAllByTestId('asset-row-name');

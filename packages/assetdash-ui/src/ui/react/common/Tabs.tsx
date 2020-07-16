@@ -5,6 +5,8 @@ export interface TabsProps {
   activeTab: string;
   tabs: Array<string>;
   setTab: (tab: string) => void;
+  currentPage?: string;
+  path?: string;
 }
 
 export const Tabs = ({activeTab, setTab, tabs}: TabsProps) => (

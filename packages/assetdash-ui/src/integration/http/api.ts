@@ -10,7 +10,7 @@ export class Api {
     return this.instance.get('assets');
   };
 
-  getPage(currentPage: number, perPage = 100) {
-    return this.instance.get('assets/page/' + currentPage + '/' + perPage);
+  getPage(currentPage: number, perPage: number) {
+    return this.instance.get('assets', {params: {currentPage, perPage}});
   };
 }

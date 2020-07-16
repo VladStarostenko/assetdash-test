@@ -51,8 +51,8 @@ describe('Asset Repository', () => {
 
   describe('findPage', () => {
     it('return selected page of assets', async () => {
-      expect(await assetRepository.findPage(2, 1)).to.deep.eq(
-        [{
+      expect(await assetRepository.findPage(2, 1)).to.deep.eq({
+        data: [{
           currentChange: 0,
           currentMarketcap: 10,
           currentPrice: 0,
@@ -65,8 +65,16 @@ describe('Asset Repository', () => {
           name: 'Ethereum',
           ticker: 'ETH',
           type: 'Cryptocurrency'
+        }],
+        pagination: {
+          currentPage: 2,
+          from: 1,
+          lastPage: 2,
+          perPage: 1,
+          to: 2,
+          total: 2
         }
-        ]);
+      });
     });
   });
 });

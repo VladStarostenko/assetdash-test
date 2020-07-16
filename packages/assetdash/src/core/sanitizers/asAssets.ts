@@ -11,8 +11,7 @@ export const asAsset = asObject({
   type: asString,
   dash_daily: asNumber,
   dash_weekly: asNumber,
-  dash_monthly: asNumber,
-  dash_quarterly: asNumber
+  dash_monthly: asNumber
 });
 
 export const asAssets = asObject({
