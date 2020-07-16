@@ -44,7 +44,8 @@ describe('Asset Repository', () => {
         ticker: 'ETH',
         price: 10.54,
         marketcap: 1000,
-        change: 0.2
+        change: 0.2,
+        type: ['Cryptocurrency']
       });
       expect((await assetRepository.findById(1)).currentPrice).to.deep.eq(10.54);
     });

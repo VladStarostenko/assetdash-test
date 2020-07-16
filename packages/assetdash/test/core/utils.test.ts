@@ -9,7 +9,8 @@ describe('Utils', () => {
         ticker: 'AAPL',
         price: 381.37,
         marketcap: 1652987245800,
-        change: 2.329
+        change: 2.329,
+        type: ['Stock', 'ETF']
       });
   });
 
@@ -19,7 +20,8 @@ describe('Utils', () => {
         ticker: 'ETH',
         price: 246.853296483,
         marketcap: 27570058643.874947,
-        change: 1.36279
+        change: 1.36279,
+        type: ['Cryptocurrency']
       });
   });
 });

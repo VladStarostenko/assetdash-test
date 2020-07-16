@@ -3,4 +3,5 @@ export interface AssetPricingData {
   price: number;
   marketcap: number;
   change: number;
+  type: string[];
 }
