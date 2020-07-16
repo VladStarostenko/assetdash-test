@@ -72,7 +72,7 @@ export class AssetRepository {
     return this.db('assets')
       .orderBy('currentMarketcap', 'desc')
       .select()
-      .where('name', 'like', `%${string}%`)
-      .orWhere('ticker', 'like', `%${string}%`);
+      .where('name', 'ilike', `%${string}%`)
+      .orWhere('ticker', 'ilike', `%${string}%`);
   }
 }
