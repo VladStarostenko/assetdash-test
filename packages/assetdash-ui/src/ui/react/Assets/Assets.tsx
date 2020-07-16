@@ -47,7 +47,7 @@ export const Assets = (props: TabsProps) => {
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 2);
-  const [perPage, setPerPage] = useState<number>(100);
+  const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
 
   const {api} = useServices();
   useEffect(() => {
@@ -202,7 +202,7 @@ export const Assets = (props: TabsProps) => {
           </tbody>
         </Table>
       </AssetsView>
-      { perPage > 100
+      { props.path === '/all'
         ? <Container>
           <TableButtons>
             <ButtonTertiary onClick={onLoadMoreCLick}>

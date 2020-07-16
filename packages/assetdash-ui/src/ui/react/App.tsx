@@ -11,6 +11,7 @@ const App: React.FC = () => {
       <Router>
         <Switch>
           <Route exact path="/" component={Home}/>
+          <Route exact path="/all" component={Home}/>
           <Route exact path="/:currentPage" component={Home}/>
         </Switch>
       </Router>

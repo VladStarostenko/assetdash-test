@@ -11,7 +11,7 @@ import {PageSubtitle} from '../common/Text/PageSubtitle';
 
 type Props = RouteComponentProps<{ currentPage: string }>;
 
-const Home = ({match: {params: {currentPage}}}: Props) => {
+const Home = ({match}: Props) => {
   const [tab, setTab] = useState('Assets');
   const tabs = ['Assets', 'Watchlist'];
 
@@ -29,7 +29,8 @@ const Home = ({match: {params: {currentPage}}}: Props) => {
             activeTab={tab}
             setTab={setTab}
             tabs={tabs}
-            currentPage={currentPage}
+            currentPage={match.params.currentPage}
+            path={match.path}
           />
         }
         {tab === 'Watchlist' &&
