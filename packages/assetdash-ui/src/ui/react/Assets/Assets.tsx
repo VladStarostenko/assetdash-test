@@ -5,7 +5,7 @@ import {Table, Th} from '../common/Table/Table';
 import {useServices} from '../hooks/useServices';
 import {AssetItem} from './AssetItem';
 import {ButtonTertiary} from '../common/Button/ButtonTertiary';
-import {Tabs, AssetsProps} from '../common/Tabs';
+import {Tabs} from '../common/Tabs';
 import {Container} from '../common/Container';
 import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
@@ -40,6 +40,16 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   } else {
     return sort(assets, compareByStringOrNumber(assetsSort.column), assetsSort.order);
   }
+}
+
+export interface AssetsProps {
+  activeTab: string;
+  tabs: Array<string>;
+  setTab: (tab: string) => void;
+  currentPage?: string;
+  path?: string;
+  searchedData?: Asset[];
+  isSearchLineEmpty: boolean;
 }
 
 export const Assets = (props: AssetsProps) => {
@@ -140,7 +150,7 @@ export const Assets = (props: AssetsProps) => {
     <>
       <Container>
         <ButtonsRow>
-          <Tabs {...props}/>
+          <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
           <TableButtons>
             { !props.searchedData
               ? <>

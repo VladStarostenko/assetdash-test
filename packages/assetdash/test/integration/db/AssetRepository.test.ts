@@ -89,7 +89,7 @@ describe('Asset Repository', () => {
 
   describe('findByString', () => {
     it('returns assets with string in name or ticker', async () => {
-      expect(await assetRepository.findByString('h'))
+      expect(await assetRepository.findByNameOrTickerPart('h'))
         .to.deep.eq([
           {
             currentChange: 0,

@@ -18,14 +18,14 @@ export const assets = ({assetRepository}: Services) => {
       query: asObject({
         currentPage: asOptional(asNumber),
         perPage: asOptional(asNumber),
-        string: asOptional(asString)
+        nameOrTickerPart: asOptional(asString)
       })
     }),
     async ({query}) => {
       if (query.currentPage && query.perPage) {
         return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
-      } else if (query.string) {
-        return responseOf(await assetRepository.findByString(query.string));
+      } else if (query.nameOrTickerPart) {
+        return responseOf(await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart));
       } else {
         return responseOf(await assetRepository.findAll());
       }

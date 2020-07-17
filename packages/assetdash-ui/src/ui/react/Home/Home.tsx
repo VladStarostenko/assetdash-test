@@ -43,7 +43,6 @@ const Home = ({match}: Props) => {
             activeTab={tab}
             setTab={setTab}
             tabs={tabs}
-            isSearchLineEmpty={isSearchLineEmpty}
           />
         }
       </ScreenContent>
