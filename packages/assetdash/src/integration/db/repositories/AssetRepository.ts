@@ -9,39 +9,40 @@ import {AssetTicker} from '../../../core/models/assetTicker';
 export class AssetRepository {
   constructor(private db: Knex) {}
 
-  async insertAsset(asset: object) {
+  async insertAsset(asset: Asset) {
     return this.db('assets').insert(asset);
   }
 
-  async insertAssets(assets: object[]) {
+  async insertAssets(assets: Asset[]) {
     return this.db('assets').insert(assets);
   }
 
   async findAll(): Promise<Asset[]> {
-    return this.db('assets').select();
+    return this.db('assets').orderBy('currentMarketcap', 'desc').select();
   }
 
   async findPage(currentPage: number, perPage: number) {
-    const paginator = await this.db('assets').orderBy('currentMarketcap', 'desc')
+    return this.db('assets')
+      .join('ranks', 'assets.id', 'ranks.assetId')
+      .select('assets.*', 'ranks.position as rank')
+      .orderBy('currentMarketcap', 'desc')
       .paginate({perPage, currentPage, isLengthAware: true});
-    const dataWithRanks = this.addRanks(paginator.data, currentPage, perPage);
-    return {
-      ...paginator,
-      data: dataWithRanks
-    };
-  }
-
-  private addRanks(data: Asset[], currentPage: number, perPage: number) {
-    return data.map((asset, index) => ({
-      ...asset,
-      rank: (index + 1) + (currentPage - 1) * perPage
-    }));
   }
 
   async findById(id: number): Promise<Asset> {
     const asset = this.db('assets').where({
       id
     }).first();
+    ensure(asset !== undefined, ResourceNotFound, 'asset', id);
+    return asset;
+  }
+
+  async findByIdWithRank(id: number, date: Date): Promise<Asset> {
+    const asset = this.db('assets')
+      .join('ranks', 'assets.id', 'ranks.assetId')
+      .select('assets.*', 'ranks.position as rank')
+      .where({assetId: id})
+      .andWhere({date: date}).first();
     ensure(asset !== undefined, ResourceNotFound, 'asset', id);
     return asset;
   }
@@ -70,12 +71,6 @@ export class AssetRepository {
       });
   }
 
-  async updatePrices(assetPrices: AssetPricingData[]) {
-    for (const assetPrice of assetPrices) {
-      await this.updatePrice(assetPrice);
-    }
-  }
-
   async getTickers(type: AssetType): Promise<AssetTicker[]> {
     return this.db('assets')
       .select('ticker')
@@ -85,7 +80,8 @@ export class AssetRepository {
   async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
     return this.db('assets')
       .orderBy('currentMarketcap', 'desc')
-      .select()
+      .join('ranks', 'assets.id', 'ranks.assetId')
+      .select('assets.*', 'ranks.position as rank')
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
   }

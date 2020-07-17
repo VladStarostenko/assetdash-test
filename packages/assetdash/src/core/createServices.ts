@@ -6,6 +6,7 @@ import {IexCloudService} from '../integration/http/IexCloudService';
 import pg from 'pg';
 import {attachPaginate} from 'knex-paginate';
 import {TagRepository} from '../integration/db/repositories/TagRepository';
+import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 
 const PG_DECIMAL_OID = 1700;
 
@@ -20,9 +21,10 @@ export const initServices = (db, config: Config) => ({
   db: db,
   assetRepository: new AssetRepository(db),
   tagRepository: new TagRepository(db),
-  coinmarketCapService: new CoinmarketCapService(),
-  iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
-});
+  ranksRepository: new RanksRepository(db),
+    coinmarketCapService: new CoinmarketCapService(),
+    iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
+  });
 
 export const createServices = (config: Config) => {
   return initServices(createDb(config), config);

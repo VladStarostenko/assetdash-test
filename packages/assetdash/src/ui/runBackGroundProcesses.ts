@@ -2,8 +2,12 @@ import {createServices} from '../core/createServices';
 import {config} from '../config/config';
 import {PricingDataUpdater} from '../app/PricingDataUpdater';
 
-const {iexCloudService, coinmarketCapService, assetRepository} = createServices(config);
-const pricingDataUpdater = new PricingDataUpdater(iexCloudService, coinmarketCapService, assetRepository);
+const {iexCloudService, coinmarketCapService, assetRepository, ranksRepository} = createServices(config);
+const pricingDataUpdater = new PricingDataUpdater(
+  iexCloudService,
+  coinmarketCapService,
+  assetRepository,
+  ranksRepository);
 
 const run = async () => {
   const cryptoTickers = await assetRepository.getTickers('Cryptocurrency');
