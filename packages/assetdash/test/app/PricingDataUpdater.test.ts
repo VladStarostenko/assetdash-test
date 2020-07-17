@@ -60,12 +60,10 @@ describe('PricingDataUpdater', () => {
       }]);
 
       await ranksRepository.insertRanks([{
-        id: 1,
         assetId: 1,
         position: 2,
         date: new Date(new Date().setUTCHours(0, 0, 0, 0) - 86400000)
       }, {
-        id: 2,
         assetId: 2,
         position: 1,
         date: new Date(new Date().setUTCHours(0, 0, 0, 0) - 86400000)
@@ -82,6 +80,7 @@ describe('PricingDataUpdater', () => {
     it('inserts ranks for assets with new date', async () => {
       await pricingDataUpdater.updateRanksForAssets();
       const date = new Date(new Date().setUTCHours(0, 0, 0, 0));
+      console.log(await assetRepository.findByIdWithRank(1, date));
       expect((await assetRepository.findByIdWithRank(1, date)).rank).be.eq(2);
       expect((await assetRepository.findByIdWithRank(2, date)).rank).be.eq(1);
     });

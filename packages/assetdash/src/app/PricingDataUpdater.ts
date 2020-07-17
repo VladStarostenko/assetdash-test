@@ -87,8 +87,8 @@ export class PricingDataUpdater {
         this.ranksRepository.updateRank(rank);
       } else {
         this.ranksRepository.insertRank(rank);
-        this._todayDate = date;
       }
     });
+    this._todayDate = date;
   }
 }
