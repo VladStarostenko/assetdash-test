@@ -1,13 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
 import searchIcon from '../../../assets/icons/search.svg';
+import {useServices} from '../../hooks/useServices';
+import {Asset} from '../../../../core/models/asset';
 
-export const Search = () => (
-  <SearchWrapper>
-    <SearchInput placeholder="Search asset"/>
-    <SearchButton/>
-  </SearchWrapper>
-);
+interface SearchProps {
+  setSearchedData(assets: Asset[]): void;
+  setIsSearchLineEmpty(isSearchLineEmpty: boolean): void;
+}
+
+export const Search = (searchProps: SearchProps) => {
+  const {api} = useServices();
+  const onChangeInput = (e: string) => {
+    if (e.length > 1) {
+      api.searchAssets(e).then(res => searchProps.setSearchedData(res.data));
+      searchProps.setIsSearchLineEmpty(false);
+    } else {
+      searchProps.setIsSearchLineEmpty(true);
+    }
+  };
+
+  return (
+    <SearchWrapper>
+      <SearchInput onChange={e => onChangeInput(e.target.value)} placeholder="Search asset"/>
+      <SearchButton/>
+    </SearchWrapper>
+  );
+};
 
 const SearchWrapper = styled.div`
   position: relative;

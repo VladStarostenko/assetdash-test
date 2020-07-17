@@ -13,4 +13,8 @@ export class Api {
   getPage(currentPage: number, perPage: number) {
     return this.instance.get('assets', {params: {currentPage, perPage}});
   };
+
+  searchAssets(nameOrTickerPart: string) {
+    return this.instance.get('assets', {params: {nameOrTickerPart}});
+  }
 }
