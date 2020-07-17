@@ -1,15 +1,18 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
+import {Asset} from '../../../core/models/asset';
 
-export interface TabsProps {
+export interface AssetsProps {
   activeTab: string;
   tabs: Array<string>;
   setTab: (tab: string) => void;
   currentPage?: string;
   path?: string;
+  searchedData?: Asset[];
+  isSearchLineEmpty?: boolean;
 }
 
-export const Tabs = ({activeTab, setTab, tabs}: TabsProps) => (
+export const Tabs = ({activeTab, setTab, tabs}: AssetsProps) => (
   <TabsRow>
     {tabs.map((tab, index) => (
       <TabButton

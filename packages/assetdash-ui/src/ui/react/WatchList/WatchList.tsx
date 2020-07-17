@@ -1,10 +1,10 @@
 import React from 'react';
 import {Container} from '../common/Container';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
-import {Tabs, TabsProps} from '../common/Tabs';
+import {Tabs, AssetsProps} from '../common/Tabs';
 import {EmptyWatchList} from './EmptyWatchList';
 
-export const WatchList = (props: TabsProps) => (
+export const WatchList = (props: AssetsProps) => (
   <>
     <Container>
       <ButtonsRow>

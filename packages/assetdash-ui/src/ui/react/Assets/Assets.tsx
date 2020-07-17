@@ -5,7 +5,7 @@ import {Table, Th} from '../common/Table/Table';
 import {useServices} from '../hooks/useServices';
 import {AssetItem} from './AssetItem';
 import {ButtonTertiary} from '../common/Button/ButtonTertiary';
-import {Tabs, TabsProps} from '../common/Tabs';
+import {Tabs, AssetsProps} from '../common/Tabs';
 import {Container} from '../common/Container';
 import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
@@ -42,7 +42,7 @@ function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
   }
 }
 
-export const Assets = (props: TabsProps) => {
+export const Assets = (props: AssetsProps) => {
   const [pageData, setPageData] = useState<Asset[]>([]);
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
@@ -51,15 +51,19 @@ export const Assets = (props: TabsProps) => {
 
   const {api} = useServices();
   useEffect(() => {
-    api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
-      if (currentPage > 1 && perPage === 200) {
-        setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
-      } else {
-        setPageData(sortAssets(res.data.data, assetsSort));
-      }
-      setLastPage(res.data.pagination.lastPage);
-    });
-  }, [api, currentPage, perPage]);
+    if (props.isSearchLineEmpty) {
+      api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
+        if (currentPage > 1 && perPage === 200) {
+          setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+        } else {
+          setPageData(sortAssets(res.data.data, assetsSort));
+        }
+        setLastPage(res.data.pagination.lastPage);
+      });
+    } else if (props.searchedData) {
+      setPageData(sortAssets(props.searchedData, assetsSort));
+    }
+  }, [api, currentPage, perPage, props.searchedData, props.isSearchLineEmpty]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
@@ -138,24 +142,27 @@ export const Assets = (props: TabsProps) => {
         <ButtonsRow>
           <Tabs {...props}/>
           <TableButtons>
-            { perPage > 100
-              ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+            { !props.searchedData
+              ? <>
+                { perPage > 100
+                  ? <ButtonArrow onClick={onBackToTopClick} direction="left">
                 Back to Top 100
-              </ButtonArrow>
-              : <>
-                { currentPage > 1
-                  ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                  </ButtonArrow>
+                  : <>
+                    { currentPage > 1
+                      ? <ButtonArrow onClick={onPreviousClick} direction="left">
                     Previous 100
-                  </ButtonArrow>
-                  : null }
-                { currentPage < lastPage
-                  ? <ButtonArrow onClick={onNextClick} direction="right">
+                      </ButtonArrow>
+                      : null }
+                    { currentPage < lastPage
+                      ? <ButtonArrow onClick={onNextClick} direction="right">
                     Next 100
-                  </ButtonArrow>
-                  : null }
-                <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
-              </>
-            }
+                      </ButtonArrow>
+                      : null }
+                    <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+                  </>
+                } </>
+              : null }
           </TableButtons>
         </ButtonsRow>
       </Container>
@@ -202,7 +209,7 @@ export const Assets = (props: TabsProps) => {
           </tbody>
         </Table>
       </AssetsView>
-      { props.path === '/all'
+      { props.path === '/all' && currentPage < lastPage
         ? <Container>
           <TableButtons>
             <ButtonTertiary onClick={onLoadMoreCLick}>
