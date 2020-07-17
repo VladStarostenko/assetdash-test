@@ -9,7 +9,7 @@ export interface AssetsProps {
   currentPage?: string;
   path?: string;
   searchedData?: Asset[];
-  isSearchLineEmpty?: boolean;
+  isSearchLineEmpty: boolean;
 }
 
 export const Tabs = ({activeTab, setTab, tabs}: AssetsProps) => (

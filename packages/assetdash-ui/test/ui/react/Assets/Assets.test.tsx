@@ -80,7 +80,7 @@ describe('Assets', () => {
     return render(
       <ServiceContext.Provider value={createTestServices()}><ThemeContextProvider>
         <Assets activeTab='Assets' setTab={() => { /**/
-        }} tabs={['Assets']} currentPage='1'/>
+        }} tabs={['Assets']} currentPage='1' isSearchLineEmpty={true}/>
       </ThemeContextProvider></ServiceContext.Provider>);
   }
 
