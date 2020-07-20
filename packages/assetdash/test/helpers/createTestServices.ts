@@ -8,9 +8,10 @@ const PG_DECIMAL_OID = 1700;
 
 export function createTestServices() {
   const db = knex(config.database);
-  if (!knex.QueryBuilder) {
+  pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
+  try {
     attachPaginate();
-    pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
+  } catch (e) {
   }
   return initServices(db, config);
 }
