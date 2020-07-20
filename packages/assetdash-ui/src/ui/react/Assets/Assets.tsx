@@ -13,9 +13,12 @@ import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
 
+type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
+type Order = 'desc' | 'asc';
+
 type AssetsSort = {
-  column: 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
-  order: 'desc' | 'asc';
+  column: Column;
+  order: Order;
 }
 
 function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
@@ -99,14 +102,15 @@ export const Assets = (props: TabsProps) => {
     setCurrentPage(currentPage + 1);
   };
 
-  const setAssetsSortForColumn =
-    (column: 'name' | 'rank' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange') => {
-      if (assetsSort.column === column && assetsSort.order === 'asc') {
-        setAssetsSort({column: column, order: 'desc'});
-      } else {
-        setAssetsSort({column: column, order: 'asc'});
-      }
-    };
+  const setAssetsSortForColumn = (column: Column) => {
+    if (assetsSort.column === column && assetsSort.order === 'asc') {
+      setAssetsSort({column: column, order: 'desc'});
+    } else {
+      setAssetsSort({column: column, order: 'asc'});
+    }
+  };
+
+  const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
 
   const onAssetNameClick = () => {
     setAssetsSortForColumn('name');
@@ -163,7 +167,7 @@ export const Assets = (props: TabsProps) => {
         <Table>
           <thead>
             <tr>
-              <Th data-testid='rank-column-header' onClick={onRankClick}>Rank</Th>
+              <Th data-testid='rank-column-header' className={getIconClassName('rank')} onClick={onRankClick}>Rank</Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
@@ -173,11 +177,41 @@ export const Assets = (props: TabsProps) => {
                   <p>Daily Dash</p>
                 </Tooltip>
               </Th>
-              <Th data-testid='name-column-header' onClick={onAssetNameClick}>Asset Name</Th>
-              <Th data-testid='symbol-column-header' onClick={onSymbolClick}>Symbol</Th>
-              <Th data-testid='marketcap-column-header' onClick={onMarketcapClick}>Market Cap</Th>
-              <Th data-testid='price-column-header' onClick={onPriceClick}>Price</Th>
-              <Th data-testid='today-column-header' onClick={onTodayClick}>Today</Th>
+              <Th
+                data-testid='name-column-header'
+                className={getIconClassName('name')}
+                onClick={onAssetNameClick}
+              >
+                Asset Name
+              </Th>
+              <Th
+                data-testid='symbol-column-header'
+                className={getIconClassName('ticker')}
+                onClick={onSymbolClick}
+              >
+                Symbol
+              </Th>
+              <Th
+                data-testid='marketcap-column-header'
+                className={getIconClassName('currentMarketcap')}
+                onClick={onMarketcapClick}
+              >
+                Market Cap
+              </Th>
+              <Th
+                data-testid='price-column-header'
+                className={getIconClassName('currentPrice')}
+                onClick={onPriceClick}
+              >
+                Price
+              </Th>
+              <Th
+                data-testid='today-column-header'
+                className={getIconClassName('currentChange')}
+                onClick={onTodayClick}
+              >
+                Today
+              </Th>
               <Th>
                 <Tooltip
                   text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places

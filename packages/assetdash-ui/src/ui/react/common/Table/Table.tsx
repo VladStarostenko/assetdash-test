@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import angleIcon from '../../../assets/icons/angle.svg';
 
 export const Table = styled.table`
   width: 100%;
@@ -14,6 +15,7 @@ export const Th = styled.th`
   text-align: right;
   color: ${({theme}) => theme.colors.colorSecondary};
   white-space: nowrap;
+  cursor: pointer;
 
   &:first-child {
     padding-left: 24px;
@@ -27,6 +29,28 @@ export const Th = styled.th`
   }
   &:nth-child(4) {
     text-align: left;
+  }
+
+  &.asc,
+  &.desc {
+    position: relative;
+    color: ${({theme}) => theme.colors.colorPrimary};
+  }
+
+  &.asc::after,
+  &.desc::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 8px;
+    height: 5px;
+    transform: translate(0, -50%);
+    background: url(${angleIcon}) center no-repeat;
+    background-size: contain;
+  }
+  &.asc::after {
+    transform: translate(0, -50%) rotate(180deg);
   }
 `;
 
