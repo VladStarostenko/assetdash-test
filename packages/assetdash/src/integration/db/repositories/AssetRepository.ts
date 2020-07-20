@@ -46,6 +46,10 @@ export class AssetRepository {
     return asset;
   }
 
+  async findByIds(ids: number[]): Promise<Asset[]> {
+    return this.db('assets').andWhere('id', 'in', ids);
+  }
+
   async updatePrice(assetPrice: AssetPricingData) {
     return this.db('assets')
       .where('ticker', assetPrice.ticker)

@@ -11,19 +11,19 @@ describe('extract tags', () => {
     ]);
     expect(result).to.deep.eq([
       {
-        assetId: 1,
+        assetId: 52,
         tagId: 5
       },
       {
-        assetId: 1,
+        assetId: 52,
         tagId: 14
       },
       {
-        assetId: 2,
+        assetId: 53,
         tagId: 5
       },
       {
-        assetId: 2,
+        assetId: 53,
         tagId: 15
       }
     ]);

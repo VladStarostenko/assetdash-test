@@ -5,6 +5,7 @@ import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import pg from 'pg';
 import {attachPaginate} from 'knex-paginate';
+import {TagRepository} from '../integration/db/repositories/TagRepository';
 
 const PG_DECIMAL_OID = 1700;
 
@@ -15,6 +16,7 @@ export const createServices = (config: Config) => {
   return {
     db,
     assetRepository: new AssetRepository(db),
+    tagRepository: new TagRepository(db),
     coinmarketCapService: new CoinmarketCapService(),
     iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
   };

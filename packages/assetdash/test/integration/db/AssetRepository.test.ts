@@ -119,4 +119,36 @@ describe('Asset Repository', () => {
         );
     });
   });
+
+  describe('findByIds', () => {
+    it('returns assets with the submitted ids', async () => {
+      expect(await assetRepository.findByIds([1, 2]))
+        .to.deep.eq([{
+          currentChange: 0,
+          currentMarketcap: 10,
+          currentPrice: 0,
+          dashDaily: 0,
+          dashMonthly: 0,
+          dashWeekly: 0,
+          id: 1,
+          imageUrl: 'eth.img',
+          name: 'Ethereum',
+          ticker: 'ETH',
+          type: 'Cryptocurrency'
+        }, {
+          currentChange: 0,
+          currentMarketcap: 20,
+          currentPrice: 0,
+          dashDaily: 0,
+          dashMonthly: 0,
+          dashWeekly: 0,
+          id: 2,
+          imageUrl: 'btc.img',
+          name: 'Bitcoin',
+          ticker: 'BTC',
+          type: 'Cryptocurrency'
+        }]
+        );
+    });
+  });
 });
