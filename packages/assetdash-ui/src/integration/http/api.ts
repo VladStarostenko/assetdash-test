@@ -17,4 +17,8 @@ export class Api {
   searchAssets(nameOrTickerPart: string) {
     return this.instance.get('assets', {params: {nameOrTickerPart}});
   }
+
+  getAssetsForSectors(sectors: string[]) {
+    return this.instance.get('assets', {params: {sectors}});
+  }
 }

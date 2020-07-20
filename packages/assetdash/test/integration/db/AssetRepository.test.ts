@@ -1,14 +1,13 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {config} from '../../../src/config/config';
-import {createServices} from '../../../src/core/createServices';
 import {clearDatabase} from '../../helpers/clear-db';
+import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
+import {createTestServices} from '../../helpers/createTestServices';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
-  const {db, assetRepository} = createServices(config);
-
+  let assetRepository: AssetRepository;
   const assets = [{
     id: 1,
     ticker: 'ETH',
@@ -34,6 +33,8 @@ describe('Asset Repository', () => {
   ];
 
   beforeEach(async () => {
+    let db;
+    ({db, assetRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
   });

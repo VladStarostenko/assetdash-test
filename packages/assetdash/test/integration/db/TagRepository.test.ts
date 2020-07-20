@@ -1,21 +1,13 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {config} from '../../../src/config/config';
 import {clearDatabase} from '../../helpers/clear-db';
-import knex from 'knex';
-import pg from 'pg';
 import {TagRepository} from '../../../src/integration/db/repositories/TagRepository';
-import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
-
-const PG_DECIMAL_OID = 1700;
+import {createTestServices} from '../../helpers/createTestServices';
 
 chai.use(chaiAsPromised);
 
 describe('Tags Repository', () => {
-  const db = knex(config.database);
-  pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
-  const tagRepository = new TagRepository(db);
-  const assetRepository = new AssetRepository(db);
+  let tagRepository: TagRepository;
 
   const assets = [{
     id: 1,
@@ -45,6 +37,8 @@ describe('Tags Repository', () => {
   const assetsTags = [{assetId: 1, tagId: 1}, {assetId: 2, tagId: 1}, {assetId: 3, tagId: 2}, {assetId: 3, tagId: 3}];
 
   beforeEach(async () => {
+    let db, assetRepository;
+    ({db, assetRepository, tagRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
     await tagRepository.insertTags(tags);
