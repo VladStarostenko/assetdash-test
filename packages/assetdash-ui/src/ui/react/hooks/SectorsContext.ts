@@ -1,4 +1,10 @@
 import {createContext} from 'react';
-import {CheckBox} from '../common/Sort/Sort';
+type SelectedSectors={
+  checkedItems: Record<string, boolean>;
+  setCheckedItems: (arg: Record<string, boolean>) => void;
+}
 
-export const SectorsContext = createContext<CheckBox | any>({} as CheckBox);
+export const SectorsContext = createContext<SelectedSectors>({
+  checkedItems: {},
+  setCheckedItems: () => { /**/ }
+});

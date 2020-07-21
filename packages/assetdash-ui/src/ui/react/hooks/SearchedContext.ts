@@ -2,10 +2,15 @@ import {createContext} from 'react';
 import {Asset} from '../../../core/models/asset';
 
 export interface SearchedContext {
-  isSearchLineEmpty: boolean;
-  setIsSearchLineEmpty(arg: boolean): void;
-  searchedData?: Asset[];
+  nameOrTickerPart: string;
+  setNameOrTickerPart(arg: string): void;
+  searchedData: Asset[];
   setSearchedData(arg: Asset[]): void;
 }
 
-export const SearchedContext = createContext<SearchedContext | any>({isSearchLineEmpty: true});
+export const SearchedContext = createContext<SearchedContext>({
+  nameOrTickerPart: '',
+  setNameOrTickerPart: () => { /**/ },
+  searchedData: [],
+  setSearchedData: () => { /**/ }
+});

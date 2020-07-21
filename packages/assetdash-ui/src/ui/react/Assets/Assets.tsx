@@ -62,7 +62,7 @@ export const Assets = (props: AssetsProps) => {
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
   const {checkedItems} = useContext(SectorsContext);
-  const {searchedData, isSearchLineEmpty} = useContext(SearchedContext);
+  const {nameOrTickerPart} = useContext(SearchedContext);
 
   const {api} = useServices();
 
@@ -77,7 +77,7 @@ export const Assets = (props: AssetsProps) => {
   };
 
   const showSearchedData = () => {
-    setPageData(sortAssets(searchedData, assetsSort));
+    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => setPageData(sortAssets(res.data, assetsSort)));
   };
 
   const paginateData = (res: GetPageResponse) => {
@@ -98,7 +98,7 @@ export const Assets = (props: AssetsProps) => {
   };
 
   useEffect(() => {
-    if (!isSearchLineEmpty) {
+    if (nameOrTickerPart) {
       showSearchedData();
     } else {
       const sectors = getSectors();
@@ -108,7 +108,7 @@ export const Assets = (props: AssetsProps) => {
         showCurrentPage();
       }
     }
-  }, [api, currentPage, perPage, searchedData, isSearchLineEmpty, checkedItems]);
+  }, [api, currentPage, perPage, nameOrTickerPart, checkedItems]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
@@ -188,7 +188,7 @@ export const Assets = (props: AssetsProps) => {
         <ButtonsRow>
           <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
           <TableButtons>
-            { !searchedData
+            { !nameOrTickerPart
               ? <>
                 { perPage > 100
                   ? <ButtonArrow onClick={onBackToTopClick} direction="left">

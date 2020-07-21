@@ -4,7 +4,7 @@ import {Screen, ScreenContent} from '../common/Screen';
 import {Container} from '../common/Container';
 import {PageTitle} from '../common/Text/PageTitle';
 import {Search} from '../common/Search/Search';
-import {CheckBox, Sort} from '../common/Sort/Sort';
+import {Sort} from '../common/Sort/Sort';
 import {Assets} from '../Assets/Assets';
 import {WatchList} from '../WatchList/WatchList';
 import {PageSubtitle} from '../common/Text/PageSubtitle';
@@ -18,13 +18,13 @@ const Home = ({match}: Props) => {
   const [tab, setTab] = useState('Assets');
   const tabs = ['Assets', 'Watchlist'];
   const [searchedData, setSearchedData] = useState<Asset[]>([]);
-  const [isSearchLineEmpty, setIsSearchLineEmpty] = useState<boolean>(true);
-  const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
+  const [nameOrTickerPart, setNameOrTickerPart] = useState<string>('');
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
   return (
     <Screen>
       <SectorsContext.Provider value={{checkedItems, setCheckedItems}}>
-        <SearchedContext.Provider value={{isSearchLineEmpty, setIsSearchLineEmpty, searchedData, setSearchedData}}>
+        <SearchedContext.Provider value={{nameOrTickerPart, setNameOrTickerPart, searchedData, setSearchedData}}>
           <Container>
             <PageTitle>Top Assets by Market Cap</PageTitle>
             <PageSubtitle/>
