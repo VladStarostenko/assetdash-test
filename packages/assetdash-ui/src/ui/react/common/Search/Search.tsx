@@ -4,14 +4,17 @@ import searchIcon from '../../../assets/icons/search.svg';
 import {useServices} from '../../hooks/useServices';
 import {Asset} from '../../../../core/models/asset';
 import {SearchedContext} from '../../hooks/SearchedContext';
+import {SectorsContext} from '../../hooks/SectorsContext';
 
 export const Search = () => {
   const {api} = useServices();
   const {setIsSearchLineEmpty, setSearchedData} = useContext(SearchedContext);
+  const {setCheckedItems} = useContext(SectorsContext);
   const onChangeInput = (e: string) => {
     if (e.length > 1) {
       api.searchAssets(e).then((res: { data: Asset[] }) => setSearchedData(res.data));
       setIsSearchLineEmpty(false);
+      setCheckedItems({});
     } else {
       setIsSearchLineEmpty(true);
     }
