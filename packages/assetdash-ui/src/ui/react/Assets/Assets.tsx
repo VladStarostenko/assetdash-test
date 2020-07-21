@@ -61,7 +61,7 @@ export const Assets = (props: AssetsProps) => {
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
-  const {checkedItems, setCheckedItems} = useContext(SectorsContext);
+  const {checkedItems} = useContext(SectorsContext);
   const {searchedData, isSearchLineEmpty} = useContext(SearchedContext);
 
   const {api} = useServices();
@@ -80,21 +80,21 @@ export const Assets = (props: AssetsProps) => {
     setPageData(sortAssets(searchedData, assetsSort));
   };
 
+  const paginateData = (res: GetPageResponse) => {
+    if (currentPage > 1 && perPage === 200) {
+      setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+    } else {
+      setPageData(sortAssets(res.data.data, assetsSort));
+    }
+    setLastPage(res.data.pagination.lastPage);
+  };
+
   const showSectorsData = (sectors: string[]) => {
-    api.getAssetsForSectors(sectors).then((res) => {
-      setPageData(sortAssets(res.data, assetsSort));
-    });
+    api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
   };
 
   const showCurrentPage = () => {
-    api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
-      if (currentPage > 1 && perPage === 200) {
-        setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
-      } else {
-        setPageData(sortAssets(res.data.data, assetsSort));
-      }
-      setLastPage(res.data.pagination.lastPage);
-    });
+    api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
   };
 
   useEffect(() => {
@@ -188,7 +188,7 @@ export const Assets = (props: AssetsProps) => {
         <ButtonsRow>
           <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
           <TableButtons>
-            { !searchedData && getSectors().length === 0
+            { !searchedData
               ? <>
                 { perPage > 100
                   ? <ButtonArrow onClick={onBackToTopClick} direction="left">

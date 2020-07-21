@@ -17,7 +17,7 @@ type Props = RouteComponentProps<{ currentPage: string }>;
 const Home = ({match}: Props) => {
   const [tab, setTab] = useState('Assets');
   const tabs = ['Assets', 'Watchlist'];
-  const [searchedData, setSearchedData] = useState<Asset[]>();
+  const [searchedData, setSearchedData] = useState<Asset[]>([]);
   const [isSearchLineEmpty, setIsSearchLineEmpty] = useState<boolean>(true);
   const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
 

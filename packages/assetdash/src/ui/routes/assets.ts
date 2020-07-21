@@ -16,12 +16,12 @@ export const assets = ({assetRepository, tagRepository}: Services) => {
       })
     }),
     async ({query}) => {
-      if (query.currentPage && query.perPage) {
-        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
+      if (query.sectors && query.currentPage && query.perPage) {
+        return responseOf(await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage));
       } else if (query.nameOrTickerPart) {
         return responseOf(await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart));
-      } else if (query.sectors) {
-        return responseOf(await assetRepository.findByTags(query.sectors));
+      } else if (query.currentPage && query.perPage) {
+        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
       } else {
         return responseOf(await assetRepository.findAll());
       }
