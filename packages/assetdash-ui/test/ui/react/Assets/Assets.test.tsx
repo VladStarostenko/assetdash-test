@@ -3,12 +3,16 @@ import '../../../shims/types';
 import adapter from 'axios/lib/adapters/http';
 import {expect} from 'chai';
 import nock from 'nock';
-import React from 'react';
+import React, {useState} from 'react';
 import {Api} from '../../../../src/integration/http/api';
 import {Assets} from '../../../../src/ui/react/Assets/Assets';
 import {ServiceContext} from '../../../../src/ui/react/hooks/useServices';
 import {Services} from '../../../../src/ui/react/services';
 import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
+import {SearchedContext} from '../../../../src/ui/react/hooks/SearchedContext';
+import {SectorsContext} from '../../../../src/ui/react/hooks/SectorsContext';
+import {Asset} from '../../../../src/core/models/asset';
+import {CheckBox} from '../../../../src/ui/react/common/Sort/Sort';
 
 function createTestServices(): Services {
   const config = Object.freeze({baseURL: 'http://127.0.0.1'});
@@ -76,16 +80,24 @@ describe('Assets', () => {
       });
   });
 
-  function renderAssets() {
+  function RenderAssets() {
+    const [searchedData, setSearchedData] = useState<Asset[]>();
+    const [isSearchLineEmpty, setIsSearchLineEmpty] = useState<boolean>(true);
+    const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
     return render(
-      <ServiceContext.Provider value={createTestServices()}><ThemeContextProvider>
-        <Assets activeTab='Assets' setTab={() => { /**/
-        }} tabs={['Assets']} currentPage='1' isSearchLineEmpty={true}/>
-      </ThemeContextProvider></ServiceContext.Provider>);
+      <ServiceContext.Provider value={createTestServices()}>
+        <ThemeContextProvider>
+          <SectorsContext.Provider value={{checkedItems, setCheckedItems}}>
+            <SearchedContext.Provider value={{isSearchLineEmpty, setIsSearchLineEmpty, searchedData, setSearchedData}}>
+              <Assets activeTab='Assets' setTab={() => { /**/
+              }} tabs={['Assets']} currentPage='1'/>
+            </SearchedContext.Provider>
+          </SectorsContext.Provider>
+        </ThemeContextProvider></ServiceContext.Provider>);
   }
 
   it('are sorted by rank by default', async () => {
-    const {findAllByTestId} = renderAssets();
+    const {findAllByTestId} = RenderAssets();
 
     const names = await findAllByTestId('asset-row-name');
     expect(names.map(el => el.textContent))
@@ -93,7 +105,7 @@ describe('Assets', () => {
   });
 
   it('change sorting direction after click', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('rank-column-header');
@@ -105,7 +117,7 @@ describe('Assets', () => {
   });
 
   it('sorts by name', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('name-column-header');
@@ -117,7 +129,7 @@ describe('Assets', () => {
   });
 
   it('sorts by name reversed', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('name-column-header');
@@ -130,7 +142,7 @@ describe('Assets', () => {
   });
 
   it('sorts by name after sorting by rank', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId(/asset-row-name/)).to.have.length(3));
 
     const rankNode = await findByTestId('rank-column-header');
@@ -145,7 +157,7 @@ describe('Assets', () => {
   });
 
   it('sorts by ticker', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('symbol-column-header');
@@ -157,7 +169,7 @@ describe('Assets', () => {
   });
 
   it('sorts by ticker reversed', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('symbol-column-header');
@@ -170,7 +182,7 @@ describe('Assets', () => {
   });
 
   it('sorts by marketcap', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('marketcap-column-header');
@@ -183,7 +195,7 @@ describe('Assets', () => {
   });
 
   it('sorts by marketcap reversed', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('marketcap-column-header');
@@ -195,7 +207,7 @@ describe('Assets', () => {
   });
 
   it('sorts by price', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('price-column-header');
@@ -207,7 +219,7 @@ describe('Assets', () => {
   });
 
   it('sorts by price reversed', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('price-column-header');
@@ -220,7 +232,7 @@ describe('Assets', () => {
   });
 
   it('sorts by today', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('today-column-header');
@@ -232,7 +244,7 @@ describe('Assets', () => {
   });
 
   it('sorts by today reversed', async () => {
-    const {findByTestId, findAllByTestId, getAllByTestId} = renderAssets();
+    const {findByTestId, findAllByTestId, getAllByTestId} = RenderAssets();
     await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 
     const node = await findByTestId('today-column-header');

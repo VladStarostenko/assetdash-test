@@ -57,6 +57,9 @@ export class AssetRepository {
       .join('tags', function () {
         this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
       })
+      .join('ranks', 'assets.id', 'ranks.assetId')
+      .select('assets.*', 'ranks.position as rank')
+      .orderBy('currentMarketcap', 'desc')
       .select('assets.*');
   }
 

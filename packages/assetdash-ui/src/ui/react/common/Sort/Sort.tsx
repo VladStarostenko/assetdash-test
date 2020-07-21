@@ -20,10 +20,11 @@ import {SortDropdownButton} from './SortDropdown';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
 import {ThemeContext} from '../../Theme/ThemeContextProvider';
 import {DropdownContent} from '../DropdownContent';
+import {SectorsContext} from '../../hooks/SectorsContext';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
-  const [checkedItems, setCheckedItems] = useState<CheckBox | any>({});
+  const {checkedItems, setCheckedItems} = useContext(SectorsContext);
   const [maxElements, setMaxElements] = useState(5);
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
@@ -131,77 +132,77 @@ export interface CheckBox {
 const checkboxes: Array<CheckBox> = [
   {
     icon: internetIcon,
-    name: 'internet',
+    name: 'Internet',
     label: 'Internet'
   },
   {
     icon: financeIcon,
-    name: 'finance',
+    name: 'Finance',
     label: 'Finance'
   },
   {
     icon: homeIcon,
-    name: 'hospitality',
+    name: 'Hospitality',
     label: 'Hospitality'
   },
   {
     icon: cartIcon,
-    name: 'retail',
+    name: 'Retail',
     label: 'Retail'
   },
   {
     icon: healthIcon,
-    name: 'health',
+    name: 'Health',
     label: 'Health'
   },
   {
     icon: cloudIcon,
-    name: 'cloud',
+    name: 'Cloud',
     label: 'Cloud'
   },
   {
     icon: ecommerceIcon,
-    name: 'eCommerce',
+    name: 'E-commerce',
     label: 'E-commerce'
   },
   {
     icon: emergingIcon,
-    name: 'emergingMarkets',
-    label: 'Emerging Markets '
+    name: 'Emerging Markets',
+    label: 'Emerging Markets'
   },
   {
     icon: airlinesIcon,
-    name: 'airlines',
+    name: 'Airline',
     label: 'Airlines '
   },
   {
     icon: carIcon,
-    name: 'cars',
+    name: 'Cars',
     label: 'Cars '
   },
   {
     icon: gambleIcon,
-    name: 'gamble',
+    name: 'Gamble',
     label: 'Gamble '
   },
   {
     icon: goldIcon,
-    name: 'gold',
+    name: 'Gold',
     label: 'Gold '
   },
   {
     icon: cryptoIcon,
-    name: 'cryptocurrencies',
+    name: 'Cryptocurrencies',
     label: 'Cryptocurrencies '
   },
   {
     icon: cannabisIcon,
-    name: 'cannabis',
+    name: 'Cannabis',
     label: 'Cannabis '
   },
   {
     icon: cubeIcon,
-    name: 'etfs',
+    name: 'ETFs',
     label: 'ETFs '
   }
 ];
