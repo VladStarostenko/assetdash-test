@@ -8,19 +8,22 @@ import {Sort} from '../common/Sort/Sort';
 import {Assets} from '../Assets/Assets';
 import {WatchList} from '../WatchList/WatchList';
 import {PageSubtitle} from '../common/Text/PageSubtitle';
+import {Asset} from '../../../core/models/asset';
 
 type Props = RouteComponentProps<{ currentPage: string }>;
 
 const Home = ({match}: Props) => {
   const [tab, setTab] = useState('Assets');
   const tabs = ['Assets', 'Watchlist'];
+  const [searchedData, setSearchedData] = useState<Asset[]>();
+  const [isSearchLineEmpty, setIsSearchLineEmpty] = useState<boolean>(true);
 
   return (
     <Screen>
       <Container>
         <PageTitle>Top Assets by Market Cap</PageTitle>
         <PageSubtitle/>
-        <Search/>
+        <Search setSearchedData={setSearchedData} setIsSearchLineEmpty={setIsSearchLineEmpty}/>
         <Sort/>
       </Container>
       <ScreenContent>
@@ -31,6 +34,8 @@ const Home = ({match}: Props) => {
             tabs={tabs}
             currentPage={match.params.currentPage}
             path={match.path}
+            searchedData={searchedData}
+            isSearchLineEmpty={isSearchLineEmpty}
           />
         }
         {tab === 'Watchlist' &&

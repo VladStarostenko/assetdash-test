@@ -48,7 +48,8 @@ export class AssetRepository {
 
   async updatePrice(assetPrice: AssetPricingData) {
     return this.db('assets')
-      .where({ticker: assetPrice.ticker})
+      .where('ticker', assetPrice.ticker)
+      .andWhere('type', 'in', assetPrice.type)
       .update({
         currentPrice: assetPrice.price,
         currentMarketcap: assetPrice.marketcap,
@@ -66,5 +67,13 @@ export class AssetRepository {
     return this.db('assets')
       .select('ticker')
       .where('type', type);
+  }
+
+  async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
+    return this.db('assets')
+      .orderBy('currentMarketcap', 'desc')
+      .select()
+      .where('name', 'ilike', `%${nameOrTickerPart}%`)
+      .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
   }
 }
