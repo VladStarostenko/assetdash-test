@@ -5,19 +5,27 @@ import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import pg from 'pg';
 import {attachPaginate} from 'knex-paginate';
+import {TagRepository} from '../integration/db/repositories/TagRepository';
 
 const PG_DECIMAL_OID = 1700;
 
-export const createServices = (config: Config) => {
+const createDb = (config: Config) => {
   const db = knex(config.database);
   attachPaginate();
   pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
-  return {
-    db,
-    assetRepository: new AssetRepository(db),
-    coinmarketCapService: new CoinmarketCapService(),
-    iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
-  };
+  return db;
+};
+
+export const initServices = (db, config: Config) => ({
+  db: db,
+  assetRepository: new AssetRepository(db),
+  tagRepository: new TagRepository(db),
+  coinmarketCapService: new CoinmarketCapService(),
+  iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
+});
+
+export const createServices = (config: Config) => {
+  return initServices(createDb(config), config);
 };
 
 export type Services = ReturnType<typeof createServices>;

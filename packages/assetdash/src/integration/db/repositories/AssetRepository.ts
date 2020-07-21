@@ -46,6 +46,19 @@ export class AssetRepository {
     return asset;
   }
 
+  async findByIds(ids: number[]): Promise<Asset[]> {
+    return this.db('assets').where('id', 'in', ids);
+  }
+
+  async findByTags(tags: string[]): Promise<Asset[]> {
+    return this.db('assets')
+      .join('assets_tags', 'assets.id', 'assets_tags.assetId')
+      .join('tags', function () {
+        this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
+      })
+      .select('assets.*');
+  }
+
   async updatePrice(assetPrice: AssetPricingData) {
     return this.db('assets')
       .where('ticker', assetPrice.ticker)

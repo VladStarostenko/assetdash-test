@@ -1,14 +1,13 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {config} from '../../../src/config/config';
-import {createServices} from '../../../src/core/createServices';
 import {clearDatabase} from '../../helpers/clear-db';
+import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
+import {createTestServices} from '../../helpers/createTestServices';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
-  const {db, assetRepository} = createServices(config);
-
+  let assetRepository: AssetRepository;
   const assets = [{
     id: 1,
     ticker: 'ETH',
@@ -34,6 +33,8 @@ describe('Asset Repository', () => {
   ];
 
   beforeEach(async () => {
+    let db;
+    ({db, assetRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
   });
@@ -116,6 +117,38 @@ describe('Asset Repository', () => {
             ticker: 'BCH',
             type: 'Cryptocurrency'
           }]
+        );
+    });
+  });
+
+  describe('findByIds', () => {
+    it('returns assets with the submitted ids', async () => {
+      expect(await assetRepository.findByIds([1, 2]))
+        .to.deep.eq([{
+          currentChange: 0,
+          currentMarketcap: 10,
+          currentPrice: 0,
+          dashDaily: 0,
+          dashMonthly: 0,
+          dashWeekly: 0,
+          id: 1,
+          imageUrl: 'eth.img',
+          name: 'Ethereum',
+          ticker: 'ETH',
+          type: 'Cryptocurrency'
+        }, {
+          currentChange: 0,
+          currentMarketcap: 20,
+          currentPrice: 0,
+          dashDaily: 0,
+          dashMonthly: 0,
+          dashWeekly: 0,
+          id: 2,
+          imageUrl: 'btc.img',
+          name: 'Bitcoin',
+          ticker: 'BTC',
+          type: 'Cryptocurrency'
+        }]
         );
     });
   });

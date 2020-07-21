@@ -1,22 +1,21 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {PricingDataUpdater} from '../../src/app/PricingDataUpdater';
-import {CoinmarketCapService} from '../../src/integration/http/CoinmarketCapService';
-import {AssetRepository} from '../../src/integration/db/repositories/AssetRepository';
-import knex from 'knex';
-import {config} from '../../src/config/config';
-import {IexCloudService} from '../../src/integration/http/IexCloudService';
 import {clearDatabase} from '../helpers/clear-db';
+import {createTestServices} from '../helpers/createTestServices';
 
 chai.use(chaiAsPromised);
 
 describe('PricingDataUpdater', () => {
   let pricingDataUpdater: PricingDataUpdater;
-  const db = knex(config.database);
-  const assetRepository = new AssetRepository(db);
+  let assetRepository;
+  let db;
 
   beforeEach(() => {
-    pricingDataUpdater = new PricingDataUpdater(new IexCloudService(''), new CoinmarketCapService(), assetRepository);
+    let iexCloudService;
+    let coinmarketCapService;
+    ({db, assetRepository, iexCloudService, coinmarketCapService} = createTestServices());
+    pricingDataUpdater = new PricingDataUpdater(iexCloudService, coinmarketCapService, assetRepository);
   });
 
   describe('updateAssetPrices', () => {
