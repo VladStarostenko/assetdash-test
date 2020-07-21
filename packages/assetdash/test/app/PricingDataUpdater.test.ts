@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {PricingDataUpdater} from '../../src/app/PricingDataUpdater';
 import {clearDatabase} from '../helpers/clear-db';
 import {createTestServices} from '../helpers/createTestServices';
-import {startOfDay, startOfToday, startOfYesterday} from 'date-fns';
+import {startOfToday, startOfYesterday} from 'date-fns';
 
 chai.use(chaiAsPromised);
 
