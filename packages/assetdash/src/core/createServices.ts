@@ -22,9 +22,9 @@ export const initServices = (db, config: Config) => ({
   assetRepository: new AssetRepository(db),
   tagRepository: new TagRepository(db),
   ranksRepository: new RanksRepository(db),
-    coinmarketCapService: new CoinmarketCapService(),
-    iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
-  });
+  coinmarketCapService: new CoinmarketCapService(),
+  iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
+});
 
 export const createServices = (config: Config) => {
   return initServices(createDb(config), config);

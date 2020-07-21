@@ -3,12 +3,15 @@ import chaiAsPromised from 'chai-as-promised';
 import {clearDatabase} from '../../helpers/clear-db';
 import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
 import {createTestServices} from '../../helpers/createTestServices';
+import {RanksRepository} from '../../../src/integration/db/repositories/RanksRepository';
+import {Asset} from '../../../src/core/models/asset';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   let assetRepository: AssetRepository;
-  const assets = [{
+  let ranksRepository: RanksRepository;
+  const assets: Asset[] = [{
     id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
@@ -51,7 +54,7 @@ describe('Asset Repository', () => {
 
   beforeEach(async () => {
     let db;
-    ({db, assetRepository} = createTestServices());
+    ({db, assetRepository, ranksRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
     await ranksRepository.insertRanks(ranks);
