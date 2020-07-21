@@ -18,6 +18,7 @@ exports.up = async (knex) => {
       table.integer('assetId').references('id').inTable('assets').notNullable();
       table.timestamp('date').notNullable();
       table.integer('position').notNullable();
+      table.unique(['assetId', 'date']);
     })
     .createTable('tags', (table) => {
       table.increments('id').primary();

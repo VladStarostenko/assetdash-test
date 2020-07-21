@@ -6,6 +6,7 @@ import {sleep} from '../core/models/utils';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 import {Rank} from '../core/models/rank';
+import {startOfToday} from 'date-fns';
 
 export class PricingDataUpdater {
   get running(): boolean {
@@ -21,7 +22,6 @@ export class PricingDataUpdater {
   private assetRepository: AssetRepository;
   private _running: boolean;
   private ranksRepository: RanksRepository;
-  private _todayDate: Date;
 
   constructor(
     iexCloudService: IexCloudService,
@@ -34,7 +34,6 @@ export class PricingDataUpdater {
     this.assetRepository = assetRepository;
     this.ranksRepository = ranksRepository;
     this._running = true;
-    this._todayDate = new Date(new Date().setUTCHours(0, 0, 0, 0));
   }
 
   start = () => {
@@ -43,10 +42,6 @@ export class PricingDataUpdater {
 
   stop = () => {
     this._running = false;
-  }
-
-  setTodayDate = () => {
-    this._todayDate = new Date(new Date().setUTCHours(0, 0, 0, 0));
   }
 
   loop = async (cryptoTickers: string[], stocksAndETFsTickers: string[]) => {
@@ -76,19 +71,15 @@ export class PricingDataUpdater {
 
   updateRanksForAssets = async () => {
     const allAssets = await this.assetRepository.findAll();
-    const date = new Date(new Date().setUTCHours(0, 0, 0, 0));
-    allAssets.forEach((asset, index) => {
+    const date = startOfToday();
+    for (let index = 0; index < allAssets.length; index++) {
+      const asset = allAssets[index];
       const rank: Rank = {
         assetId: asset.id,
         position: index + 1,
         date: date
       };
-      if (date === this._todayDate) {
-        this.ranksRepository.updateRank(rank);
-      } else {
-        this.ranksRepository.insertRank(rank);
-      }
-    });
-    this._todayDate = date;
+      await this.ranksRepository.updateRank(rank);
+    }
   }
 }

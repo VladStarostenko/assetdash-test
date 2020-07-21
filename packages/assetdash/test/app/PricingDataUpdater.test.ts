@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {PricingDataUpdater} from '../../src/app/PricingDataUpdater';
 import {clearDatabase} from '../helpers/clear-db';
 import {createTestServices} from '../helpers/createTestServices';
+import {startOfDay, startOfToday, startOfYesterday} from 'date-fns';
 
 chai.use(chaiAsPromised);
 
@@ -41,6 +42,9 @@ describe('PricingDataUpdater', () => {
   });
 
   describe('updateAssetRanks', () => {
+    const TODAY = startOfToday();
+    const YESTERDAY = startOfYesterday();
+
     beforeEach(async () => {
       await clearDatabase(db);
       await assetRepository.insertAssets([{
@@ -58,31 +62,42 @@ describe('PricingDataUpdater', () => {
         id: 2,
         currentMarketcap: 20
       }]);
+    });
 
+    it('update ranks for today does not change ranks from yesterday', async () => {
       await ranksRepository.insertRanks([{
         assetId: 1,
         position: 2,
-        date: new Date(new Date().setUTCHours(0, 0, 0, 0) - 86400000)
+        date: YESTERDAY
       }, {
         assetId: 2,
         position: 1,
-        date: new Date(new Date().setUTCHours(0, 0, 0, 0) - 86400000)
+        date: YESTERDAY
       }]);
+      await pricingDataUpdater.updateRanksForAssets();
+      expect((await assetRepository.findByIdWithRank(1, YESTERDAY)).rank).be.eq(2);
+      expect((await assetRepository.findByIdWithRank(2, YESTERDAY)).rank).be.eq(1);
     });
 
-    it('updates ranks for assets', async () => {
+    it('update ranks for today', async () => {
+      await ranksRepository.insertRanks([{
+        assetId: 1,
+        position: 1,
+        date: TODAY
+      }, {
+        assetId: 2,
+        position: 2,
+        date: TODAY
+      }]);
       await pricingDataUpdater.updateRanksForAssets();
-      const date = new Date(new Date().setUTCHours(0, 0, 0, 0) - 86400000);
-      expect((await assetRepository.findByIdWithRank(1, date)).rank).be.eq(2);
-      expect((await assetRepository.findByIdWithRank(2, date)).rank).be.eq(1);
+      expect((await assetRepository.findByIdWithRank(1, TODAY)).rank).be.eq(2);
+      expect((await assetRepository.findByIdWithRank(2, TODAY)).rank).be.eq(1);
     });
 
     it('inserts ranks for assets with new date', async () => {
       await pricingDataUpdater.updateRanksForAssets();
-      const date = new Date(new Date().setUTCHours(0, 0, 0, 0));
-      console.log(await assetRepository.findByIdWithRank(1, date));
-      expect((await assetRepository.findByIdWithRank(1, date)).rank).be.eq(2);
-      expect((await assetRepository.findByIdWithRank(2, date)).rank).be.eq(1);
+      expect((await assetRepository.findByIdWithRank(1, TODAY)).rank).be.eq(2);
+      expect((await assetRepository.findByIdWithRank(2, TODAY)).rank).be.eq(1);
     });
   });
 });

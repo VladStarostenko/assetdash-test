@@ -14,11 +14,13 @@ export class RanksRepository {
   }
 
   async updateRank(rank: Rank) {
-    return this.db('ranks')
-      .where('assetId', rank.assetId)
-      .andWhere('date', rank.date)
+    const insert = this.db('ranks').insert(rank);
+    const update = this.db.queryBuilder()
+      .where('ranks.assetId', rank.assetId)
+      .andWhere('ranks.date', rank.date)
       .update({
         position: rank.position
       });
+    return this.db.raw('? ON CONFLICT ("assetId", "date") DO ? returning *', [insert, update]);
   }
 }
