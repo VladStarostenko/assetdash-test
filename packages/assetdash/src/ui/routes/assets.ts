@@ -6,13 +6,6 @@ import {asArray, asNumber, asObject, asOptional, asString} from '@restless/sanit
 export const assets = ({assetRepository, tagRepository}: Services) => {
   const router = expressRouter();
 
-  router.get('/:id', asyncHandler(
-    sanitize({
-      id: asNumber
-    }),
-    async ({id}) => responseOf(await assetRepository.findById(id))
-  ));
-
   router.get('/', asyncHandler(
     sanitize({
       query: asObject({

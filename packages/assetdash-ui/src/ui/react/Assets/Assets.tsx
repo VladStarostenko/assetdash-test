@@ -156,7 +156,7 @@ export const Assets = (props: AssetsProps) => {
         <ButtonsRow>
           <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
           <TableButtons>
-            { !props.searchedData
+            { props.isSearchLineEmpty
               ? <>
                 { perPage > 100
                   ? <ButtonArrow onClick={onBackToTopClick} direction="left">

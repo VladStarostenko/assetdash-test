@@ -42,6 +42,7 @@
     "@restless/sanitizers": "^0.2.4",
     "fast-csv": "^4.3.0",
     "node-fetch": "^2.6.0",
-    "knex-paginate": "^1.2.1"
+    "knex-paginate": "^1.2.1",
+    "date-fns": "^2.15.0"
   }
 }

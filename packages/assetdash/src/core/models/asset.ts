@@ -3,11 +3,12 @@ export interface Asset {
   ticker: string;
   name: string;
   imageUrl: string;
-  currentPrice: number;
-  currentMarketcap: number;
-  currentChange: number;
+  currentPrice?: number;
+  currentMarketcap?: number;
+  currentChange?: number;
   type: string;
-  dash_daily: number;
-  dashWeekly: number;
-  dashMonthly: number;
+  dash_daily?: number;
+  dashWeekly?: number;
+  dashMonthly?: number;
+  rank?: number;
 }

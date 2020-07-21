@@ -3,12 +3,15 @@ import chaiAsPromised from 'chai-as-promised';
 import {clearDatabase} from '../../helpers/clear-db';
 import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
 import {createTestServices} from '../../helpers/createTestServices';
+import {RanksRepository} from '../../../src/integration/db/repositories/RanksRepository';
+import {Asset} from '../../../src/core/models/asset';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   let assetRepository: AssetRepository;
-  const assets = [{
+  let ranksRepository: RanksRepository;
+  const assets: Asset[] = [{
     id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
@@ -29,14 +32,32 @@ describe('Asset Repository', () => {
     imageUrl: 'bch.img',
     type: 'Cryptocurrency',
     currentMarketcap: 5
-  }
-  ];
+  }];
+
+  const date = new Date(new Date().setUTCHours(0, 0, 0, 0));
+  const ranks = [{
+    id: 1,
+    assetId: 1,
+    date: date,
+    position: 2
+  }, {
+    id: 2,
+    assetId: 2,
+    date: date,
+    position: 1
+  }, {
+    id: 3,
+    assetId: 3,
+    date: date,
+    position: 3
+  }];
 
   beforeEach(async () => {
     let db;
-    ({db, assetRepository} = createTestServices());
+    ({db, assetRepository, ranksRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
+    await ranksRepository.insertRanks(ranks);
   });
 
   describe('Update', () => {
@@ -103,7 +124,8 @@ describe('Asset Repository', () => {
             imageUrl: 'eth.img',
             name: 'Ethereum',
             ticker: 'ETH',
-            type: 'Cryptocurrency'
+            type: 'Cryptocurrency',
+            rank: 2
           }, {
             currentChange: 0,
             currentMarketcap: 5,
@@ -115,7 +137,8 @@ describe('Asset Repository', () => {
             imageUrl: 'bch.img',
             name: 'Bitcoin Cash',
             ticker: 'BCH',
-            type: 'Cryptocurrency'
+            type: 'Cryptocurrency',
+            rank: 3
           }]
         );
     });
