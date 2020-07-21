@@ -28,19 +28,12 @@ export const assets = ({assetRepository, tagRepository}: Services) => {
       } else if (query.nameOrTickerPart) {
         return responseOf(await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart));
       } else if (query.sectors) {
-        return responseOf(await assetRepository.findByIds(await getAssetIds(query.sectors)));
+        return responseOf(await assetRepository.findByTags(query.sectors));
       } else {
         return responseOf(await assetRepository.findAll());
       }
     }
   ));
-
-  const getAssetIds = async (sectors: string[]) => {
-    const tagsIdsObject = await tagRepository.getTagsIds(sectors);
-    const tagsIds = tagsIdsObject.map(tagsIdObject => tagsIdObject.id);
-    const assetIdsObject = await tagRepository.findByTagIds(tagsIds);
-    return assetIdsObject.map(assetIdObject => assetIdObject.assetId);
-  };
 
   return router;
 };

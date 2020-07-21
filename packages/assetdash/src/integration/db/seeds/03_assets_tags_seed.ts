@@ -9,12 +9,12 @@ const tagIdOf = (tag: string) => tagNames.indexOf(tag) + 1;
 
 const assetIdOf = (assetIndex: number) => assetIndex + 1;
 
-export const extractTags = (stocksAssets: string[][]): AssetWithTag[] => {
+export const addTagsForStocksAssets = (stocksAssets: string[][], startIndex: number): AssetWithTag[] => {
   return stocksAssets.map((stocksAsset, assetIndex) => {
     return stocksAsset.slice(2)
       .filter(elem => !!elem)
       .map(tag => ({
-        tagId: tagIdOf(tag), assetId: assetIdOf(assetIndex + 51)
+        tagId: tagIdOf(tag), assetId: assetIdOf(startIndex + assetIndex)
       }));
   }).reduce((acc, val) => [...acc, ...val], []);
 };
@@ -26,6 +26,7 @@ export const seed = async function (knex) {
     tagId: tagIdOf('Cryptocurrency'),
     assetId: assetIdOf(index)
   }));
-  const assetsWithTags = cryptoAssetsWithTags.concat(extractTags(stocksAssets));
+  const stocksAssetsWithTags = addTagsForStocksAssets(stocksAssets, cryptoAssets.length);
+  const assetsWithTags = cryptoAssetsWithTags.concat(stocksAssetsWithTags);
   return knex('assets_tags').insert(assetsWithTags);
 };
