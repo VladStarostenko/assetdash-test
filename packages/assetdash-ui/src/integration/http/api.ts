@@ -18,7 +18,7 @@ export class Api {
     return this.instance.get('assets', {params: {nameOrTickerPart}});
   }
 
-  getAssetsForSectors(sectors: string[]) {
-    return this.instance.get('assets', {params: {sectors}});
+  getAssetsForSectors(currentPage: number, perPage: number, sectors: string[]) {
+    return this.instance.get('assets', {params: {currentPage, perPage, sectors}});
   }
 }

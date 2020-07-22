@@ -51,13 +51,17 @@ export class AssetRepository {
     return this.db('assets').where('id', 'in', ids);
   }
 
-  async findByTags(tags: string[]): Promise<Asset[]> {
+  async findByTags(tags: string[], currentPage: number, perPage: number) {
     return this.db('assets')
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
         this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
       })
-      .select('assets.*');
+      .join('ranks', 'assets.id', 'ranks.assetId')
+      .distinct('assets.*', 'ranks.position as rank')
+      .orderBy('currentMarketcap', 'desc')
+      .select('assets.*')
+      .paginate({perPage, currentPage, isLengthAware: true});
   }
 
   async updatePrice(assetPrice: AssetPricingData) {

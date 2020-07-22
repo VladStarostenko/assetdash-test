@@ -1,22 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import styled from 'styled-components';
 import searchIcon from '../../../assets/icons/search.svg';
-import {useServices} from '../../hooks/useServices';
-import {Asset} from '../../../../core/models/asset';
+import {SearchedContext} from '../../hooks/SearchedContext';
+import {SectorsContext} from '../../hooks/SectorsContext';
 
-interface SearchProps {
-  setSearchedData(assets: Asset[]): void;
-  setIsSearchLineEmpty(isSearchLineEmpty: boolean): void;
-}
-
-export const Search = (searchProps: SearchProps) => {
-  const {api} = useServices();
+export const Search = () => {
+  const {setNameOrTickerPart} = useContext(SearchedContext);
+  const {setCheckedItems} = useContext(SectorsContext);
   const onChangeInput = (e: string) => {
     if (e.length > 1) {
-      api.searchAssets(e).then(res => searchProps.setSearchedData(res.data));
-      searchProps.setIsSearchLineEmpty(false);
+      setNameOrTickerPart(e);
+      setCheckedItems({});
     } else {
-      searchProps.setIsSearchLineEmpty(true);
+      setNameOrTickerPart('');
     }
   };
 

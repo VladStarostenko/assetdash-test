@@ -78,10 +78,11 @@ describe('Assets', () => {
 
   function renderAssets() {
     return render(
-      <ServiceContext.Provider value={createTestServices()}><ThemeContextProvider>
-        <Assets activeTab='Assets' setTab={() => { /**/
-        }} tabs={['Assets']} currentPage='1' isSearchLineEmpty={true}/>
-      </ThemeContextProvider></ServiceContext.Provider>);
+      <ServiceContext.Provider value={createTestServices()}>
+        <ThemeContextProvider>
+          <Assets activeTab='Assets' setTab={() => { /**/
+          }} tabs={['Assets']} currentPage='1'/>
+        </ThemeContextProvider></ServiceContext.Provider>);
   }
 
   it('are sorted by rank by default', async () => {

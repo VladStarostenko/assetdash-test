@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import {Table, Th} from '../common/Table/Table';
@@ -12,6 +12,8 @@ import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
+import {SectorsContext} from '../hooks/SectorsContext';
+import {SearchedContext} from '../hooks/SearchedContext';
 
 type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
 type Order = 'desc' | 'asc';
@@ -51,8 +53,6 @@ export interface AssetsProps {
   setTab: (tab: string) => void;
   currentPage?: string;
   path?: string;
-  searchedData?: Asset[];
-  isSearchLineEmpty: boolean;
 }
 
 export const Assets = (props: AssetsProps) => {
@@ -61,22 +61,54 @@ export const Assets = (props: AssetsProps) => {
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
+  const {checkedItems} = useContext(SectorsContext);
+  const {nameOrTickerPart} = useContext(SearchedContext);
 
   const {api} = useServices();
-  useEffect(() => {
-    if (props.isSearchLineEmpty) {
-      api.getPage(currentPage, perPage).then((res: GetPageResponse) => {
-        if (currentPage > 1 && perPage === 200) {
-          setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
-        } else {
-          setPageData(sortAssets(res.data.data, assetsSort));
-        }
-        setLastPage(res.data.pagination.lastPage);
-      });
-    } else if (props.searchedData) {
-      setPageData(sortAssets(props.searchedData, assetsSort));
+
+  const getSectors = () => {
+    const sectors: string[] = [];
+    for (const item in checkedItems) {
+      if (checkedItems[item]) {
+        sectors.push(item);
+      }
     }
-  }, [api, currentPage, perPage, props.searchedData, props.isSearchLineEmpty]);
+    return sectors;
+  };
+
+  const showSearchedData = () => {
+    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => setPageData(sortAssets(res.data, assetsSort)));
+  };
+
+  const paginateData = (res: GetPageResponse) => {
+    if (currentPage > 1 && perPage === 200) {
+      setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+    } else {
+      setPageData(sortAssets(res.data.data, assetsSort));
+    }
+    setLastPage(res.data.pagination.lastPage);
+  };
+
+  const showSectorsData = (sectors: string[]) => {
+    api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
+  };
+
+  const showCurrentPage = () => {
+    api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
+  };
+
+  useEffect(() => {
+    if (nameOrTickerPart) {
+      showSearchedData();
+    } else {
+      const sectors = getSectors();
+      if (sectors.length > 0) {
+        showSectorsData(sectors);
+      } else {
+        showCurrentPage();
+      }
+    }
+  }, [api, currentPage, perPage, nameOrTickerPart, checkedItems]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
@@ -156,7 +188,7 @@ export const Assets = (props: AssetsProps) => {
         <ButtonsRow>
           <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
           <TableButtons>
-            { props.isSearchLineEmpty
+            { !nameOrTickerPart
               ? <>
                 { perPage > 100
                   ? <ButtonArrow onClick={onBackToTopClick} direction="left">
