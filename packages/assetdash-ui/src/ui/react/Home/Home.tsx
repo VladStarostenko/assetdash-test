@@ -19,12 +19,19 @@ const Home = ({match}: Props) => {
   const tabs = ['Assets', 'Watchlist'];
   const [searchedData, setSearchedData] = useState<Asset[]>([]);
   const [nameOrTickerPart, setNameOrTickerPart] = useState<string>('');
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
 
   return (
     <Screen>
       <SectorsContext.Provider value={{checkedItems, setCheckedItems}}>
-        <SearchedContext.Provider value={{nameOrTickerPart, setNameOrTickerPart, searchedData, setSearchedData}}>
+        <SearchedContext.Provider
+          value={{nameOrTickerPart,
+            setNameOrTickerPart,
+            searchedData,
+            setSearchedData,
+            searchInputValue,
+            setSearchInputValue}}>
           <Container>
             <PageTitle>Top Assets by Market Cap</PageTitle>
             <PageSubtitle/>

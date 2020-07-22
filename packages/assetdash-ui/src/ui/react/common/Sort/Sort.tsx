@@ -21,10 +21,12 @@ import {useOutsideClick} from '../../hooks/useOutsideClick';
 import {ThemeContext} from '../../Theme/ThemeContextProvider';
 import {DropdownContent} from '../DropdownContent';
 import {SectorsContext} from '../../hooks/SectorsContext';
+import {SearchedContext} from '../../hooks/SearchedContext';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
   const {checkedItems, setCheckedItems} = useContext(SectorsContext);
+  const {setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
   const [maxElements, setMaxElements] = useState(5);
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
@@ -34,6 +36,8 @@ export const Sort = () => {
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNameOrTickerPart('');
+    setSearchInputValue('');
     setCheckedItems({...checkedItems, [event.target.name]: event.target.checked});
   };
 
@@ -192,12 +196,12 @@ const checkboxes: Array<CheckBox> = [
   },
   {
     icon: cryptoIcon,
-    name: 'Cryptocurrencies',
+    name: 'Cryptocurrency',
     label: 'Cryptocurrencies '
   },
   {
     icon: cannabisIcon,
-    name: 'Cannabis',
+    name: 'Green',
     label: 'Cannabis '
   },
   {

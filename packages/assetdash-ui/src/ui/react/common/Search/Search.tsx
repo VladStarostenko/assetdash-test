@@ -5,9 +5,10 @@ import {SearchedContext} from '../../hooks/SearchedContext';
 import {SectorsContext} from '../../hooks/SectorsContext';
 
 export const Search = () => {
-  const {setNameOrTickerPart} = useContext(SearchedContext);
+  const {setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
   const {setCheckedItems} = useContext(SectorsContext);
   const onChangeInput = (e: string) => {
+    setSearchInputValue(e);
     if (e.length > 1) {
       setNameOrTickerPart(e);
       setCheckedItems({});
@@ -18,7 +19,7 @@ export const Search = () => {
 
   return (
     <SearchWrapper>
-      <SearchInput onChange={e => onChangeInput(e.target.value)} placeholder="Search asset"/>
+      <SearchInput onChange={e => onChangeInput(e.target.value)} placeholder="Search asset" value={searchInputValue}/>
       <SearchButton/>
     </SearchWrapper>
   );
