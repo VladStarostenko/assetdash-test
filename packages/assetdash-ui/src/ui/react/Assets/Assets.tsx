@@ -63,6 +63,7 @@ export const Assets = (props: AssetsProps) => {
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
   const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart} = useContext(SearchedContext);
+  const [isSearchResults, setIsSearchResults] = useState<boolean>(false);
 
   const {api} = useServices();
 
@@ -70,9 +71,12 @@ export const Assets = (props: AssetsProps) => {
     return Object.entries(checkedItems).filter(([, v]) => !!v).map(([k]) => k);
   }, [checkedItems]);
 
-  const showSearchedData = useCallback(() => {
-    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => setPageData(sortAssets(res.data, assetsSort)));
-  }, [api, nameOrTickerPart, assetsSort]);
+  const showSearchedData = () => {
+    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => {
+      setIsSearchResults(res.data.length === 0);
+      setPageData(sortAssets(res.data, assetsSort));
+    });
+  };
 
   const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && perPage === 200) {
@@ -92,6 +96,7 @@ export const Assets = (props: AssetsProps) => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
+    setPageData([]);
     if (nameOrTickerPart) {
       showSearchedData();
     } else {
@@ -288,7 +293,7 @@ export const Assets = (props: AssetsProps) => {
           </TableButtons>
         </Container>
         : null }
-      { pageData.length === 0 ? <Loader/> : null}
+      { pageData.length === 0 && !isSearchResults ? <Loader/> : null}
     </>
   );
 };
