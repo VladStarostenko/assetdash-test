@@ -14,6 +14,7 @@ import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
 import {SectorsContext} from '../hooks/SectorsContext';
 import {SearchedContext} from '../hooks/SearchedContext';
+import magnifierIcon from '../../assets/icons/magnifier.svg';
 
 type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
 type Order = 'desc' | 'asc';
@@ -284,7 +285,7 @@ export const Assets = (props: AssetsProps) => {
           </tbody>
         </Table>
       </AssetsView>
-      { props.path === '/all' && currentPage < lastPage
+      { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
         ? <Container>
           <TableButtons>
             <ButtonTertiary onClick={onLoadMoreCLick}>
@@ -294,6 +295,17 @@ export const Assets = (props: AssetsProps) => {
         </Container>
         : null }
       { pageData.length === 0 && !isSearchResults ? <Loader/> : null}
+      { nameOrTickerPart && isSearchResults
+        ? <NoResultsContainer>
+          <NoResults>
+            <NoFoundIconWrapper>
+              <img src={magnifierIcon}/>
+            </NoFoundIconWrapper>
+            <NoFoundTitel>No results</NoFoundTitel>
+            <NoFoundMessage>Try different asset name</NoFoundMessage>
+          </NoResults>
+        </NoResultsContainer>
+        : null }
     </>
   );
 };
@@ -304,6 +316,47 @@ const AssetsView = styled.div`
   padding: 0 20px;
   margin: 0 auto;
   overflow-x: scroll;
+`;
+
+const NoFoundTitel = styled.h1`
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 18px;
+  color: ${({theme}) => theme.colors.colorPrimary};
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NoFoundIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NoFoundMessage = styled.div`
+  font-size: 16px;
+  line-height: 18px;
+  color: ${({theme}) => theme.colors.colorSecondary};
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NoResultsContainer = styled(Container)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NoResults = styled.div`
+  max-width: 1210px;
+  width: 100%;
+  padding: 50px 20px;
+  margin: 0 auto;
+  overflow-x: scroll;
+  background: ${({theme}) => theme.colors.backgroundPrimary};
 `;
 
 const TableButtons = styled.div`
