@@ -1,6 +1,6 @@
 import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {AssetRepository} from '../integration/db/repositories/AssetRepository';
-import {cryptoDataToCryptoPricingData, stocksAndETFsDataToStocksAndETFsPricingData} from '../core/utils';
+import {cryptoDataToCryptoPricingData, logIfError, stocksAndETFsDataToStocksAndETFsPricingData} from '../core/utils';
 import {config} from '../config/config';
 import {sleep} from '../core/models/utils';
 import {IexCloudService} from '../integration/http/IexCloudService';
@@ -46,9 +46,9 @@ export class PricingDataUpdater {
 
   loop = async (cryptoTickers: string[], stocksAndETFsTickers: string[]) => {
     while (this._running) {
-      await this.updateCryptoAssetPrices(cryptoTickers);
-      await this.updateStocksAndETFsAssetPrices(stocksAndETFsTickers);
-      await this.updateRanksForAssets();
+      await logIfError(this.updateCryptoAssetPrices(cryptoTickers));
+      await logIfError(this.updateStocksAndETFsAssetPrices(stocksAndETFsTickers));
+      await logIfError(this.updateRanksForAssets());
       await sleep(config.priceUpdateTime);
     }
   }

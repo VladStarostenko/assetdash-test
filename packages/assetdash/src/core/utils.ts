@@ -4,6 +4,14 @@ interface ErrorConstructor<T extends any[]> {
   new (...args: T): Error;
 }
 
+export async function logIfError(promise: Promise<void>) {
+  try {
+    await promise;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export function ensure<T extends any[]>(condition: boolean, ErrorToThrow: ErrorConstructor<T>, ...errorArgs: T):
   asserts condition {
   if (!condition) {

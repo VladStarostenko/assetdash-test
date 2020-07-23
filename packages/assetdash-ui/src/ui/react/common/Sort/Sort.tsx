@@ -25,8 +25,8 @@ import {SearchedContext} from '../../hooks/SearchedContext';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
-  const {checkedItems, setCheckedItems} = useContext(SectorsContext);
-  const {setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
+  const {checkedItems, setCheckedItems, resetFilter} = useContext(SectorsContext);
+  const {resetSearch} = useContext(SearchedContext);
   const [maxElements, setMaxElements] = useState(5);
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
@@ -36,8 +36,7 @@ export const Sort = () => {
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNameOrTickerPart('');
-    setSearchInputValue('');
+    resetSearch();
     setCheckedItems({...checkedItems, [event.target.name]: event.target.checked});
   };
 
@@ -80,7 +79,7 @@ export const Sort = () => {
     <SortView>
       <SortRow style={{maxWidth}}>
         <Title>Sort by sector:</Title>
-        <ResetButton isVisible={isResetButtonVisible()} onClick={() => setCheckedItems({})}>Reset filters</ResetButton>
+        <ResetButton isVisible={isResetButtonVisible()} onClick={resetFilter}>Reset filters</ResetButton>
       </SortRow>
       <SortList ref={sortListRef}>
         {checkboxes.slice(0, maxElements).map(({icon, label, name}, index) => (

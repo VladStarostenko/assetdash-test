@@ -6,12 +6,12 @@ import {SectorsContext} from '../../hooks/SectorsContext';
 
 export const Search = () => {
   const {setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
-  const {setCheckedItems} = useContext(SectorsContext);
-  const onChangeInput = (e: string) => {
-    setSearchInputValue(e);
-    if (e.length > 1) {
-      setNameOrTickerPart(e);
-      setCheckedItems({});
+  const {resetFilter} = useContext(SectorsContext);
+  const onChangeInput = (value: string) => {
+    setSearchInputValue(value);
+    if (value.length > 1) {
+      setNameOrTickerPart(value);
+      resetFilter();
     } else {
       setNameOrTickerPart('');
     }
