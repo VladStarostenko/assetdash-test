@@ -14,6 +14,7 @@ import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
 import {SectorsContext} from '../hooks/SectorsContext';
 import {SearchedContext} from '../hooks/SearchedContext';
+import magnifierIcon from '../../assets/icons/magnifier.svg';
 
 type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
 type Order = 'desc' | 'asc';
@@ -63,6 +64,7 @@ export const Assets = (props: AssetsProps) => {
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
   const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart} = useContext(SearchedContext);
+  const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
 
   const {api} = useServices();
 
@@ -71,7 +73,10 @@ export const Assets = (props: AssetsProps) => {
   }, [checkedItems]);
 
   const showSearchedData = useCallback(() => {
-    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => setPageData(sortAssets(res.data, assetsSort)));
+    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => {
+      setEmptySearchResults(res.data.length === 0);
+      setPageData(sortAssets(res.data, assetsSort));
+    });
   }, [api, nameOrTickerPart, assetsSort]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
@@ -92,6 +97,7 @@ export const Assets = (props: AssetsProps) => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
+    setPageData([]);
     if (nameOrTickerPart) {
       showSearchedData();
     } else {
@@ -105,7 +111,7 @@ export const Assets = (props: AssetsProps) => {
   }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData]);
 
   useEffect(() => {
-    setPageData((pageData) => sortAssets(pageData, assetsSort));
+    setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
 
   const history = useHistory();
@@ -279,7 +285,7 @@ export const Assets = (props: AssetsProps) => {
           </tbody>
         </Table>
       </AssetsView>
-      { props.path === '/all' && currentPage < lastPage
+      { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
         ? <Container>
           <TableButtons>
             <ButtonTertiary onClick={onLoadMoreCLick}>
@@ -287,6 +293,18 @@ export const Assets = (props: AssetsProps) => {
             </ButtonTertiary>
           </TableButtons>
         </Container>
+        : null }
+      { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
+      { nameOrTickerPart && emptySearchResults
+        ? <NoResultsContainer>
+          <NoResults>
+            <NotFoundIconWrapper>
+              <img src={magnifierIcon}/>
+            </NotFoundIconWrapper>
+            <NotFoundTitle>No results</NotFoundTitle>
+            <NotFoundMessage>Try different asset name</NotFoundMessage>
+          </NoResults>
+        </NoResultsContainer>
         : null }
     </>
   );
@@ -300,6 +318,47 @@ const AssetsView = styled.div`
   overflow-x: scroll;
 `;
 
+const NotFoundTitle = styled.h1`
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 18px;
+  color: ${({theme}) => theme.colors.colorPrimary};
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NotFoundIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NotFoundMessage = styled.div`
+  font-size: 16px;
+  line-height: 18px;
+  color: ${({theme}) => theme.colors.colorSecondary};
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
+
+const NoResultsContainer = styled(Container)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NoResults = styled.div`
+  max-width: 1210px;
+  width: 100%;
+  padding: 50px 20px;
+  margin: 0 auto;
+  overflow-x: scroll;
+  background: ${({theme}) => theme.colors.backgroundPrimary};
+`;
+
 const TableButtons = styled.div`
   display: flex;
   align-items: center;
@@ -307,5 +366,71 @@ const TableButtons = styled.div`
 
   @media(max-width: 600px) {
     display: none;
+  }
+`;
+
+const Loader = styled.div`
+  font-size: 10px;
+  text-indent: -99999em;
+  color: #21CE99;
+  margin: 55px auto;
+  position: relative;
+  width: 10em;
+  height: 10em;
+  box-shadow: inset 0 0 0 1em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  border-radius: 50%;
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+  }
+  &::before {
+    width: 5.2em;
+    height: 10.2em;
+    background: #F4FBFB;
+    border-radius: 10.2em 0 0 10.2em;
+    top: -0.1em;
+    left: -0.1em;
+    -webkit-transform-origin: 5.1em 5.1em;
+    transform-origin: 5.1em 5.1em;
+    -webkit-animation: load2 2s infinite ease 1.5s;
+    animation: load2 2s infinite ease 1.5s;
+  }
+  &::after {
+    width: 5.2em;
+    height: 10.2em;
+    background: #F4FBFB;
+    border-radius: 0 10.2em 10.2em 0;
+    top: -0.1em;
+    left: 4.9em;
+    -webkit-transform-origin: 0.1em 5.1em;
+    transform-origin: 0.1em 5.1em;
+    -webkit-animation: load2 2s infinite ease;
+    animation: load2 2s infinite ease;
+  }
+  @-webkit-keyframes load2 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load2 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
   }
 `;
