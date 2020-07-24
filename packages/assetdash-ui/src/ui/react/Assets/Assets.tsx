@@ -97,7 +97,9 @@ export const Assets = (props: AssetsProps) => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
-    setPageData([]);
+    if (perPage !== 200) {
+      setPageData([]);
+    }
     if (nameOrTickerPart) {
       showSearchedData();
     } else {
@@ -108,7 +110,7 @@ export const Assets = (props: AssetsProps) => {
         showCurrentPage();
       }
     }
-  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData]);
+  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData, perPage]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
