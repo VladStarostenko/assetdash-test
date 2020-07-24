@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import styled from 'styled-components';
 import {Td, Tr} from '../common/Table/Table';
 import angleIcon from '../../assets/icons/angle-down-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
 import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
+import {Tooltip} from '../common/Tooltip';
 
 interface AssetItemProps {
   asset: Asset;
@@ -40,6 +41,22 @@ export const AssetItem = (props: AssetItemProps) => {
     }
   };
 
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const ref = useRef<HTMLParagraphElement>(null);
+
+  const showTooltip = () => {
+    const element = ref.current;
+    if (element && element.scrollHeight > element.clientHeight) {
+      setIsTooltipVisible(true);
+    } else setIsTooltipVisible(false);
+  };
+
+  useEffect(() => {
+    showTooltip();
+    window.addEventListener('resize', showTooltip);
+    return () => window.removeEventListener('resize', showTooltip);
+  }, []);
+
   return (
     <Tr>
       <Td>{rank}</Td>
@@ -57,7 +74,9 @@ export const AssetItem = (props: AssetItemProps) => {
             width="32"
             alt={`${name} logo`}
           />
-          {name}
+          <Tooltip text={name} isVisible={isTooltipVisible}>
+            <span ref={ref}>{name}</span>
+          </Tooltip>
         </AssetName>
       </Td>
       <Td>{ticker}</Td>
@@ -103,13 +122,21 @@ const Dash = styled.p<DashProps>`
   }
 `;
 
-const AssetName = styled.p`
+const AssetName = styled.div`
   display: flex;
   align-items: center;
-  font-weight: bold;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
+
+  span {
+    max-height: 38px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;  
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    color: ${({theme}) => theme.colors.colorPrimary};
+  }
 
   img {
     margin-right: 8px;

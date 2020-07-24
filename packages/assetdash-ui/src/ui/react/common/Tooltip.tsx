@@ -4,16 +4,21 @@ import styled, {css} from 'styled-components';
 interface TooltipProps extends TooltipBodyProps {
   text: string;
   children: ReactNode;
+  isVisible?: boolean;
 }
 
-export const Tooltip = ({text, children, position}: TooltipProps) => (
-  <TooltipWrapper>
-    {children}
-    <TooltipBody position={position}>
-      <p>{text}</p>
-    </TooltipBody>
-  </TooltipWrapper>
-);
+export const Tooltip = ({text, children, position, isVisible = true}: TooltipProps) => {
+  return (
+    <TooltipWrapper>
+      {children}
+      {isVisible &&
+        <TooltipBody position={position}>
+          <p>{text}</p>
+        </TooltipBody>
+      }
+    </TooltipWrapper>
+  );
+};
 
 const tooltipRightPositionStyles = css`
   left: auto;
@@ -31,7 +36,7 @@ const tooltipRightPositionStyles = css`
   }
 `;
 
-const tooltipLefttPositionStyles = css`
+const tooltipLeftPositionStyles = css`
   left: 0;
   transform: translate(0, 100%);
 
@@ -93,7 +98,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
   }
 
   ${({position}) => position === 'right' && tooltipRightPositionStyles}
-  ${({position}) => position === 'left' && tooltipLefttPositionStyles}
+  ${({position}) => position === 'left' && tooltipLeftPositionStyles}
 `;
 
 const TooltipWrapper = styled.div`
