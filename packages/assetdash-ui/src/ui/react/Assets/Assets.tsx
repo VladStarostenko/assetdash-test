@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import {Table, Th} from '../common/Table/Table';
@@ -66,36 +66,30 @@ export const Assets = (props: AssetsProps) => {
 
   const {api} = useServices();
 
-  const getSectors = () => {
-    const sectors: string[] = [];
-    for (const item in checkedItems) {
-      if (checkedItems[item]) {
-        sectors.push(item);
-      }
-    }
-    return sectors;
-  };
+  const getSectors = useCallback(() => {
+    return Object.entries(checkedItems).filter(([, v]) => !!v).map(([k]) => k);
+  }, [checkedItems]);
 
-  const showSearchedData = () => {
+  const showSearchedData = useCallback(() => {
     api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => setPageData(sortAssets(res.data, assetsSort)));
-  };
+  }, [api, nameOrTickerPart, assetsSort]);
 
-  const paginateData = (res: GetPageResponse) => {
+  const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && perPage === 200) {
-      setPageData(sortAssets(pageData.concat(res.data.data), assetsSort));
+      setPageData((pageData) => sortAssets(pageData.concat(res.data.data), assetsSort));
     } else {
       setPageData(sortAssets(res.data.data, assetsSort));
     }
     setLastPage(res.data.pagination.lastPage);
-  };
+  }, [currentPage, perPage, assetsSort]);
 
-  const showSectorsData = (sectors: string[]) => {
+  const showSectorsData = useCallback((sectors: string[]) => {
     api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
-  };
+  }, [api, currentPage, perPage, paginateData]);
 
-  const showCurrentPage = () => {
+  const showCurrentPage = useCallback(() => {
     api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
-  };
+  }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
     if (nameOrTickerPart) {
@@ -108,10 +102,10 @@ export const Assets = (props: AssetsProps) => {
         showCurrentPage();
       }
     }
-  }, [api, currentPage, perPage, nameOrTickerPart, checkedItems]);
+  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData]);
 
   useEffect(() => {
-    setPageData(sortAssets(pageData, assetsSort));
+    setPageData((pageData) => sortAssets(pageData, assetsSort));
   }, [assetsSort]);
 
   const history = useHistory();
@@ -277,7 +271,7 @@ export const Assets = (props: AssetsProps) => {
                   <p>Monthly Dash</p>
                 </Tooltip>
               </Th>
-              <Th></Th>
+              <Th/>
             </tr>
           </thead>
           <tbody>

@@ -5,6 +5,7 @@ import {AssetRepository} from '../../../src/integration/db/repositories/AssetRep
 import {createTestServices} from '../../helpers/createTestServices';
 import {RanksRepository} from '../../../src/integration/db/repositories/RanksRepository';
 import {Asset} from '../../../src/core/models/asset';
+import {startOfToday} from 'date-fns';
 
 chai.use(chaiAsPromised);
 
@@ -34,7 +35,7 @@ describe('Asset Repository', () => {
     currentMarketcap: 5
   }];
 
-  const date = new Date(new Date().setUTCHours(0, 0, 0, 0));
+  const date = startOfToday();
   const ranks = [{
     id: 1,
     assetId: 1,
@@ -76,7 +77,7 @@ describe('Asset Repository', () => {
   describe('getTickers', () => {
     it('gets cryptocurrency tickers', async () => {
       expect(await assetRepository.getTickers('Cryptocurrency'))
-        .to.deep.eq([{ticker: 'ETH'}, {ticker: 'BTC'}, {ticker: 'BCH'}]);
+        .to.deep.eq(['ETH', 'BTC', 'BCH']);
     });
   });
 

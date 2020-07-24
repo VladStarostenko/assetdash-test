@@ -11,11 +11,9 @@ const pricingDataUpdater = new PricingDataUpdater(
 
 const run = async () => {
   const cryptoTickers = await assetRepository.getTickers('Cryptocurrency');
-  const arrayCryptoTickers = cryptoTickers.map(ticker => ticker['ticker']);
   const stocksAndETFsTickers = (await assetRepository.getTickers('Stock'))
     .concat(await assetRepository.getTickers('ETF'));
-  const arrayStocksAndETFsTickers = stocksAndETFsTickers.map(ticker => ticker['ticker']);
-  await pricingDataUpdater.loop(arrayCryptoTickers, arrayStocksAndETFsTickers);
+  await pricingDataUpdater.loop(cryptoTickers, stocksAndETFsTickers);
 };
 
 run().catch(console.error);

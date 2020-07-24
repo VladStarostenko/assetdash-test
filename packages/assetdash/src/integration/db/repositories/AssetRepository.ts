@@ -1,10 +1,10 @@
+import {startOfToday} from 'date-fns';
 import Knex from 'knex';
-import {Asset} from '../../../core/models/asset';
 import {ResourceNotFound} from '../../../core/errors';
-import {ensure} from '../../../core/utils';
+import {Asset} from '../../../core/models/asset';
 import {AssetPricingData} from '../../../core/models/assetPricingData';
 import {AssetType} from '../../../core/models/assetType';
-import {AssetTicker} from '../../../core/models/assetTicker';
+import {ensure} from '../../../core/utils';
 
 export class AssetRepository {
   constructor(private db: Knex) {}
@@ -23,7 +23,9 @@ export class AssetRepository {
 
   async findPage(currentPage: number, perPage: number) {
     return this.db('assets')
-      .join('ranks', 'assets.id', 'ranks.assetId')
+      .join('ranks', function () {
+        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
+      })
       .select('assets.*', 'ranks.position as rank')
       .orderBy('currentMarketcap', 'desc')
       .paginate({perPage, currentPage, isLengthAware: true});
@@ -57,10 +59,11 @@ export class AssetRepository {
       .join('tags', function () {
         this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
       })
-      .join('ranks', 'assets.id', 'ranks.assetId')
+      .join('ranks', function () {
+        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
+      })
       .distinct('assets.*', 'ranks.position as rank')
       .orderBy('currentMarketcap', 'desc')
-      .select('assets.*')
       .paginate({perPage, currentPage, isLengthAware: true});
   }
 
@@ -75,17 +78,20 @@ export class AssetRepository {
       });
   }
 
-  async getTickers(type: AssetType): Promise<AssetTicker[]> {
+  async getTickers(type: AssetType): Promise<string[]> {
     return this.db('assets')
       .select('ticker')
-      .where('type', type);
+      .where('type', type)
+      .pluck('ticker');
   }
 
   async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
     return this.db('assets')
-      .orderBy('currentMarketcap', 'desc')
-      .join('ranks', 'assets.id', 'ranks.assetId')
+      .join('ranks', function () {
+        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
+      })
       .select('assets.*', 'ranks.position as rank')
+      .orderBy('currentMarketcap', 'desc')
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
   }
