@@ -64,7 +64,7 @@ export const Assets = (props: AssetsProps) => {
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
   const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart} = useContext(SearchedContext);
-  const [isSearchResults, setIsSearchResults] = useState<boolean>(false);
+  const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
 
   const {api} = useServices();
 
@@ -72,12 +72,12 @@ export const Assets = (props: AssetsProps) => {
     return Object.entries(checkedItems).filter(([, v]) => !!v).map(([k]) => k);
   }, [checkedItems]);
 
-  const showSearchedData = () => {
+  const showSearchedData = useCallback(() => {
     api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => {
-      setIsSearchResults(res.data.length === 0);
+      setEmptySearchResults(res.data.length === 0);
       setPageData(sortAssets(res.data, assetsSort));
     });
-  };
+  }, [api, nameOrTickerPart, assetsSort]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && perPage === 200) {
@@ -111,7 +111,7 @@ export const Assets = (props: AssetsProps) => {
   }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData]);
 
   useEffect(() => {
-    setPageData((pageData) => sortAssets(pageData, assetsSort));
+    setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
 
   const history = useHistory();
@@ -294,15 +294,15 @@ export const Assets = (props: AssetsProps) => {
           </TableButtons>
         </Container>
         : null }
-      { pageData.length === 0 && !isSearchResults ? <Loader/> : null}
-      { nameOrTickerPart && isSearchResults
+      { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
+      { nameOrTickerPart && emptySearchResults
         ? <NoResultsContainer>
           <NoResults>
-            <NoFoundIconWrapper>
+            <NotFoundIconWrapper>
               <img src={magnifierIcon}/>
-            </NoFoundIconWrapper>
-            <NoFoundTitel>No results</NoFoundTitel>
-            <NoFoundMessage>Try different asset name</NoFoundMessage>
+            </NotFoundIconWrapper>
+            <NotFoundTitle>No results</NotFoundTitle>
+            <NotFoundMessage>Try different asset name</NotFoundMessage>
           </NoResults>
         </NoResultsContainer>
         : null }
@@ -318,7 +318,7 @@ const AssetsView = styled.div`
   overflow-x: scroll;
 `;
 
-const NoFoundTitel = styled.h1`
+const NotFoundTitle = styled.h1`
   font-weight: bold;
   font-size: 20px;
   line-height: 18px;
@@ -328,13 +328,13 @@ const NoFoundTitel = styled.h1`
   padding-top: 10px;
 `;
 
-const NoFoundIconWrapper = styled.div`
+const NotFoundIconWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 10px;
 `;
 
-const NoFoundMessage = styled.div`
+const NotFoundMessage = styled.div`
   font-size: 16px;
   line-height: 18px;
   color: ${({theme}) => theme.colors.colorSecondary};
