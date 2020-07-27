@@ -118,12 +118,17 @@ export const Assets = (props: AssetsProps) => {
       setCurrentPage(1);
       setPerPage(100);
       setAssetsSort({column: 'rank', order: 'asc'});
-      setCheckedItems({});
       setNameOrTickerPart('');
       setPageData([]);
       setSearchInputValue('');
     }
   }, [props.currentPage, props.path]);
+
+  useEffect(() => {
+    if (!nameOrTickerPart || nameOrTickerPart === '') {
+      routeChange('/');
+    }
+  }, [getSectors, nameOrTickerPart]);
 
   const history = useHistory();
   const routeChange = (path: string) => {
