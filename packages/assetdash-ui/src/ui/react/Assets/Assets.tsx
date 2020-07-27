@@ -1,20 +1,20 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
-import {Table, Th} from '../common/Table/Table';
-import {useServices} from '../hooks/useServices';
-import {AssetItem} from './AssetItem';
-import {ButtonTertiary} from '../common/Button/ButtonTertiary';
-import {Tabs} from '../common/Tabs';
-import {Container} from '../common/Container';
-import {ButtonArrow} from '../common/Button/ButtonArrow';
-import {ButtonsRow} from '../common/Button/ButtonsRow';
-import {Tooltip} from '../common/Tooltip';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
-import {SectorsContext} from '../hooks/SectorsContext';
-import {SearchedContext} from '../hooks/SearchedContext';
 import magnifierIcon from '../../assets/icons/magnifier.svg';
+import {ButtonArrow} from '../common/Button/ButtonArrow';
+import {ButtonsRow} from '../common/Button/ButtonsRow';
+import {ButtonTertiary} from '../common/Button/ButtonTertiary';
+import {Container} from '../common/Container';
+import {Table, Th} from '../common/Table/Table';
+import {Tabs} from '../common/Tabs';
+import {Tooltip} from '../common/Tooltip';
+import {SearchedContext} from '../hooks/SearchedContext';
+import {SectorsContext} from '../hooks/SectorsContext';
+import {useServices} from '../hooks/useServices';
+import {AssetItem} from './AssetItem';
 
 type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
 type Order = 'desc' | 'asc';
@@ -73,11 +73,11 @@ export const Assets = (props: AssetsProps) => {
   }, [checkedItems]);
 
   const showSearchedData = useCallback(() => {
-    api.searchAssets(nameOrTickerPart).then((res: { data: Asset[] }) => {
-      setEmptySearchResults(res.data.length === 0);
-      setPageData(sortAssets(res.data, assetsSort));
+    api.searchAssets(nameOrTickerPart).then((res: GetPageResponse) => {
+      setEmptySearchResults(res.data.data.length === 0);
+      setPageData(sortAssets(res.data.data, assetsSort));
     });
-  }, [api, nameOrTickerPart, assetsSort]);
+  }, [api, nameOrTickerPart]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && perPage === 200) {
@@ -86,7 +86,7 @@ export const Assets = (props: AssetsProps) => {
       setPageData(sortAssets(res.data.data, assetsSort));
     }
     setLastPage(res.data.pagination.lastPage);
-  }, [currentPage, perPage, assetsSort]);
+  }, [currentPage, perPage]);
 
   const showSectorsData = useCallback((sectors: string[]) => {
     api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
@@ -160,156 +160,136 @@ export const Assets = (props: AssetsProps) => {
 
   const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
 
-  const onAssetNameClick = () => {
-    setAssetsSortForColumn('name');
-  };
-
-  const onRankClick = () => {
-    setAssetsSortForColumn('rank');
-  };
-
-  const onSymbolClick = () => {
-    setAssetsSortForColumn('ticker');
-  };
-
-  const onMarketcapClick = () => {
-    setAssetsSortForColumn('currentMarketcap');
-  };
-
-  const onPriceClick = () => {
-    setAssetsSortForColumn('currentPrice');
-  };
-
-  const onTodayClick = () => {
-    setAssetsSortForColumn('currentChange');
-  };
-
-  return (
-    <>
-      <Container>
-        <ButtonsRow>
-          <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
-          <TableButtons>
-            { !nameOrTickerPart
-              ? <>
-                { perPage > 100
-                  ? <ButtonArrow onClick={onBackToTopClick} direction="left">
-                Back to Top 100
-                  </ButtonArrow>
-                  : <>
-                    { currentPage > 1
-                      ? <ButtonArrow onClick={onPreviousClick} direction="left">
-                    Previous 100
-                      </ButtonArrow>
-                      : null }
-                    { currentPage < lastPage
-                      ? <ButtonArrow onClick={onNextClick} direction="right">
-                    Next 100
-                      </ButtonArrow>
-                      : null }
-                    <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
-                  </>
-                } </>
-              : null }
-          </TableButtons>
-        </ButtonsRow>
+  return <>
+    <Container>
+      <ButtonsRow>
+        <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
+        <TableButtons>
+          { !nameOrTickerPart
+            ? <>
+              { perPage > 100
+                ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+              Back to Top 100
+                </ButtonArrow>
+                : <>
+                  { currentPage > 1
+                    ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                  Previous 100
+                    </ButtonArrow>
+                    : null }
+                  { currentPage < lastPage
+                    ? <ButtonArrow onClick={onNextClick} direction="right">
+                  Next 100
+                    </ButtonArrow>
+                    : null }
+                  <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+                </>
+              } </>
+            : null }
+        </TableButtons>
+      </ButtonsRow>
+    </Container>
+    <AssetsView>
+      <Table>
+        <thead>
+          <tr>
+            <Th
+              data-testid='rank-column-header'
+              className={getIconClassName('rank')}
+              onClick={() => setAssetsSortForColumn('rank')}
+            >
+              Rank
+            </Th>
+            <Th>
+              <Tooltip
+                text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
+                    an asset has moved up or down in the leaderboard over the course of the day."
+                position="left"
+              >
+                <p>Daily Dash</p>
+              </Tooltip>
+            </Th>
+            <Th
+              data-testid='name-column-header'
+              className={getIconClassName('name')}
+              onClick={() => setAssetsSortForColumn('name')}
+            >
+              Asset Name
+            </Th>
+            <Th
+              data-testid='symbol-column-header'
+              className={getIconClassName('ticker')}
+              onClick={() => setAssetsSortForColumn('ticker')}
+            >
+              Symbol
+            </Th>
+            <Th
+              data-testid='marketcap-column-header'
+              className={getIconClassName('currentMarketcap')}
+              onClick={() => setAssetsSortForColumn('currentMarketcap')}
+            >
+              Market Cap
+            </Th>
+            <Th
+              data-testid='price-column-header'
+              className={getIconClassName('currentPrice')}
+              onClick={() => setAssetsSortForColumn('currentPrice')}
+            >
+              Price
+            </Th>
+            <Th
+              data-testid='today-column-header'
+              className={getIconClassName('currentChange')}
+              onClick={() => setAssetsSortForColumn('currentChange')}
+            >
+              Today
+            </Th>
+            <Th>
+              <Tooltip
+                text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
+                     an asset has moved up or down in the leaderboard over the course of the week."
+              >
+                <p>Weekly Dash</p>
+              </Tooltip>
+            </Th>
+            <Th>
+              <Tooltip
+                text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
+                     an asset has moved up or down in the leaderboard over the course of the month."
+              >
+                <p>Monthly Dash</p>
+              </Tooltip>
+            </Th>
+            <Th/>
+          </tr>
+        </thead>
+        <tbody>
+          {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
+        </tbody>
+      </Table>
+    </AssetsView>
+    { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
+      ? <Container>
+        <TableButtons>
+          <ButtonTertiary onClick={onLoadMoreCLick}>
+            Load More
+          </ButtonTertiary>
+        </TableButtons>
       </Container>
-      <AssetsView>
-        <Table>
-          <thead>
-            <tr>
-              <Th data-testid='rank-column-header' className={getIconClassName('rank')} onClick={onRankClick}>Rank</Th>
-              <Th>
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
-                      an asset has moved up or down in the leaderboard over the course of the day."
-                  position="left"
-                >
-                  <p>Daily Dash</p>
-                </Tooltip>
-              </Th>
-              <Th
-                data-testid='name-column-header'
-                className={getIconClassName('name')}
-                onClick={onAssetNameClick}
-              >
-                Asset Name
-              </Th>
-              <Th
-                data-testid='symbol-column-header'
-                className={getIconClassName('ticker')}
-                onClick={onSymbolClick}
-              >
-                Symbol
-              </Th>
-              <Th
-                data-testid='marketcap-column-header'
-                className={getIconClassName('currentMarketcap')}
-                onClick={onMarketcapClick}
-              >
-                Market Cap
-              </Th>
-              <Th
-                data-testid='price-column-header'
-                className={getIconClassName('currentPrice')}
-                onClick={onPriceClick}
-              >
-                Price
-              </Th>
-              <Th
-                data-testid='today-column-header'
-                className={getIconClassName('currentChange')}
-                onClick={onTodayClick}
-              >
-                Today
-              </Th>
-              <Th>
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
-                       an asset has moved up or down in the leaderboard over the course of the week."
-                >
-                  <p>Weekly Dash</p>
-                </Tooltip>
-              </Th>
-              <Th>
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
-                       an asset has moved up or down in the leaderboard over the course of the month."
-                >
-                  <p>Monthly Dash</p>
-                </Tooltip>
-              </Th>
-              <Th/>
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
-          </tbody>
-        </Table>
-      </AssetsView>
-      { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
-        ? <Container>
-          <TableButtons>
-            <ButtonTertiary onClick={onLoadMoreCLick}>
-              Load More
-            </ButtonTertiary>
-          </TableButtons>
-        </Container>
-        : null }
-      { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
-      { nameOrTickerPart && emptySearchResults
-        ? <NoResultsContainer>
-          <NoResults>
-            <NotFoundIconWrapper>
-              <img src={magnifierIcon}/>
-            </NotFoundIconWrapper>
-            <NotFoundTitle>No results</NotFoundTitle>
-            <NotFoundMessage>Try different asset name</NotFoundMessage>
-          </NoResults>
-        </NoResultsContainer>
-        : null }
-    </>
-  );
+      : null }
+    { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
+    { nameOrTickerPart && emptySearchResults
+      ? <NoResultsContainer>
+        <NoResults>
+          <NotFoundIconWrapper>
+            <img src={magnifierIcon}/>
+          </NotFoundIconWrapper>
+          <NotFoundTitle>No results</NotFoundTitle>
+          <NotFoundMessage>Try different asset name</NotFoundMessage>
+        </NoResults>
+      </NoResultsContainer>
+      : null }
+  </>;
 };
 
 const AssetsView = styled.div`

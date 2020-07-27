@@ -12,6 +12,7 @@ export interface CheckboxProps {
 export const Checkbox = ({id, value, name, onChange}: CheckboxProps) => (
   <CheckboxWrapper>
     <HiddenCheckbox
+      data-testid='sector-checkbox'
       name={name}
       id={id || ''}
       onChange={onChange}

@@ -3,7 +3,7 @@ import {Router as expressRouter} from 'express';
 import {asyncHandler, sanitize, responseOf} from '@restless/restless';
 import {asArray, asNumber, asObject, asOptional, asString} from '@restless/sanitizers';
 
-export const assets = ({assetRepository, tagRepository}: Services) => {
+export const assets = ({assetRepository}: Services) => {
   const router = expressRouter();
 
   router.get('/', asyncHandler(
@@ -19,7 +19,7 @@ export const assets = ({assetRepository, tagRepository}: Services) => {
       if (query.sectors && query.currentPage && query.perPage) {
         return responseOf(await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage));
       } else if (query.nameOrTickerPart) {
-        return responseOf(await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart));
+        return responseOf({data: await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart)});
       } else if (query.currentPage && query.perPage) {
         return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
       } else {

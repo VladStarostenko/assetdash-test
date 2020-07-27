@@ -19,7 +19,10 @@ export const Search = () => {
 
   return (
     <SearchWrapper>
-      <SearchInput onChange={e => onChangeInput(e.target.value)} placeholder="Search asset" value={searchInputValue}/>
+      <SearchInput data-testid="search-input"
+        onChange={e => onChangeInput(e.target.value)}
+        placeholder="Search asset"
+        value={searchInputValue}/>
       <SearchButton/>
     </SearchWrapper>
   );
