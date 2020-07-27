@@ -62,7 +62,7 @@ export const Assets = (props: AssetsProps) => {
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
-  const {checkedItems, setCheckedItems} = useContext(SectorsContext);
+  const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart, setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
 
