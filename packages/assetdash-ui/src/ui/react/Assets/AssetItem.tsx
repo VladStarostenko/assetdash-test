@@ -16,7 +16,6 @@ export const AssetItem = (props: AssetItemProps) => {
     rank,
     ticker,
     name,
-    imageUrl,
     currentPrice,
     currentMarketcap,
     currentChange,
@@ -30,15 +29,6 @@ export const AssetItem = (props: AssetItemProps) => {
 
   const onFavoriteButtonClick = () => {
     setIsFavorite(!isFavorite);
-  };
-
-  const missingImages = ['VWAGY', 'TTNDY', 'BMWYY'];
-  const getImageUrl = () => {
-    if (missingImages.includes(ticker)) {
-      return 'https://storage.googleapis.com/iex/api/logos/NFLX.png';
-    } else {
-      return imageUrl;
-    }
   };
 
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
@@ -69,7 +59,7 @@ export const AssetItem = (props: AssetItemProps) => {
             src={
               (type === 'Cryptocurrency'
                 ? require(`../../assets/crypto-icons/${ticker.toLowerCase()}.svg`)
-                : getImageUrl())
+                : require(`../../assets/stocks-icons/${ticker.toUpperCase()}.png`))
             }
             width="32"
             alt={`${name} logo`}
@@ -129,7 +119,7 @@ const AssetName = styled.div`
   span {
     max-height: 38px;
     display: -webkit-box;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
     font-weight: bold;
