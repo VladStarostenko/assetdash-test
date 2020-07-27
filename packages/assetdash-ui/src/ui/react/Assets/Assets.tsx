@@ -374,7 +374,7 @@ const Loader = styled.div`
   &::before {
     width: 5.2em;
     height: 10.2em;
-    background: #F4FBFB;
+    background: ${({theme}) => theme.colors.backgroundSecondary};
     border-radius: 10.2em 0 0 10.2em;
     top: -0.1em;
     left: -0.1em;
@@ -386,7 +386,7 @@ const Loader = styled.div`
   &::after {
     width: 5.2em;
     height: 10.2em;
-    background: #F4FBFB;
+    background: ${({theme}) => theme.colors.backgroundSecondary};
     border-radius: 0 10.2em 10.2em 0;
     top: -0.1em;
     left: 4.9em;
