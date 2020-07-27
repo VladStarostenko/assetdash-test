@@ -3,7 +3,7 @@ export const lightTheme = {
     colorPrimary: '#1F3840',
     colorSecondary: '#8395AE',
     backgroundPrimary: '#FFFFFF',
-    backgroundSecondary: '#F4FBFB;',
+    backgroundSecondary: '#F4FBFB',
     borderPrimary: '#E7EBF2',
     borderSecondary: '#EEF2FA',
     boxShadowPrimary: '0px 4px 32px rgba(225, 242, 242, 0.59)',
