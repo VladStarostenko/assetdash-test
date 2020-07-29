@@ -1,3 +1,5 @@
+import {parseISO} from 'date-fns';
+import {zonedTimeToUtc} from 'date-fns-tz';
 import {AssetPricingData} from './models/assetPricingData';
 
 interface ErrorConstructor<T extends any[]> {
@@ -25,7 +27,8 @@ export function cryptoDataToCryptoPricingData(assetData: object): AssetPricingDa
     price: assetData['quote']['USD']['price'],
     marketcap: assetData['quote']['USD']['market_cap'],
     change: assetData['quote']['USD']['percent_change_24h'],
-    type: ['Cryptocurrency']
+    type: ['Cryptocurrency'],
+    lastUpdated: new Date(assetData['last_updated'])
   };
 }
 
@@ -35,6 +38,10 @@ export function stocksAndETFsDataToStocksAndETFsPricingData(assetData: object): 
     price: assetData['quote']['latestPrice'],
     marketcap: assetData['quote']['marketCap'],
     change: assetData['quote']['changePercent'] * 100,
-    type: ['Stock', 'ETF']
+    type: ['Stock', 'ETF'],
+    lastUpdated: new Date(assetData['quote']['latestUpdate'])
   };
 }
+
+export const parseAsEstDate = (isoDateString: string) => zonedTimeToUtc(parseISO(isoDateString), 'America/New_York');
+export const estDate = (isoDate: Date) => zonedTimeToUtc(isoDate, 'America/New_York');

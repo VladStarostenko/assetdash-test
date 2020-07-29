@@ -7,6 +7,7 @@ import pg from 'pg';
 import {attachPaginate} from 'knex-paginate';
 import {TagRepository} from '../integration/db/repositories/TagRepository';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
+import {DashService} from './DashService';
 
 const PG_DECIMAL_OID = 1700;
 
@@ -17,14 +18,18 @@ const createDb = (config: Config) => {
   return db;
 };
 
-export const initServices = (db, config: Config) => ({
-  db: db,
-  assetRepository: new AssetRepository(db),
-  tagRepository: new TagRepository(db),
-  ranksRepository: new RanksRepository(db),
-  coinmarketCapService: new CoinmarketCapService(),
-  iexCloudService: new IexCloudService(config.iexCloudBaseUrl)
-});
+export const initServices = (db, config: Config) => {
+  const ranksRepository = new RanksRepository(db);
+  return ({
+    db: db,
+    assetRepository: new AssetRepository(db),
+    tagRepository: new TagRepository(db),
+    ranksRepository: ranksRepository,
+    coinmarketCapService: new CoinmarketCapService(config.coinmarketCapBaseUrl),
+    iexCloudService: new IexCloudService(config.iexCloudBaseUrl, config.iexBatchSize),
+    dashService: new DashService(ranksRepository)
+  });
+};
 
 export const createServices = (config: Config) => {
   return initServices(createDb(config), config);

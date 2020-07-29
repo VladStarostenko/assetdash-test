@@ -1,3 +1,32 @@
+import {Asset} from '../../src/core/models/asset';
+import {AssetType} from '../../src/core/models/assetType';
+import {Rank} from '../../src/core/models/rank';
+
+let lastId = 0;
+
+import {RanksRepository} from '../../src/integration/db/repositories/RanksRepository';
+
+export function assetWithId(id: number): Asset {
+  return {id, imageUrl: '', name: 'Bitcoin', ticker: 'BTC', type: 'Cryptocurrency'};
+}
+
+export function anAsset({
+  ticker = '',
+  name = '',
+  assetType = 'Cryptocurrency' as AssetType
+} = {}): Asset {
+  return {
+    id: lastId++, imageUrl: '', name, ticker, type: assetType
+  };
+}
+
+export const insertRanks = (ranksRepository: RanksRepository) => async (ranks: Rank[]) => {
+  for (const rank of ranks) {
+    await ranksRepository.updateRank(rank);
+  }
+};
+export const DEFAULT_LAST_UPDATED = new Date('2020-01-01T00:00:00.000Z');
+
 export const stockAssetData = {
   quote: {
     symbol: 'AAPL',

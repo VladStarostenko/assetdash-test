@@ -21,12 +21,15 @@ export class AssetRepository {
     return this.db('assets').orderBy('currentMarketcap', 'desc').select();
   }
 
-  async findPage(currentPage: number, perPage: number) {
+  async findPage(currentPage: number, perPage: number, now?: Date) {
+    const maxDate = this.db('ranks')
+      .distinctOn('assetId')
+      .select('position', 'assetId')
+      .orderBy([{column: 'assetId'}, {column: 'date', order: 'desc'}, {column: 'isOpen', order: 'asc'}])
+      .as('currentRank');
     return this.db('assets')
-      .join('ranks', function () {
-        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
-      })
-      .select('assets.*', 'ranks.position as rank')
+      .join(maxDate, 'assets.id', '=', 'currentRank.assetId')
+      .select('assets.*', 'currentRank.position as rank')
       .orderBy('currentMarketcap', 'desc')
       .paginate({perPage, currentPage, isLengthAware: true});
   }
@@ -44,7 +47,8 @@ export class AssetRepository {
       .join('ranks', 'assets.id', 'ranks.assetId')
       .select('assets.*', 'ranks.position as rank')
       .where({assetId: id})
-      .andWhere({date: date}).first();
+      .orderBy('ranks.date', 'desc')
+      .first();
     ensure(asset !== undefined, ResourceNotFound, 'asset', id);
     return asset;
   }
@@ -74,7 +78,8 @@ export class AssetRepository {
       .update({
         currentPrice: assetPrice.price,
         currentMarketcap: assetPrice.marketcap,
-        currentChange: assetPrice.change
+        currentChange: assetPrice.change,
+        lastUpdated: assetPrice.lastUpdated
       });
   }
 
@@ -94,5 +99,15 @@ export class AssetRepository {
       .orderBy('currentMarketcap', 'desc')
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
+  }
+
+  async updateDash(assetId: number, dashDaily: number, dashWeekly: number, dashMonthly: number) {
+    return this.db('assets')
+      .where('id', assetId)
+      .update({
+        dashDaily,
+        dashWeekly,
+        dashMonthly
+      });
   }
 }

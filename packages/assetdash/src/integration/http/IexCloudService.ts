@@ -6,7 +6,7 @@ export class IexCloudService {
   private readonly fetch: HttpFunction;
   private readonly batchSize: number;
 
-  constructor(iexCloudBaseUrl: any, batchSize: any = 100) {
+  constructor(iexCloudBaseUrl: string, batchSize = 100) {
     this.fetch = http(fetch)(iexCloudBaseUrl);
     this.batchSize = batchSize;
   }

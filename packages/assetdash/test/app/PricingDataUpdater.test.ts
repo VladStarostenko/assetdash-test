@@ -1,9 +1,11 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {PricingDataUpdater} from '../../src/app/PricingDataUpdater';
+import {Rank} from '../../src/core/models/rank';
+import {parseAsEstDate} from '../../src/core/utils';
 import {clearDatabase} from '../helpers/clear-db';
 import {createTestServices} from '../helpers/createTestServices';
-import {startOfToday, startOfYesterday} from 'date-fns';
+import {assetWithId, insertRanks} from '../helpers/fixtures';
 
 chai.use(chaiAsPromised);
 
@@ -12,15 +14,17 @@ describe('PricingDataUpdater', () => {
   let assetRepository;
   let ranksRepository;
   let db;
+  let storeRanks: (ranks: Rank[]) => Promise<void>;
 
   beforeEach(() => {
     let iexCloudService;
     let coinmarketCapService;
-    ({db, assetRepository, iexCloudService, coinmarketCapService, ranksRepository} = createTestServices());
+    let dashService;
+    ({db, assetRepository, iexCloudService, coinmarketCapService, ranksRepository, dashService} = createTestServices(true));
     pricingDataUpdater = new PricingDataUpdater(
-      iexCloudService, coinmarketCapService,
-      assetRepository,
-      ranksRepository);
+      iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService
+    );
+    storeRanks = insertRanks(ranksRepository);
   });
 
   describe('updateAssetPrices', () => {
@@ -42,8 +46,9 @@ describe('PricingDataUpdater', () => {
   });
 
   describe('updateAssetRanks', () => {
-    const TODAY = startOfToday();
-    const YESTERDAY = startOfYesterday();
+    const TODAYOPEN = parseAsEstDate('2020-05-12 11:00');
+    const TODAY = parseAsEstDate('2020-05-12 12:00');
+    const YESTERDAY = parseAsEstDate('2020-05-11 12:00');
 
     beforeEach(async () => {
       await clearDatabase(db);
@@ -53,51 +58,84 @@ describe('PricingDataUpdater', () => {
         imageUrl: 'eth.img',
         type: 'Cryptocurrency',
         id: 1,
-        currentMarketcap: 10
+        currentMarketcap: 10,
+        lastUpdated: TODAYOPEN
       }, {
         ticker: 'BTC',
         name: 'Bitcoin',
         imageUrl: 'btc.img',
         type: 'Cryptocurrency',
         id: 2,
-        currentMarketcap: 20
+        currentMarketcap: 20,
+        lastUpdated: TODAYOPEN
       }]);
-    });
-
-    it('update ranks for today does not change ranks from yesterday', async () => {
-      await ranksRepository.insertRanks([{
-        assetId: 1,
-        position: 2,
-        date: YESTERDAY
-      }, {
-        assetId: 2,
-        position: 1,
-        date: YESTERDAY
-      }]);
-      await pricingDataUpdater.updateRanksForAssets();
-      expect((await assetRepository.findByIdWithRank(1, YESTERDAY)).rank).be.eq(2);
-      expect((await assetRepository.findByIdWithRank(2, YESTERDAY)).rank).be.eq(1);
-    });
-
-    it('update ranks for today', async () => {
-      await ranksRepository.insertRanks([{
-        assetId: 1,
-        position: 1,
-        date: TODAY
-      }, {
-        assetId: 2,
-        position: 2,
-        date: TODAY
-      }]);
-      await pricingDataUpdater.updateRanksForAssets();
-      expect((await assetRepository.findByIdWithRank(1, TODAY)).rank).be.eq(2);
-      expect((await assetRepository.findByIdWithRank(2, TODAY)).rank).be.eq(1);
     });
 
     it('inserts ranks for assets with new date', async () => {
       await pricingDataUpdater.updateRanksForAssets();
-      expect((await assetRepository.findByIdWithRank(1, TODAY)).rank).be.eq(2);
-      expect((await assetRepository.findByIdWithRank(2, TODAY)).rank).be.eq(1);
+      const data = (await assetRepository.findPage(1, 2, TODAY)).data;
+      expect(await ranksRepository.findOpenFor(TODAY, 2)).to.deep.include({position: 1, date: TODAYOPEN});
+      expect(await ranksRepository.findOpenFor(TODAY, 1)).to.deep.include({position: 2, date: TODAYOPEN});
+      expect(data[0]).to.deep.include({id: 2, rank: 1});
+      expect(data[1]).to.deep.include({id: 1, rank: 2});
+    });
+
+    it('update ranks for today does not change ranks from yesterday', async () => {
+      await storeRanks([{
+        assetId: 1,
+        position: 1,
+        date: YESTERDAY
+      }, {
+        assetId: 2,
+        position: 2,
+        date: YESTERDAY
+      }]);
+      await pricingDataUpdater.updateRanksForAssets();
+      expect(await ranksRepository.findMostRecentFor(YESTERDAY, 1)).to.deep.include({position: 1, date: YESTERDAY});
+      expect(await ranksRepository.findMostRecentFor(YESTERDAY, 2)).to.deep.include({position: 2, date: YESTERDAY});
+    });
+
+    it('update ranks for today', async () => {
+      await storeRanks([{
+        assetId: 1,
+        position: 1,
+        date: TODAYOPEN
+      }, {
+        assetId: 2,
+        position: 2,
+        date: TODAYOPEN
+      }]);
+      await pricingDataUpdater.updateRanksForAssets();
+      expect(await ranksRepository.findOpenFor(TODAY, 1)).to.deep.include({position: 1, date: TODAYOPEN});
+      expect(await ranksRepository.findOpenFor(TODAY, 2)).to.deep.include({position: 2, date: TODAYOPEN});
+      expect(await ranksRepository.findMostRecentFor(TODAY, 1)).to.deep.include({position: 2, date: TODAYOPEN});
+      expect(await ranksRepository.findMostRecentFor(TODAY, 2)).to.deep.include({position: 1, date: TODAYOPEN});
+
+      const data = (await assetRepository.findPage(1, 20)).data;
+      expect(data).to.have.length(2);
+      expect(data[0]).to.deep.include({id: 2, rank: 1});
+      expect(data[1]).to.deep.include({id: 1, rank: 2});
+    });
+  });
+
+  describe('update dash', () => {
+    beforeEach(async () => {
+      await clearDatabase(db);
+      await assetRepository.insertAsset(assetWithId(1));
+    });
+
+    it('update daily, weekly and monthly dash ', async () => {
+      const now = parseAsEstDate('2020-05-15 12:41');
+      await ranksRepository.updateRank({assetId: 1, position: 110, date: parseAsEstDate('2020-05-01 09:40')});
+      await ranksRepository.updateRank({assetId: 1, position: 100, date: parseAsEstDate('2020-05-11 09:40')});
+      await ranksRepository.updateRank({assetId: 1, position: 95, date: parseAsEstDate('2020-05-15 09:40')});
+      await ranksRepository.updateRank({assetId: 1, position: 92, date: parseAsEstDate('2020-05-15 12:40')});
+
+      await pricingDataUpdater.updateDash(now);
+
+      expect((await assetRepository.findById(1)).dashDaily).to.be.eq(3);
+      expect((await assetRepository.findById(1)).dashWeekly).to.be.eq(8);
+      expect((await assetRepository.findById(1)).dashMonthly).to.be.eq(18);
     });
   });
 });
