@@ -73,7 +73,7 @@ describe('PricingDataUpdater', () => {
 
     it('inserts ranks for assets with new date', async () => {
       await pricingDataUpdater.updateRanksForAssets();
-      const data = (await assetRepository.findPage(1, 2, TODAY)).data;
+      const data = (await assetRepository.findPage(1, 2)).data;
       expect(await ranksRepository.findOpenFor(TODAY, 2)).to.deep.include({position: 1, date: TODAYOPEN});
       expect(await ranksRepository.findOpenFor(TODAY, 1)).to.deep.include({position: 2, date: TODAYOPEN});
       expect(data[0]).to.deep.include({id: 2, rank: 1});
