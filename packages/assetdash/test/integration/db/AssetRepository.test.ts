@@ -29,10 +29,10 @@ describe('Asset Repository', () => {
     currentMarketcap: 20
   }, {
     id: 3,
-    ticker: 'BCH',
-    name: 'Bitcoin Cash',
-    imageUrl: 'bch.img',
-    type: 'Cryptocurrency',
+    ticker: 'AAPL',
+    name: 'Apple',
+    imageUrl: 'aapl.img',
+    type: 'Stock',
     currentMarketcap: 5
   }];
 
@@ -52,14 +52,36 @@ describe('Asset Repository', () => {
     assetId: 3,
     date: date,
     position: 3
+  }, {
+    id: 4,
+    assetId: 1,
+    date: date,
+    position: 2
+  }, {
+    id: 5,
+    assetId: 2,
+    date: date,
+    position: 1
+  }, {
+    id: 6,
+    assetId: 3,
+    date: date,
+    position: 3
   }];
+
+  const tags = [{name: 'Cryptocurrency'}, {name: 'Internet'}, {name: 'Finance'}];
+
+  const assetsTags = [{assetId: 1, tagId: 1}, {assetId: 2, tagId: 1}, {assetId: 3, tagId: 2}, {assetId: 3, tagId: 3}];
 
   beforeEach(async () => {
     let db;
-    ({db, assetRepository, ranksRepository} = createTestServices());
+    let tagRepository;
+    ({db, assetRepository, ranksRepository, tagRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
     await (insertRanks(ranksRepository))(ranks);
+    await tagRepository.insertTags(tags);
+    await tagRepository.insertAssetsTags(assetsTags);
   });
 
   describe('Update', () => {
@@ -81,7 +103,7 @@ describe('Asset Repository', () => {
   describe('getTickers', () => {
     it('gets cryptocurrency tickers', async () => {
       expect(await assetRepository.getTickers('Cryptocurrency'))
-        .to.deep.eq(['ETH', 'BTC', 'BCH']);
+        .to.deep.eq(['ETH', 'BTC']);
     });
   });
 
@@ -117,72 +139,18 @@ describe('Asset Repository', () => {
 
   describe('findByString', () => {
     it('returns assets with string in name or ticker', async () => {
-      expect(await assetRepository.findByNameOrTickerPart('h'))
-        .to.deep.eq([
-          {
-            currentChange: 0,
-            currentMarketcap: 10,
-            currentPrice: 0,
-            dashDaily: 0,
-            dashMonthly: 0,
-            dashWeekly: 0,
-            id: 1,
-            imageUrl: 'eth.img',
-            name: 'Ethereum',
-            ticker: 'ETH',
-            lastUpdated: DEFAULT_LAST_UPDATED,
-            type: 'Cryptocurrency',
-            rank: 2
-          }, {
-            currentChange: 0,
-            currentMarketcap: 5,
-            currentPrice: 0,
-            dashDaily: 0,
-            dashMonthly: 0,
-            dashWeekly: 0,
-            id: 3,
-            imageUrl: 'bch.img',
-            name: 'Bitcoin Cash',
-            ticker: 'BCH',
-            lastUpdated: DEFAULT_LAST_UPDATED,
-            type: 'Cryptocurrency',
-            rank: 3
-          }]
-        );
+      const assets = await assetRepository.findByNameOrTickerPart('t');
+      expect(assets).to.have.length(2);
+      expect(assets[0]).to.deep.include({name: 'Bitcoin'});
+      expect(assets[1]).to.deep.include({name: 'Ethereum'});
     });
   });
 
-  describe('findByIds', () => {
-    it('returns assets with the submitted ids', async () => {
-      expect(await assetRepository.findByIds([1, 2]))
-        .to.deep.eq([{
-          currentChange: 0,
-          currentMarketcap: 10,
-          currentPrice: 0,
-          dashDaily: 0,
-          dashMonthly: 0,
-          dashWeekly: 0,
-          id: 1,
-          imageUrl: 'eth.img',
-          name: 'Ethereum',
-          lastUpdated: DEFAULT_LAST_UPDATED,
-          ticker: 'ETH',
-          type: 'Cryptocurrency'
-        }, {
-          currentChange: 0,
-          currentMarketcap: 20,
-          currentPrice: 0,
-          dashDaily: 0,
-          dashMonthly: 0,
-          dashWeekly: 0,
-          id: 2,
-          imageUrl: 'btc.img',
-          name: 'Bitcoin',
-          ticker: 'BTC',
-          lastUpdated: DEFAULT_LAST_UPDATED,
-          type: 'Cryptocurrency'
-        }]
-        );
+  describe('findByTags', () => {
+    it('returns assets with selected tags', async () => {
+      const data = (await assetRepository.findByTags(['Internet', 'Finance'], 1, 10)).data;
+      expect(data).to.have.length(1);
+      expect(data[0]).to.deep.include({ticker: 'AAPL'});
     });
   });
 });
