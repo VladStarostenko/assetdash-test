@@ -34,13 +34,13 @@ async function iexWillReturn(ticker: string, iexResponse: any) {
     });
 }
 
-async function coinmarketcapWillReturn(ticker: string, coinmarketcapResponse: any) {
+async function coinmarketcapWillReturn(ticker: string, coinmarketcapResponse: any[]) {
+  const result = {};
+  coinmarketcapResponse.forEach((crypto) => { result[crypto.symbol] = crypto; });
   nock(/coinmarketcap\.test/)
     .get(new RegExp(ticker))
     .reply(200, {
-      data: {
-        ticker: coinmarketcapResponse
-      }
+      data: result
     });
 }
 
@@ -104,7 +104,7 @@ describe('Whole flow', () => {
     ]);
 
     await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:55', symbol: 'AAPL', marketCap: 100}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50}));
+    await coinmarketcapWillReturn('ETH', [crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50})]);
     await doOneUpdate('2020-05-12 10:00');
 
     const assets = await findAssets();
@@ -119,17 +119,50 @@ describe('Whole flow', () => {
     ]);
 
     await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:55', symbol: 'AAPL', marketCap: 100}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50}));
+    await coinmarketcapWillReturn('ETH', [crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50})]);
     await doOneUpdate('2020-05-12 09:55');
     await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:56', symbol: 'AAPL', marketCap: 70}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:56', symbol: 'ETH', marketCap: 71}));
+    await coinmarketcapWillReturn('ETH', [crypto({latestUpdate: '2020-05-12 09:56', symbol: 'ETH', marketCap: 71})]);
     await doOneUpdate('2020-05-12 09:56');
     await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:57', symbol: 'AAPL', marketCap: 50}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:57', symbol: 'ETH', marketCap: 150}));
+    await coinmarketcapWillReturn('ETH', [crypto({latestUpdate: '2020-05-12 09:57', symbol: 'ETH', marketCap: 150})]);
     await doOneUpdate('2020-05-12 09:57');
 
     const assets = await findAssets();
     expect(assets[0]).to.deep.include({ticker: 'ETH', dashDaily: 1});
     expect(assets[1]).to.deep.include({ticker: 'AAPL', dashDaily: -1});
+  });
+
+  it('resets daily dash at 9:00 am', async () => {
+    await seedAssets([
+      anAsset({ticker: 'ETH', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'BTC', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'AAPL', assetType: 'Stock'})
+    ]);
+
+    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 08:55', symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({latestUpdate: '2020-05-12 08:55', symbol: 'ETH', marketCap: 50}),
+      crypto({latestUpdate: '2020-05-12 08:55', symbol: 'BTC', marketCap: 70})
+    ]);
+    await doOneUpdate('2020-05-12 08:55');
+
+    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 08:56', symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({latestUpdate: '2020-05-12 08:56', symbol: 'ETH', marketCap: 70}),
+      crypto({latestUpdate: '2020-05-12 08:56', symbol: 'BTC', marketCap: 60})]);
+    await doOneUpdate('2020-05-12 08:56');
+
+    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:00', symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({latestUpdate: '2020-05-12 09:00', symbol: 'ETH', marketCap: 70}),
+      crypto({latestUpdate: '2020-05-12 09:00', symbol: 'BTC', marketCap: 60})
+    ]);
+    await doOneUpdate('2020-05-12 09:00');
+
+    const assets = await findAssets();
+    expect(assets[0]).to.deep.include({ticker: 'AAPL', dashDaily: 0});
+    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 0});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: 0});
   });
 });
