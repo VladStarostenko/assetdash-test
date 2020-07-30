@@ -1,5 +1,5 @@
-import {endOfDay, startOfDay} from 'date-fns';
 import Knex from 'knex';
+import {findLastsDailyResetTime, findNextDailyResetTime} from '../../../core/dashResetTimes';
 import {Rank} from '../../../core/models/rank';
 
 export class RanksRepository {
@@ -20,7 +20,7 @@ export class RanksRepository {
     return this.db('ranks')
       .where('assetId', assetId)
       .where('isOpen', true)
-      .whereBetween('date', [startOfDay(date), endOfDay(date)])
+      .whereBetween('date', [findLastsDailyResetTime(date), findNextDailyResetTime(date)])
       .first();
   }
 
@@ -32,7 +32,7 @@ export class RanksRepository {
     return this.db('ranks')
       .where('assetId', assetId)
       .where('isOpen', false)
-      .whereBetween('date', [startOfDay(date), endOfDay(date)])
+      .whereBetween('date', [findLastsDailyResetTime(date), findNextDailyResetTime(date)])
       .first();
   }
 }

@@ -80,7 +80,6 @@ export class PricingDataUpdater {
     const allAssets = await this.assetRepository.findAll();
     for (let index = 0; index < allAssets.length; index++) {
       const asset = allAssets[index];
-      // console.log(`${asset.id}: ${asset.ticker} - ${asset.currentMarketcap}- ${asset.lastUpdated}`);
       const rank: Rank = {
         assetId: asset.id,
         position: index + 1,
