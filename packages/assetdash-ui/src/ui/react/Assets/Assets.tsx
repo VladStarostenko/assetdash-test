@@ -64,7 +64,7 @@ export const Assets = (props: AssetsProps) => {
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
   const {checkedItems} = useContext(SectorsContext);
-  const {nameOrTickerPart} = useContext(SearchedContext);
+  const {nameOrTickerPart, setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
 
   const {api} = useServices();
@@ -98,9 +98,6 @@ export const Assets = (props: AssetsProps) => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
-    if (perPage !== 200) {
-      setPageData([]);
-    }
     if (nameOrTickerPart) {
       showSearchedData();
     } else {
@@ -116,6 +113,23 @@ export const Assets = (props: AssetsProps) => {
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
+
+  useEffect(() => {
+    if (!props.currentPage && props.path !== '/all') {
+      setCurrentPage(1);
+      setPerPage(100);
+      setAssetsSort({column: 'rank', order: 'asc'});
+      setNameOrTickerPart('');
+      setPageData([]);
+      setSearchInputValue('');
+    }
+  }, [props.currentPage, props.path]);
+
+  useEffect(() => {
+    if (!nameOrTickerPart || nameOrTickerPart === '') {
+      routeChange('/');
+    }
+  }, [getSectors, nameOrTickerPart]);
 
   const history = useHistory();
   const routeChange = (path: string) => {
