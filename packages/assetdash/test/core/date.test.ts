@@ -1,5 +1,8 @@
 import {expect} from 'chai';
-import {findLastsDailyResetTime, findNextDailyResetTime} from '../../src/core/dashResetTimes';
+import {findLastsDailyResetTime,
+  findMonthlyDashResetTime,
+  findNextDailyResetTime,
+  findWeeklyDashResetTime} from '../../src/core/dashResetTimes';
 import {parseAsEstDate} from '../../src/core/utils';
 
 describe('dates', () => {
@@ -26,5 +29,15 @@ describe('dates', () => {
   it('finds next daily reset time after 9 ', () => {
     expect(findNextDailyResetTime(parseAsEstDate('2020-07-27 10:00')))
       .to.eql(parseAsEstDate('2020-07-28 09:00'));
+  });
+
+  it('finds monthly dash reset time', () => {
+    expect(findMonthlyDashResetTime(parseAsEstDate('2020-05-15 12:41')))
+      .to.eql(parseAsEstDate('2020-04-30 23:59'));
+  });
+
+  it('finds weekly dash reset time', () => {
+    expect(findWeeklyDashResetTime(parseAsEstDate('2020-05-15 12:41')))
+      .to.eql(parseAsEstDate('2020-05-11 09:00'));
   });
 });

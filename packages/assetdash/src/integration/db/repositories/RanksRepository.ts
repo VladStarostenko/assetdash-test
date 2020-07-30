@@ -1,5 +1,10 @@
 import Knex from 'knex';
-import {findLastsDailyResetTime, findNextDailyResetTime} from '../../../core/dashResetTimes';
+import {
+  findLastsDailyResetTime,
+  findMonthlyDashResetTime,
+  findNextDailyResetTime,
+  findWeeklyDashResetTime
+} from '../../../core/dashResetTimes';
 import {Rank} from '../../../core/models/rank';
 
 export class RanksRepository {
@@ -34,5 +39,29 @@ export class RanksRepository {
       .where('isOpen', false)
       .whereBetween('date', [findLastsDailyResetTime(date), findNextDailyResetTime(date)])
       .first();
+  }
+
+  async findWeekOpenFor(date: Date, assetId: number): Promise<Rank> {
+    return this.db('ranks')
+      .where('assetId', assetId)
+      .where('isOpen', true)
+      .where('date', '>=', findWeeklyDashResetTime(date))
+      .first();
+  }
+
+  async findWeekMostRecentFor(date: Date, assetId: number): Promise<Rank> {
+    return await this.findNotOpen(date, assetId) || this.findWeekOpenFor(date, assetId);
+  }
+
+  async findMonthOpenFor(date: Date, assetId: number): Promise<Rank> {
+    return this.db('ranks')
+      .where('assetId', assetId)
+      .where('isOpen', true)
+      .where('date', '>=', findMonthlyDashResetTime(date))
+      .first();
+  }
+
+  async findMonthMostRecentFor(date: Date, assetId: number): Promise<Rank> {
+    return await this.findNotOpen(date, assetId) || this.findMonthOpenFor(date, assetId);
   }
 }

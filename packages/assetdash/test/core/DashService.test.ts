@@ -51,7 +51,7 @@ describe('Dash Service', () => {
     expect(await dashService.monthlyDash(now, 1)).to.eql(50);
   });
 
-  xit('daily dash resets a 9 AM EST (cryptocurrency)', async () => {
+  it('daily dash resets a 9 AM EST (cryptocurrency)', async () => {
     const resetTime = parseAsEstDate('2020-05-12 09:00');
     const justBefore = parseAsEstDate('2020-05-12 08:59:59');
     await ranksRepository.updateRank({assetId: 1, position: 100, date: parseAsEstDate('2020-05-12 07:50')});

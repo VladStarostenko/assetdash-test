@@ -4,5 +4,4 @@ export interface AssetPricingData {
   marketcap: number;
   change: number;
   type: string[];
-  lastUpdated: Date;
 }

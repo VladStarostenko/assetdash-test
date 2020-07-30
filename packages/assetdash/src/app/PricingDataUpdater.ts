@@ -1,13 +1,17 @@
 import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {AssetRepository} from '../integration/db/repositories/AssetRepository';
-import {cryptoDataToCryptoPricingData, logIfError, stocksAndETFsDataToStocksAndETFsPricingData} from '../core/utils';
+import {
+  cryptoDataToCryptoPricingData,
+  logIfError,
+  stocksAndETFsDataToStocksAndETFsPricingData
+} from '../core/utils';
 import {config} from '../config/config';
 import {sleep} from '../core/models/utils';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 import {Rank} from '../core/models/rank';
-import {startOfToday} from 'date-fns';
 import {DashService} from '../core/DashService';
+import {DateTime} from 'luxon';
 
 export class PricingDataUpdater {
   get running(): boolean {
@@ -51,10 +55,10 @@ export class PricingDataUpdater {
 
   loop = async (cryptoTickers: string[], stocksAndETFsTickers: string[]) => {
     while (this._running) {
-      const now = startOfToday();
+      const now = new Date();
       await logIfError(this.updateCryptoAssetPrices(cryptoTickers));
       await logIfError(this.updateStocksAndETFsAssetPrices(stocksAndETFsTickers));
-      await logIfError(this.updateRanksForAssets());
+      await logIfError(this.updateRanksForAssets(now));
       await logIfError(this.updateDash(now));
       await sleep(config.priceUpdateTime);
     }
@@ -76,17 +80,23 @@ export class PricingDataUpdater {
     }
   }
 
-  updateRanksForAssets = async () => {
+  updateRanksForAssets = async (date: Date) => {
     const allAssets = await this.assetRepository.findAll();
     for (let index = 0; index < allAssets.length; index++) {
       const asset = allAssets[index];
       const rank: Rank = {
         assetId: asset.id,
         position: index + 1,
-        date: asset.lastUpdated || new Date()
+        date: date
       };
       await this.ranksRepository.updateRank(rank);
     }
+  }
+
+  stocksDashUpdateTime = (now: Date) => {
+    const utcDate = DateTime.fromJSDate(now);
+    const nyDate = utcDate.setZone('America/New_York');
+    return nyDate.hour > 8 && nyDate.hour < 16;
   }
 
   updateDash = async (now: Date) => {
@@ -95,7 +105,9 @@ export class PricingDataUpdater {
       const dashDaily = await this.dashService.dailyDash(now, allAssets[index].id);
       const dashWeekly = await this.dashService.weeklyDash(now, allAssets[index].id);
       const dashMonthly = await this.dashService.monthlyDash(now, allAssets[index].id);
-      await this.assetRepository.updateDash(allAssets[index].id, dashDaily, dashWeekly, dashMonthly);
+      if (this.stocksDashUpdateTime(now) || allAssets[index].type === 'Cryptocurrency') {
+        await this.assetRepository.updateDash(allAssets[index].id, dashDaily, dashWeekly, dashMonthly);
+      }
     }
   }
 }
