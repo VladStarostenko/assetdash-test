@@ -41,5 +41,5 @@ export function stocksAndETFsDataToStocksAndETFsPricingData(assetData: object): 
 }
 
 export const parseAsEstDate = (isoDateString: string) => {
-  return DateTime.fromSQL(isoDateString, {zone: 'America/New_York'}).toUTC().toBSON();
+  return DateTime.fromSQL(isoDateString, {zone: 'America/New_York'}).toUTC().toJSDate();
 };

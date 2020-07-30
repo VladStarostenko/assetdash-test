@@ -49,19 +49,11 @@ export class RanksRepository {
       .first();
   }
 
-  async findWeekMostRecentFor(date: Date, assetId: number): Promise<Rank> {
-    return await this.findNotOpen(date, assetId) || this.findWeekOpenFor(date, assetId);
-  }
-
   async findMonthOpenFor(date: Date, assetId: number): Promise<Rank> {
     return this.db('ranks')
       .where('assetId', assetId)
       .where('isOpen', true)
       .where('date', '>=', findMonthlyDashResetTime(date))
       .first();
-  }
-
-  async findMonthMostRecentFor(date: Date, assetId: number): Promise<Rank> {
-    return await this.findNotOpen(date, assetId) || this.findMonthOpenFor(date, assetId);
   }
 }
