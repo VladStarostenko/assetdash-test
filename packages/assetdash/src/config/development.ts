@@ -23,6 +23,7 @@ export const getDevConfig = () => {
     coinmarketCapKey: process.env.COINMARKETCAP_KEY,
     priceUpdateTime: 180000,
     iexCloudBaseUrl: 'https://cloud.iexapis.com',
-    iexCloudKey: process.env.IEXCLOUD_KEY
+    iexCloudKey: process.env.IEXCLOUD_KEY,
+    iexBatchSize: 100
   };
 };

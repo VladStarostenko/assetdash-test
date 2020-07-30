@@ -5,8 +5,8 @@ import fetch from 'node-fetch';
 export class CoinmarketCapService {
   private readonly fetch: HttpFunction;
 
-  constructor() {
-    this.fetch = http(fetch)(config.coinmarketCapBaseUrl);
+  constructor(coinmarketCapBaseUrl: string) {
+    this.fetch = http(fetch)(coinmarketCapBaseUrl);
   }
 
   async getAssetsData(tickers: string[]): Promise<object> {

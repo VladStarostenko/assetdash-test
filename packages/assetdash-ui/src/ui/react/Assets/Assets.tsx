@@ -16,7 +16,8 @@ import {SectorsContext} from '../hooks/SectorsContext';
 import {useServices} from '../hooks/useServices';
 import {AssetItem} from './AssetItem';
 
-type Column = 'rank' | 'name' | 'ticker' | 'currentMarketcap' | 'currentPrice' | 'currentChange' | 'none';
+type Column = 'rank' | 'dashDaily' | 'dashWeekly' | 'dashMonthly' | 'name' | 'ticker' | 'currentMarketcap'
+| 'currentPrice' | 'currentChange' | 'none';
 type Order = 'desc' | 'asc';
 
 type AssetsSort = {
@@ -214,13 +215,18 @@ export const Assets = (props: AssetsProps) => {
             >
               Rank
             </Th>
-            <Th>
+            <Th
+              className={getIconClassName('dashDaily')}
+              onClick={() => setAssetsSortForColumn('dashDaily')}
+            >
               <Tooltip
                 text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
                     an asset has moved up or down in the leaderboard over the course of the day."
                 position="left"
               >
-                <p>Daily Dash</p>
+                <P
+                  className={getIconClassName('dashDaily')}
+                >Daily Dash</P>
               </Tooltip>
             </Th>
             <Th
@@ -258,20 +264,30 @@ export const Assets = (props: AssetsProps) => {
             >
               Today
             </Th>
-            <Th>
+            <Th
+              className={getIconClassName('dashWeekly')}
+              onClick={() => setAssetsSortForColumn('dashWeekly')}
+            >
               <Tooltip
                 text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
                      an asset has moved up or down in the leaderboard over the course of the week."
               >
-                <p>Weekly Dash</p>
+                <P
+                  className={getIconClassName('dashWeekly')}
+                >Weekly Dash</P>
               </Tooltip>
             </Th>
-            <Th>
+            <Th
+              className={getIconClassName('dashMonthly')}
+              onClick={() => setAssetsSortForColumn('dashMonthly')}
+            >
               <Tooltip
                 text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
                      an asset has moved up or down in the leaderboard over the course of the month."
               >
-                <p>Monthly Dash</p>
+                <P
+                  className={getIconClassName('dashMonthly')}
+                >Monthly Dash</P>
               </Tooltip>
             </Th>
             <Th/>
@@ -388,7 +404,7 @@ const Loader = styled.div`
   &::before {
     width: 5.2em;
     height: 10.2em;
-    background: #F4FBFB;
+    background: ${({theme}) => theme.colors.backgroundSecondary};
     border-radius: 10.2em 0 0 10.2em;
     top: -0.1em;
     left: -0.1em;
@@ -400,7 +416,7 @@ const Loader = styled.div`
   &::after {
     width: 5.2em;
     height: 10.2em;
-    background: #F4FBFB;
+    background: ${({theme}) => theme.colors.backgroundSecondary};
     border-radius: 0 10.2em 10.2em 0;
     top: -0.1em;
     left: 4.9em;
@@ -428,5 +444,13 @@ const Loader = styled.div`
       -webkit-transform: rotate(360deg);
       transform: rotate(360deg);
     }
+  }
+`;
+
+const P = styled.p`
+ &.asc,
+ &.desc {
+    position: relative;
+    color: ${({theme}) => theme.colors.colorPrimary};
   }
 `;

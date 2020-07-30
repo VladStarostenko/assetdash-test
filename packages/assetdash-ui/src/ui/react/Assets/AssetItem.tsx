@@ -1,7 +1,8 @@
 import React, {useState, useRef, useEffect} from 'react';
 import styled from 'styled-components';
 import {Td, Tr} from '../common/Table/Table';
-import angleIcon from '../../assets/icons/angle-down-bright.svg';
+import angleDownIcon from '../../assets/icons/angle-down-bright.svg';
+import angleUpIcon from '../../assets/icons/angle-up-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
 import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
@@ -51,7 +52,7 @@ export const AssetItem = (props: AssetItemProps) => {
     <Tr>
       <Td>{rank}</Td>
       <Td>
-        <Dash direction="down">{dashDaily}</Dash>
+        <Dash direction={dashDaily > 0 ? 'up' : 'down'}>{dashDaily}</Dash>
       </Td>
       <Td>
         <AssetName data-testid={'asset-row-name'}>
@@ -104,10 +105,11 @@ const Dash = styled.p<DashProps>`
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translateY(-50%);
+    transform: ${({direction}) => direction === 'up' ? 'translateY(-50%) rotate(180deg);' : 'translateY(-50%);'}
     width: 10px;
     height: 6px;
-    background: url(${angleIcon}) no-repeat center;
+    background: ${({direction}) => direction === 'up'
+    ? `url(${angleUpIcon}) no-repeat center;` : `url(${angleDownIcon}) no-repeat center;`}
     background-size: contain;
   }
 `;

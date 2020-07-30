@@ -1,5 +1,6 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import {config} from '../../../src/config/config';
 import {CoinmarketCapService} from '../../../src/integration/http/CoinmarketCapService';
 
 chai.use(chaiAsPromised);
@@ -8,7 +9,7 @@ describe('CoinmarketCap', () => {
   let service: CoinmarketCapService;
 
   beforeEach(() => {
-    service = new CoinmarketCapService();
+    service = new CoinmarketCapService(config.coinmarketCapBaseUrl);
   });
 
   describe('getCoinsQuotes', () => {

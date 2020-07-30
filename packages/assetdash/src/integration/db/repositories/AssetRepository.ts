@@ -1,4 +1,3 @@
-import {startOfToday} from 'date-fns';
 import Knex from 'knex';
 import {ResourceNotFound} from '../../../core/errors';
 import {Asset} from '../../../core/models/asset';
@@ -21,14 +20,20 @@ export class AssetRepository {
     return this.db('assets').orderBy('currentMarketcap', 'desc').select();
   }
 
-  async findPage(currentPage: number, perPage: number) {
+  findAssetQuery() {
+    const maxDate = this.db('ranks')
+      .distinctOn('assetId')
+      .select('position', 'assetId')
+      .orderBy([{column: 'assetId'}, {column: 'date', order: 'desc'}, {column: 'isOpen', order: 'asc'}])
+      .as('currentRank');
     return this.db('assets')
-      .join('ranks', function () {
-        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
-      })
-      .select('assets.*', 'ranks.position as rank')
-      .orderBy('currentMarketcap', 'desc')
-      .paginate({perPage, currentPage, isLengthAware: true});
+      .join(maxDate, 'assets.id', '=', 'currentRank.assetId')
+      .select('assets.*', 'currentRank.position as rank')
+      .orderBy('currentMarketcap', 'desc');
+  }
+
+  async findPage(currentPage: number, perPage: number) {
+    return this.findAssetQuery().paginate({perPage, currentPage, isLengthAware: true});
   }
 
   async findById(id: number): Promise<Asset> {
@@ -39,31 +44,13 @@ export class AssetRepository {
     return asset;
   }
 
-  async findByIdWithRank(id: number, date: Date): Promise<Asset> {
-    const asset = this.db('assets')
-      .join('ranks', 'assets.id', 'ranks.assetId')
-      .select('assets.*', 'ranks.position as rank')
-      .where({assetId: id})
-      .andWhere({date: date}).first();
-    ensure(asset !== undefined, ResourceNotFound, 'asset', id);
-    return asset;
-  }
-
-  async findByIds(ids: number[]): Promise<Asset[]> {
-    return this.db('assets').where('id', 'in', ids);
-  }
-
   async findByTags(tags: string[], currentPage: number, perPage: number) {
-    return this.db('assets')
+    return this.findAssetQuery()
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
         this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
       })
-      .join('ranks', function () {
-        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
-      })
-      .distinct('assets.*', 'ranks.position as rank')
-      .orderBy('currentMarketcap', 'desc')
+      .distinct()
       .paginate({perPage, currentPage, isLengthAware: true});
   }
 
@@ -74,7 +61,8 @@ export class AssetRepository {
       .update({
         currentPrice: assetPrice.price,
         currentMarketcap: assetPrice.marketcap,
-        currentChange: assetPrice.change
+        currentChange: assetPrice.change,
+        lastUpdated: assetPrice.lastUpdated
       });
   }
 
@@ -86,13 +74,18 @@ export class AssetRepository {
   }
 
   async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
-    return this.db('assets')
-      .join('ranks', function () {
-        this.on('assets.id', '=', 'ranks.assetId').onIn('ranks.date', [startOfToday()]);
-      })
-      .select('assets.*', 'ranks.position as rank')
-      .orderBy('currentMarketcap', 'desc')
+    return this.findAssetQuery()
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
+  }
+
+  async updateDash(assetId: number, dashDaily: number, dashWeekly: number, dashMonthly: number) {
+    return this.db('assets')
+      .where('id', assetId)
+      .update({
+        dashDaily,
+        dashWeekly,
+        dashMonthly
+      });
   }
 }

@@ -1,3 +1,5 @@
+type AssetType = 'Cryptocurrency' | 'Stock' | 'ETF';
+
 export interface Asset {
   id: number;
   ticker: string;
@@ -6,9 +8,10 @@ export interface Asset {
   currentPrice?: number;
   currentMarketcap?: number;
   currentChange?: number;
-  type: string;
-  dash_daily?: number;
+  type: AssetType;
+  dashDaily?: number;
   dashWeekly?: number;
   dashMonthly?: number;
   rank?: number;
+  lastUpdated?: Date;
 }
