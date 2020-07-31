@@ -7,6 +7,7 @@ import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
 import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
 import {Tooltip} from '../common/Tooltip';
+import {useServices} from '../hooks/useServices';
 
 interface AssetItemProps {
   asset: Asset;
@@ -26,9 +27,16 @@ export const AssetItem = (props: AssetItemProps) => {
     dashMonthly
   } = props.asset;
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const {cookie} = useServices();
+  const isChecked = () => {
+    const watchList = cookie.get('watchlist') ? cookie.get('watchlist').split('-') : [];
+    return watchList.indexOf(ticker) !== -1;
+  };
+
+  const [isFavorite, setIsFavorite] = useState<boolean>(isChecked());
 
   const onFavoriteButtonClick = () => {
+    isFavorite ? cookie.removeElementFromWatchList(ticker) : cookie.addElementToWatchList(ticker);
     setIsFavorite(!isFavorite);
   };
 
@@ -84,7 +92,7 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <ButtonFavorite
-          checked={isFavorite}
+          checked={isChecked()}
           onChange={onFavoriteButtonClick}/>
       </Td>
     </Tr>

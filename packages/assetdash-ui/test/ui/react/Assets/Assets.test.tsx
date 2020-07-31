@@ -12,6 +12,7 @@ import {ServiceContext} from '../../../../src/ui/react/hooks/useServices';
 import {Services} from '../../../../src/ui/react/services';
 import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
 import '../../../shims/types';
+import {CookieService} from '../../../../src/ui/react/services/CookieService';
 
 chai.use(chaiDom);
 
@@ -25,7 +26,8 @@ function createTestServices(): Services {
   const axiosConfig = {...config, adapter};
   return {
     config,
-    api: new Api(axiosConfig)
+    api: new Api(axiosConfig),
+    cookie: new CookieService()
   };
 }
 
