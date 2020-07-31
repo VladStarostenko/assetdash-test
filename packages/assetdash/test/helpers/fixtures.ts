@@ -25,7 +25,6 @@ export const insertRanks = (ranksRepository: RanksRepository) => async (ranks: R
     await ranksRepository.updateRank(rank);
   }
 };
-export const DEFAULT_LAST_UPDATED = new Date('2020-01-01T00:00:00.000Z');
 
 export const stockAssetData = {
   quote: {

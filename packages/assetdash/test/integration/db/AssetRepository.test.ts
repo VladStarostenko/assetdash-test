@@ -1,12 +1,11 @@
 import chai, {expect} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {parseISO, startOfToday} from 'date-fns';
 import {Asset} from '../../../src/core/models/asset';
 import {AssetRepository} from '../../../src/integration/db/repositories/AssetRepository';
 import {RanksRepository} from '../../../src/integration/db/repositories/RanksRepository';
 import {clearDatabase} from '../../helpers/clear-db';
 import {createTestServices} from '../../helpers/createTestServices';
-import {DEFAULT_LAST_UPDATED, insertRanks} from '../../helpers/fixtures';
+import {insertRanks} from '../../helpers/fixtures';
 
 chai.use(chaiAsPromised);
 
@@ -36,7 +35,7 @@ describe('Asset Repository', () => {
     currentMarketcap: 5
   }];
 
-  const date = startOfToday();
+  const date = new Date();
   const ranks = [{
     id: 1,
     assetId: 1,
@@ -86,17 +85,14 @@ describe('Asset Repository', () => {
 
   describe('Update', () => {
     it('updates price', async () => {
-      const lastUpdated = parseISO('2020-01-10');
       await assetRepository.updatePrice({
         ticker: 'ETH',
         price: 10.54,
         marketcap: 1000,
         change: 0.2,
-        type: ['Cryptocurrency'],
-        lastUpdated: lastUpdated
+        type: ['Cryptocurrency']
       });
       expect((await assetRepository.findById(1)).currentPrice).to.deep.eq(10.54);
-      expect((await assetRepository.findById(1)).lastUpdated).to.deep.eq(lastUpdated);
     });
   });
 
@@ -121,7 +117,6 @@ describe('Asset Repository', () => {
           rank: 2,
           imageUrl: 'eth.img',
           name: 'Ethereum',
-          lastUpdated: DEFAULT_LAST_UPDATED,
           ticker: 'ETH',
           type: 'Cryptocurrency'
         }],

@@ -13,5 +13,4 @@ export interface Asset {
   dashWeekly?: number;
   dashMonthly?: number;
   rank?: number;
-  lastUpdated?: Date;
 }

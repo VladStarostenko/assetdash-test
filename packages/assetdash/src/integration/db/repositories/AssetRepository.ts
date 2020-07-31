@@ -61,8 +61,7 @@ export class AssetRepository {
       .update({
         currentPrice: assetPrice.price,
         currentMarketcap: assetPrice.marketcap,
-        currentChange: assetPrice.change,
-        lastUpdated: assetPrice.lastUpdated
+        currentChange: assetPrice.change
       });
   }
 

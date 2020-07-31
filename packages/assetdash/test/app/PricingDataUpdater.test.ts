@@ -46,7 +46,7 @@ describe('PricingDataUpdater', () => {
   });
 
   describe('updateAssetRanks', () => {
-    const TODAYOPEN = parseAsEstDate('2020-05-12 11:00');
+    const TODAYOPEN = parseAsEstDate('2020-05-12 09:00');
     const TODAY = parseAsEstDate('2020-05-12 12:00');
     const YESTERDAY = parseAsEstDate('2020-05-11 12:00');
 
@@ -58,21 +58,19 @@ describe('PricingDataUpdater', () => {
         imageUrl: 'eth.img',
         type: 'Cryptocurrency',
         id: 1,
-        currentMarketcap: 10,
-        lastUpdated: TODAYOPEN
+        currentMarketcap: 10
       }, {
         ticker: 'BTC',
         name: 'Bitcoin',
         imageUrl: 'btc.img',
         type: 'Cryptocurrency',
         id: 2,
-        currentMarketcap: 20,
-        lastUpdated: TODAYOPEN
+        currentMarketcap: 20
       }]);
     });
 
     it('inserts ranks for assets with new date', async () => {
-      await pricingDataUpdater.updateRanksForAssets();
+      await pricingDataUpdater.updateRanksForAssets(TODAYOPEN);
       const data = (await assetRepository.findPage(1, 2)).data;
       expect(await ranksRepository.findOpenFor(TODAY, 2)).to.deep.include({position: 1, date: TODAYOPEN});
       expect(await ranksRepository.findOpenFor(TODAY, 1)).to.deep.include({position: 2, date: TODAYOPEN});
@@ -90,7 +88,7 @@ describe('PricingDataUpdater', () => {
         position: 2,
         date: YESTERDAY
       }]);
-      await pricingDataUpdater.updateRanksForAssets();
+      await pricingDataUpdater.updateRanksForAssets(TODAYOPEN);
       expect(await ranksRepository.findMostRecentFor(YESTERDAY, 1)).to.deep.include({position: 1, date: YESTERDAY});
       expect(await ranksRepository.findMostRecentFor(YESTERDAY, 2)).to.deep.include({position: 2, date: YESTERDAY});
     });
@@ -105,7 +103,7 @@ describe('PricingDataUpdater', () => {
         position: 2,
         date: TODAYOPEN
       }]);
-      await pricingDataUpdater.updateRanksForAssets();
+      await pricingDataUpdater.updateRanksForAssets(TODAYOPEN);
       expect(await ranksRepository.findOpenFor(TODAY, 1)).to.deep.include({position: 1, date: TODAYOPEN});
       expect(await ranksRepository.findOpenFor(TODAY, 2)).to.deep.include({position: 2, date: TODAYOPEN});
       expect(await ranksRepository.findMostRecentFor(TODAY, 1)).to.deep.include({position: 2, date: TODAYOPEN});

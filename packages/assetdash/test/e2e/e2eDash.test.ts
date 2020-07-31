@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import {formatISO} from 'date-fns';
 import nock from 'nock';
 import {PricingDataUpdater} from '../../src/app/PricingDataUpdater';
 import {DashService} from '../../src/core/DashService';
@@ -22,7 +21,7 @@ const updater = (iexCloudService: IexCloudService,
   await pricingDataUpdater.updateCryptoAssetPrices(await assetRepository.getTickers('Cryptocurrency'));
   const stockAndETFTickers = (await assetRepository.getTickers('Stock')).concat(await assetRepository.getTickers('ETF'));
   await pricingDataUpdater.updateStocksAndETFsAssetPrices(stockAndETFTickers);
-  await pricingDataUpdater.updateRanksForAssets();
+  await pricingDataUpdater.updateRanksForAssets(parseAsEstDate(date));
   await pricingDataUpdater.updateDash(parseAsEstDate(date));
 };
 
@@ -34,39 +33,34 @@ async function iexWillReturn(ticker: string, iexResponse: any) {
     });
 }
 
-async function coinmarketcapWillReturn(ticker: string, coinmarketcapResponse: any) {
+async function coinmarketcapWillReturn(ticker: string, coinmarketcapResponse: any[]) {
+  const result = {};
+  coinmarketcapResponse.forEach((crypto) => { result[crypto.symbol] = crypto; });
   nock(/coinmarketcap\.test/)
     .get(new RegExp(ticker))
     .reply(200, {
-      data: {
-        ticker: coinmarketcapResponse
-      }
+      data: result
     });
 }
 
 function stock(
   {
-    latestUpdate = '2020-01-01',
     marketCap = 1652987245800,
     symbol = 'AAPL'
   } = {}
 ) {
-  const latestUpdateTimestamp = parseAsEstDate(latestUpdate).getTime();
-  return {quote: {...stockAssetData.quote, latestUpdate: latestUpdateTimestamp, marketCap, symbol}};
+  return {quote: {...stockAssetData.quote, marketCap, symbol}};
 }
 
 function crypto(
   {
-    latestUpdate = '2020-01-01',
     marketCap = 27570058643.874947,
     symbol = 'ETH'
   } = {}
 ) {
-  const latestUpdateFormatted = formatISO(parseAsEstDate(latestUpdate));
   return {
     ...cryptoAssetData,
     symbol,
-    last_updated: latestUpdateFormatted,
     quote: {
       USD: {
         ...cryptoAssetData.quote.USD,
@@ -103,8 +97,8 @@ describe('Whole flow', () => {
       anAsset({ticker: 'AAPL', assetType: 'Stock'})
     ]);
 
-    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:55', symbol: 'AAPL', marketCap: 100}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50}));
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('ETH', [crypto({symbol: 'ETH', marketCap: 50})]);
     await doOneUpdate('2020-05-12 10:00');
 
     const assets = await findAssets();
@@ -118,18 +112,108 @@ describe('Whole flow', () => {
       anAsset({ticker: 'AAPL', assetType: 'Stock'})
     ]);
 
-    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:55', symbol: 'AAPL', marketCap: 100}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:55', symbol: 'ETH', marketCap: 50}));
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('ETH', [crypto({symbol: 'ETH', marketCap: 50})]);
     await doOneUpdate('2020-05-12 09:55');
-    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:56', symbol: 'AAPL', marketCap: 70}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:56', symbol: 'ETH', marketCap: 71}));
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 70}));
+    await coinmarketcapWillReturn('ETH', [crypto({symbol: 'ETH', marketCap: 71})]);
     await doOneUpdate('2020-05-12 09:56');
-    await iexWillReturn('AAPL', stock({latestUpdate: '2020-05-12 09:57', symbol: 'AAPL', marketCap: 50}));
-    await coinmarketcapWillReturn('ETH', crypto({latestUpdate: '2020-05-12 09:57', symbol: 'ETH', marketCap: 150}));
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 50}));
+    await coinmarketcapWillReturn('ETH', [crypto({symbol: 'ETH', marketCap: 150})]);
     await doOneUpdate('2020-05-12 09:57');
 
     const assets = await findAssets();
     expect(assets[0]).to.deep.include({ticker: 'ETH', dashDaily: 1});
     expect(assets[1]).to.deep.include({ticker: 'AAPL', dashDaily: -1});
+  });
+
+  it('resets daily dash at 9:00 am', async () => {
+    await seedAssets([
+      anAsset({ticker: 'ETH', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'BTC', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'AAPL', assetType: 'Stock'})
+    ]);
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 50}),
+      crypto({symbol: 'BTC', marketCap: 70})
+    ]);
+    await doOneUpdate('2020-05-12 08:55');
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 70}),
+      crypto({symbol: 'BTC', marketCap: 60})]);
+    await doOneUpdate('2020-05-12 08:56');
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 70}),
+      crypto({symbol: 'BTC', marketCap: 60})
+    ]);
+    await doOneUpdate('2020-05-12 09:00');
+
+    const assets = await findAssets();
+    expect(assets[0]).to.deep.include({ticker: 'AAPL', dashDaily: 0});
+    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 0});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: 0});
+  });
+
+  it('dont update dash for stocks and ETFs when outside trading hours', async () => {
+    await seedAssets([
+      anAsset({ticker: 'ETH', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'BTC', assetType: 'Cryptocurrency'}),
+      anAsset({ticker: 'AAPL', assetType: 'Stock'})
+    ]);
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 50}),
+      crypto({symbol: 'BTC', marketCap: 70})
+    ]);
+    await doOneUpdate('2020-05-12 15:55');
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 90}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 60}),
+      crypto({symbol: 'BTC', marketCap: 100})]);
+    await doOneUpdate('2020-05-12 15:59');
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 90}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 95}),
+      crypto({symbol: 'BTC', marketCap: 105})
+    ]);
+    await doOneUpdate('2020-05-12 16:05');
+
+    let assets = await findAssets();
+    expect(assets[0]).to.deep.include({ticker: 'BTC', dashDaily: 1});
+    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 1});
+    expect(assets[2]).to.deep.include({ticker: 'AAPL', dashDaily: -1});
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 90}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 95}),
+      crypto({symbol: 'BTC', marketCap: 80})
+    ]);
+    await doOneUpdate('2020-05-13 08:55');
+
+    assets = await findAssets();
+    expect(assets[0]).to.deep.include({ticker: 'ETH', dashDaily: 2});
+    expect(assets[1]).to.deep.include({ticker: 'AAPL', dashDaily: -1});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: -1});
+
+    await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
+    await coinmarketcapWillReturn('BTC', [
+      crypto({symbol: 'ETH', marketCap: 95}),
+      crypto({symbol: 'BTC', marketCap: 80})
+    ]);
+    await doOneUpdate('2020-05-13 09:00');
+
+    assets = await findAssets();
+    expect(assets[0]).to.deep.include({ticker: 'AAPL', dashDaily: 0});
+    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 0});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: 0});
   });
 });

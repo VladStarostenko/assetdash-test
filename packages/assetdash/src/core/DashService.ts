@@ -1,4 +1,3 @@
-import {startOfMonth, startOfWeek} from 'date-fns';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 
 export class DashService {
@@ -13,13 +12,13 @@ export class DashService {
   }
 
   async weeklyDash(now: Date, assetId: number) {
-    const open = await this.ranksRepository.findOpenFor(startOfWeek(now, {weekStartsOn: 1}), assetId);
+    const open = await this.ranksRepository.findWeekOpenFor(now, assetId);
     const current = await this.ranksRepository.findMostRecentFor(now, assetId);
     return open?.position - current?.position || 0;
   }
 
   async monthlyDash(now: Date, assetId: number) {
-    const open = await this.ranksRepository.findOpenFor(startOfMonth(now), assetId);
+    const open = await this.ranksRepository.findMonthOpenFor(now, assetId);
     const current = await this.ranksRepository.findMostRecentFor(now, assetId);
     return open?.position - current?.position || 0;
   }
