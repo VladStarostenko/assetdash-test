@@ -8,51 +8,18 @@ import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {ButtonTertiary} from '../common/Button/ButtonTertiary';
 import {Container} from '../common/Container';
-import {Table, Th} from '../common/Table/Table';
 import {Tabs} from '../common/Tabs';
-import {Tooltip} from '../common/Tooltip';
 import {SearchedContext} from '../hooks/SearchedContext';
 import {SectorsContext} from '../hooks/SectorsContext';
 import {useServices} from '../hooks/useServices';
+import {AssetsSort, Column} from '../../../core/models/assetsSort';
+import {Table, Th} from '../common/Table/Table';
+import {Tooltip} from '../common/Tooltip';
 import {AssetItem} from './AssetItem';
-
-type Column = 'rank' | 'dashDaily' | 'dashWeekly' | 'dashMonthly' | 'name' | 'ticker' | 'currentMarketcap'
-| 'currentPrice' | 'currentChange' | 'none';
-type Order = 'desc' | 'asc';
-
-type AssetsSort = {
-  column: Column;
-  order: Order;
-}
-
-function sortAssets(assets: Asset[], assetsSort: AssetsSort) {
-  function sort(assets: Asset[], compare: (a: Asset, b: Asset) => number, order: 'desc' | 'asc') {
-    const result = [...assets];
-    result.sort(compare);
-    return order === 'asc' ? result : result.reverse();
-  }
-
-  const compareByStringOrNumber = (column: keyof Asset) => (a: Asset, b: Asset) => {
-    if (a[column] > b[column]) {
-      return 1;
-    }
-    if (a[column] < b[column]) {
-      return -1;
-    }
-    return 0;
-  };
-
-  if (assetsSort.column === 'none') {
-    return assets;
-  } else {
-    return sort(assets, compareByStringOrNumber(assetsSort.column), assetsSort.order);
-  }
-}
+import {sortAssets} from '../../../core/utils';
+import {EmptyWatchList} from '../WatchList/EmptyWatchList';
 
 export interface AssetsProps {
-  activeTab: string;
-  tabs: Array<string>;
-  setTab: (tab: string) => void;
   currentPage?: string;
   path?: string;
 }
@@ -66,6 +33,9 @@ export const Assets = (props: AssetsProps) => {
   const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart, setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
+  const [emptySortResults, setEmptySortResults] = useState<boolean>(false);
+  const [tab, setTab] = useState('Assets');
+  const tabs = ['Assets', 'Watchlist'];
 
   const {api} = useServices();
 
@@ -93,35 +63,60 @@ export const Assets = (props: AssetsProps) => {
     api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
+  const showSectorsDataForWatchList = useCallback((sectors: string[], watchList: string) => {
+    api.getAssetsForSectorsForWatchList(currentPage, perPage, sectors, watchList)
+      .then((res: GetPageResponse) => {
+        setEmptySortResults(res.data.data.length === 0);
+        paginateData(res);
+      });
+  }, [api, currentPage, perPage, paginateData]);
+
   const showCurrentPage = useCallback(() => {
     api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
+  const showCurrentPageForWatchList = useCallback((watchList: string) => {
+    api.getPageForWatchList(currentPage, perPage, watchList).then((res: GetPageResponse) => paginateData(res));
+  }, [api, currentPage, perPage, paginateData]);
+
+  const {watchlist} = useServices();
+
   useEffect(() => {
     if (nameOrTickerPart) {
       showSearchedData();
-    } else {
+    } else if (tab === 'Assets') {
       const sectors = getSectors();
       if (sectors.length > 0) {
         showSectorsData(sectors);
       } else {
         showCurrentPage();
       }
+    } else {
+      const sectors = getSectors();
+      if (sectors.length > 0) {
+        showSectorsDataForWatchList(sectors, watchlist.get('watchlist'));
+      } else {
+        showCurrentPageForWatchList(watchlist.get('watchlist'));
+      }
     }
-  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData, perPage]);
+  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData, perPage, tab]);
 
   useEffect(() => {
     setPageData(sortAssets(pageData, assetsSort));
   }, [assetsSort]);
 
+  const resetPage = () => {
+    setCurrentPage(1);
+    setPerPage(100);
+    setAssetsSort({column: 'rank', order: 'asc'});
+    setNameOrTickerPart('');
+    setPageData([]);
+    setSearchInputValue('');
+  };
+
   useEffect(() => {
     if (!props.currentPage && props.path !== '/all') {
-      setCurrentPage(1);
-      setPerPage(100);
-      setAssetsSort({column: 'rank', order: 'asc'});
-      setNameOrTickerPart('');
-      setPageData([]);
-      setSearchInputValue('');
+      resetPage();
     }
   }, [props.currentPage, props.path]);
 
@@ -178,7 +173,7 @@ export const Assets = (props: AssetsProps) => {
   return <>
     <Container>
       <ButtonsRow>
-        <Tabs activeTab={props.activeTab} tabs={props.tabs} setTab={props.setTab}/>
+        <Tabs activeTab={tab} tabs={tabs} setTab={setTab} resetPage={resetPage}/>
         <TableButtons>
           { !nameOrTickerPart
             ? <>
@@ -204,100 +199,103 @@ export const Assets = (props: AssetsProps) => {
         </TableButtons>
       </ButtonsRow>
     </Container>
-    <AssetsView>
-      <Table>
-        <thead>
-          <tr>
-            <Th
-              data-testid='rank-column-header'
-              className={getIconClassName('rank')}
-              onClick={() => setAssetsSortForColumn('rank')}
-            >
+    { !watchlist.get('watchlist') && tab === 'Watchlist'
+      ? <EmptyWatchList/>
+      : <AssetsView>
+        <Table>
+          <thead>
+            <tr>
+              <Th
+                data-testid='rank-column-header'
+                className={getIconClassName('rank')}
+                onClick={() => setAssetsSortForColumn('rank')}
+              >
               Rank
-            </Th>
-            <Th
-              className={getIconClassName('dashDaily')}
-              onClick={() => setAssetsSortForColumn('dashDaily')}
-            >
-              <Tooltip
-                text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
+              </Th>
+              <Th
+                className={getIconClassName('dashDaily')}
+                onClick={() => setAssetsSortForColumn('dashDaily')}
+              >
+                <Tooltip
+                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
                     an asset has moved up or down in the leaderboard over the course of the day."
-                position="left"
+                  position="left"
+                >
+                  <P
+                    className={getIconClassName('dashDaily')}
+                  >Daily Dash</P>
+                </Tooltip>
+              </Th>
+              <Th
+                data-testid='name-column-header'
+                className={getIconClassName('name')}
+                onClick={() => setAssetsSortForColumn('name')}
               >
-                <P
-                  className={getIconClassName('dashDaily')}
-                >Daily Dash</P>
-              </Tooltip>
-            </Th>
-            <Th
-              data-testid='name-column-header'
-              className={getIconClassName('name')}
-              onClick={() => setAssetsSortForColumn('name')}
-            >
               Asset Name
-            </Th>
-            <Th
-              data-testid='symbol-column-header'
-              className={getIconClassName('ticker')}
-              onClick={() => setAssetsSortForColumn('ticker')}
-            >
+              </Th>
+              <Th
+                data-testid='symbol-column-header'
+                className={getIconClassName('ticker')}
+                onClick={() => setAssetsSortForColumn('ticker')}
+              >
               Symbol
-            </Th>
-            <Th
-              data-testid='marketcap-column-header'
-              className={getIconClassName('currentMarketcap')}
-              onClick={() => setAssetsSortForColumn('currentMarketcap')}
-            >
+              </Th>
+              <Th
+                data-testid='marketcap-column-header'
+                className={getIconClassName('currentMarketcap')}
+                onClick={() => setAssetsSortForColumn('currentMarketcap')}
+              >
               Market Cap
-            </Th>
-            <Th
-              data-testid='price-column-header'
-              className={getIconClassName('currentPrice')}
-              onClick={() => setAssetsSortForColumn('currentPrice')}
-            >
+              </Th>
+              <Th
+                data-testid='price-column-header'
+                className={getIconClassName('currentPrice')}
+                onClick={() => setAssetsSortForColumn('currentPrice')}
+              >
               Price
-            </Th>
-            <Th
-              data-testid='today-column-header'
-              className={getIconClassName('currentChange')}
-              onClick={() => setAssetsSortForColumn('currentChange')}
-            >
+              </Th>
+              <Th
+                data-testid='today-column-header'
+                className={getIconClassName('currentChange')}
+                onClick={() => setAssetsSortForColumn('currentChange')}
+              >
               Today
-            </Th>
-            <Th
-              className={getIconClassName('dashWeekly')}
-              onClick={() => setAssetsSortForColumn('dashWeekly')}
-            >
-              <Tooltip
-                text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
+              </Th>
+              <Th
+                className={getIconClassName('dashWeekly')}
+                onClick={() => setAssetsSortForColumn('dashWeekly')}
+              >
+                <Tooltip
+                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
                      an asset has moved up or down in the leaderboard over the course of the week."
+                >
+                  <P
+                    className={getIconClassName('dashWeekly')}
+                  >Weekly Dash</P>
+                </Tooltip>
+              </Th>
+              <Th
+                className={getIconClassName('dashMonthly')}
+                onClick={() => setAssetsSortForColumn('dashMonthly')}
               >
-                <P
-                  className={getIconClassName('dashWeekly')}
-                >Weekly Dash</P>
-              </Tooltip>
-            </Th>
-            <Th
-              className={getIconClassName('dashMonthly')}
-              onClick={() => setAssetsSortForColumn('dashMonthly')}
-            >
-              <Tooltip
-                text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
+                <Tooltip
+                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
                      an asset has moved up or down in the leaderboard over the course of the month."
-              >
-                <P
-                  className={getIconClassName('dashMonthly')}
-                >Monthly Dash</P>
-              </Tooltip>
-            </Th>
-            <Th/>
-          </tr>
-        </thead>
-        <tbody>
-          {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
-        </tbody>
-      </Table>
-    </AssetsView>
+                >
+                  <P
+                    className={getIconClassName('dashMonthly')}
+                  >Monthly Dash</P>
+                </Tooltip>
+              </Th>
+              <Th/>
+            </tr>
+          </thead>
+          <tbody>
+            {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
+          </tbody>
+        </Table>
+      </AssetsView>
+    }
     { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
       ? <Container>
         <TableButtons>
@@ -307,7 +305,7 @@ export const Assets = (props: AssetsProps) => {
         </TableButtons>
       </Container>
       : null }
-    { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
+    { pageData.length === 0 && !emptySearchResults && !emptySortResults ? <Loader/> : null}
     { nameOrTickerPart && emptySearchResults
       ? <NoResultsContainer>
         <NoResults>

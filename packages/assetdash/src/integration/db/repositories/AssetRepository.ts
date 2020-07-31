@@ -32,7 +32,12 @@ export class AssetRepository {
       .orderBy('currentMarketcap', 'desc');
   }
 
-  async findPage(currentPage: number, perPage: number) {
+  async findPage(currentPage: number, perPage: number, watchList?: string) {
+    if (watchList) {
+      return this.findAssetQuery()
+        .whereIn('assets.ticker', watchList.split('-'))
+        .paginate({perPage, currentPage, isLengthAware: true});
+    }
     return this.findAssetQuery().paginate({perPage, currentPage, isLengthAware: true});
   }
 
@@ -44,7 +49,17 @@ export class AssetRepository {
     return asset;
   }
 
-  async findByTags(tags: string[], currentPage: number, perPage: number) {
+  async findByTags(tags: string[], currentPage: number, perPage: number, watchList?: string) {
+    if (watchList) {
+      return this.findAssetQuery()
+        .whereIn('assets.ticker', watchList.split('-'))
+        .join('assets_tags', 'assets.id', 'assets_tags.assetId')
+        .join('tags', function () {
+          this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
+        })
+        .distinct()
+        .paginate({perPage, currentPage, isLengthAware: true});
+    }
     return this.findAssetQuery()
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
@@ -72,7 +87,7 @@ export class AssetRepository {
       .pluck('ticker');
   }
 
-  async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
+  async findByNameOrTickerPart(nameOrTickerPart: string, watchList?: string): Promise<Asset[]> {
     return this.findAssetQuery()
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);

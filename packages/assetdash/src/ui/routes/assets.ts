@@ -12,16 +12,18 @@ export const assets = ({assetRepository}: Services) => {
         currentPage: asOptional(asNumber),
         perPage: asOptional(asNumber),
         nameOrTickerPart: asOptional(asString),
-        sectors: asOptional(asArray(asString))
+        sectors: asOptional(asArray(asString)),
+        watchList: asOptional(asString)
       })
     }),
     async ({query}) => {
       if (query.sectors && query.currentPage && query.perPage) {
-        return responseOf(await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage));
+        return responseOf(
+          await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage, query.watchList));
       } else if (query.nameOrTickerPart) {
         return responseOf({data: await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart)});
       } else if (query.currentPage && query.perPage) {
-        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
+        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage, query.watchList));
       } else {
         return responseOf(await assetRepository.findAll());
       }
