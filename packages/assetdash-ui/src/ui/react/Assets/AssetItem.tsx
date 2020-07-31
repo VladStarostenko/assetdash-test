@@ -77,10 +77,10 @@ export const AssetItem = (props: AssetItemProps) => {
         <Change {...{isPositive: currentChange > 0}}>{formatChange(currentChange)}%</Change>
       </Td>
       <Td>
-        <Dash direction="down">{dashWeekly}</Dash>
+        <Dash direction={dashWeekly > 0 ? 'up' : 'down'}>{dashWeekly}</Dash>
       </Td>
       <Td>
-        <Dash direction="down">{dashMonthly}</Dash>
+        <Dash direction={dashMonthly > 0 ? 'up' : 'down'}>{dashMonthly}</Dash>
       </Td>
       <Td>
         <ButtonFavorite
