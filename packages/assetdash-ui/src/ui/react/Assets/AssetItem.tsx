@@ -7,6 +7,7 @@ import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
 import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
 import {Tooltip} from '../common/Tooltip';
+import {useServices} from '../hooks/useServices';
 
 interface AssetItemProps {
   asset: Asset;
@@ -26,9 +27,12 @@ export const AssetItem = (props: AssetItemProps) => {
     dashMonthly
   } = props.asset;
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const {watchlist} = useServices();
+
+  const [isFavorite, setIsFavorite] = useState<boolean>(watchlist.isInWatchList(ticker));
 
   const onFavoriteButtonClick = () => {
+    isFavorite ? watchlist.removeElementFromWatchList(ticker) : watchlist.addElementToWatchList(ticker);
     setIsFavorite(!isFavorite);
   };
 
@@ -84,7 +88,7 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <ButtonFavorite
-          checked={isFavorite}
+          checked={watchlist.isInWatchList(ticker)}
           onChange={onFavoriteButtonClick}/>
       </Td>
     </Tr>
