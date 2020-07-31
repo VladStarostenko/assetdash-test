@@ -1,6 +1,6 @@
 import {DateTime} from 'luxon';
 
-export function findLastsDailyResetTime(date: Date): Date {
+export function findLastDailyResetTime(date: Date): Date {
   const utcDate = DateTime.fromJSDate(date);
   const nyDate = utcDate.setZone('America/New_York');
   const result = nyDate.set({hour: 9, minute: 0, second: 0, millisecond: 0});

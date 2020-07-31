@@ -1,6 +1,6 @@
 import Knex from 'knex';
 import {
-  findLastsDailyResetTime,
+  findLastDailyResetTime,
   findMonthlyDashResetTime,
   findNextDailyResetTime,
   findWeeklyDashResetTime
@@ -25,7 +25,7 @@ export class RanksRepository {
     return this.db('ranks')
       .where('assetId', assetId)
       .where('isOpen', true)
-      .whereBetween('date', [findLastsDailyResetTime(date), findNextDailyResetTime(date)])
+      .whereBetween('date', [findLastDailyResetTime(date), findNextDailyResetTime(date)])
       .first();
   }
 
@@ -37,7 +37,7 @@ export class RanksRepository {
     return this.db('ranks')
       .where('assetId', assetId)
       .where('isOpen', false)
-      .whereBetween('date', [findLastsDailyResetTime(date), findNextDailyResetTime(date)])
+      .whereBetween('date', [findLastDailyResetTime(date), findNextDailyResetTime(date)])
       .first();
   }
 
@@ -46,6 +46,7 @@ export class RanksRepository {
       .where('assetId', assetId)
       .where('isOpen', true)
       .where('date', '>=', findWeeklyDashResetTime(date))
+      .orderBy('date', 'asc')
       .first();
   }
 
@@ -54,6 +55,7 @@ export class RanksRepository {
       .where('assetId', assetId)
       .where('isOpen', true)
       .where('date', '>=', findMonthlyDashResetTime(date))
+      .orderBy('date', 'asc')
       .first();
   }
 }
