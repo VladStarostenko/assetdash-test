@@ -101,12 +101,12 @@ export class PricingDataUpdater {
 
   updateDash = async (now: Date) => {
     const allAssets = await this.assetRepository.findAll();
-    for (let index = 0; index < allAssets.length; index++) {
-      const dashDaily = await this.dashService.dailyDash(now, allAssets[index].id);
-      const dashWeekly = await this.dashService.weeklyDash(now, allAssets[index].id);
-      const dashMonthly = await this.dashService.monthlyDash(now, allAssets[index].id);
-      if (this.stocksDashUpdateTime(now) || allAssets[index].type === 'Cryptocurrency') {
-        await this.assetRepository.updateDash(allAssets[index].id, dashDaily, dashWeekly, dashMonthly);
+    for (const asset of allAssets) {
+      const dashDaily = await this.dashService.dailyDash(now, asset.id);
+      const dashWeekly = await this.dashService.weeklyDash(now, asset.id);
+      const dashMonthly = await this.dashService.monthlyDash(now, asset.id);
+      if (this.stocksDashUpdateTime(now) || asset.type === 'Cryptocurrency') {
+        await this.assetRepository.updateDash(asset.id, dashDaily, dashWeekly, dashMonthly);
       }
     }
   }

@@ -200,9 +200,9 @@ describe('Whole flow', () => {
     await doOneUpdate('2020-05-13 08:55');
 
     assets = await findAssets();
-    expect(assets[0]).to.deep.include({ticker: 'ETH', dashDaily: 2});
-    expect(assets[1]).to.deep.include({ticker: 'AAPL', dashDaily: -1});
-    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: -1});
+    expect(assets[0]).to.deep.include({ticker: 'ETH', dashDaily: 2, dashWeekly: 2, dashMonthly: 2});
+    expect(assets[1]).to.deep.include({ticker: 'AAPL', dashDaily: -1, dashWeekly: -1, dashMonthly: -1});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: -1, dashWeekly: -1, dashMonthly: -1});
 
     await iexWillReturn('AAPL', stock({symbol: 'AAPL', marketCap: 100}));
     await coinmarketcapWillReturn('BTC', [
@@ -212,8 +212,8 @@ describe('Whole flow', () => {
     await doOneUpdate('2020-05-13 09:00');
 
     assets = await findAssets();
-    expect(assets[0]).to.deep.include({ticker: 'AAPL', dashDaily: 0});
-    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 0});
-    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: 0});
+    expect(assets[0]).to.deep.include({ticker: 'AAPL', dashDaily: 0, dashWeekly: 0, dashMonthly: 0});
+    expect(assets[1]).to.deep.include({ticker: 'ETH', dashDaily: 0, dashWeekly: 1, dashMonthly: 1});
+    expect(assets[2]).to.deep.include({ticker: 'BTC', dashDaily: 0, dashWeekly: -1, dashMonthly: -1});
   });
 });
