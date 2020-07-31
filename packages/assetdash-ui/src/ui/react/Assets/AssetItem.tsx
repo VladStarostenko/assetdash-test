@@ -27,16 +27,12 @@ export const AssetItem = (props: AssetItemProps) => {
     dashMonthly
   } = props.asset;
 
-  const {cookie} = useServices();
-  const isChecked = () => {
-    const watchList = cookie.get('watchlist') ? cookie.get('watchlist').split('-') : [];
-    return watchList.indexOf(ticker) !== -1;
-  };
+  const {watchlist} = useServices();
 
-  const [isFavorite, setIsFavorite] = useState<boolean>(isChecked());
+  const [isFavorite, setIsFavorite] = useState<boolean>(watchlist.isInWatchList(ticker));
 
   const onFavoriteButtonClick = () => {
-    isFavorite ? cookie.removeElementFromWatchList(ticker) : cookie.addElementToWatchList(ticker);
+    isFavorite ? watchlist.removeElementFromWatchList(ticker) : watchlist.addElementToWatchList(ticker);
     setIsFavorite(!isFavorite);
   };
 
@@ -92,7 +88,7 @@ export const AssetItem = (props: AssetItemProps) => {
       </Td>
       <Td>
         <ButtonFavorite
-          checked={isChecked()}
+          checked={watchlist.isInWatchList(ticker)}
           onChange={onFavoriteButtonClick}/>
       </Td>
     </Tr>
