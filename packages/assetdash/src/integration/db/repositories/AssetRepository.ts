@@ -36,6 +36,11 @@ export class AssetRepository {
     return this.findAssetQuery().paginate({perPage, currentPage, isLengthAware: true});
   }
 
+  async findWatchList(watchList: string) {
+    return this.findAssetQuery()
+      .whereIn('assets.ticker', watchList.split('-'));
+  }
+
   async findById(id: number): Promise<Asset> {
     const asset = this.db('assets').where({
       id

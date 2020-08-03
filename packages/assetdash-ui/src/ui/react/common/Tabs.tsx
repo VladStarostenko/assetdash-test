@@ -5,21 +5,34 @@ export interface TabsProps {
   activeTab: string;
   tabs: Array<string>;
   setTab: (tab: string) => void;
+  path: string | undefined;
+  routeChange: (path: string) => void;
 }
 
-export const Tabs = ({activeTab, setTab, tabs}: TabsProps) => (
-  <TabsRow>
-    {tabs.map((tab, index) => (
-      <TabButton
-        key={index}
-        isActive={activeTab === tab}
-        onClick={() => setTab(tab)}
-      >
-        {tab}
-      </TabButton>
-    ))}
-  </TabsRow>
-);
+export const Tabs = ({activeTab, setTab, tabs, path, routeChange}: TabsProps) => {
+  const onClickTabButton = (tab: string) => {
+    if (path === '/watchlist') {
+      routeChange('/');
+    } else {
+      routeChange('/watchlist');
+    }
+    setTab(tab);
+  };
+
+  return <>
+    <TabsRow>
+      {tabs.map((tab, index) => (
+        <TabButton
+          key={index}
+          isActive={activeTab === tab}
+          onClick={() => onClickTabButton(tab)}
+        >
+          {tab}
+        </TabButton>
+      ))}
+    </TabsRow>
+  </>;
+};
 
 const TabsRow = styled.div`
   display: flex;

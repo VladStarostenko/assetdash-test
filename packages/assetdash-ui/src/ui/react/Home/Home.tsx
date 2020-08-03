@@ -6,7 +6,6 @@ import {PageTitle} from '../common/Text/PageTitle';
 import {Search} from '../common/Search/Search';
 import {Sort} from '../common/Sort/Sort';
 import {Assets} from '../Assets/Assets';
-import {WatchList} from '../WatchList/WatchList';
 import {PageSubtitle} from '../common/Text/PageSubtitle';
 import {SectorsContext} from '../hooks/SectorsContext';
 import {SearchedContext} from '../hooks/SearchedContext';
@@ -14,8 +13,6 @@ import {SearchedContext} from '../hooks/SearchedContext';
 type Props = RouteComponentProps<{ currentPage: string }>;
 
 const Home = ({match}: Props) => {
-  const [tab, setTab] = useState('Assets');
-  const tabs = ['Assets', 'Watchlist'];
   const [nameOrTickerPart, setNameOrTickerPart] = useState<string>('');
   const [searchInputValue, setSearchInputValue] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
@@ -42,22 +39,7 @@ const Home = ({match}: Props) => {
             <Sort/>
           </Container>
           <ScreenContent>
-            {tab === 'Assets' &&
-          <Assets
-            activeTab={tab}
-            setTab={setTab}
-            tabs={tabs}
-            currentPage={match.params.currentPage}
-            path={match.path}
-          />
-            }
-            {tab === 'Watchlist' &&
-          <WatchList
-            activeTab={tab}
-            setTab={setTab}
-            tabs={tabs}
-          />
-            }
+            <Assets currentPage={match.params.currentPage} path={match.path}/>
           </ScreenContent>
         </SearchedContext.Provider>
       </SectorsContext.Provider>
