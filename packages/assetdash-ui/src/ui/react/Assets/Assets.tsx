@@ -110,11 +110,11 @@ export const Assets = (props: AssetsProps) => {
     }
   }, [props.path]);
 
-  // useEffect(() => {
-  //   if (!nameOrTickerPart || nameOrTickerPart === '') {
-  //     routeChange('/');
-  //   }
-  // }, [getSectors, nameOrTickerPart]);
+  useEffect(() => {
+    if (!nameOrTickerPart || nameOrTickerPart === '') {
+      routeChange('/');
+    }
+  }, [getSectors]);
 
   const history = useHistory();
   const routeChange = (path: string) => {
@@ -122,7 +122,6 @@ export const Assets = (props: AssetsProps) => {
   };
 
   const routeForNextAndPrevious = (newPage: number) => {
-    setCurrentPage(newPage);
     newPage === 1 ? routeChange('/') : routeChange(`/${newPage}`);
   };
 
@@ -135,14 +134,10 @@ export const Assets = (props: AssetsProps) => {
   };
 
   const onBackToTopClick = () => {
-    setCurrentPage(1);
-    setPerPage(100);
     routeChange('/');
   };
 
   const onViewAllClick = () => {
-    setCurrentPage(1);
-    setPerPage(200);
     routeChange('/all');
   };
 

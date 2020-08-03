@@ -12,8 +12,7 @@ export const assets = ({assetRepository}: Services) => {
         currentPage: asOptional(asNumber),
         perPage: asOptional(asNumber),
         nameOrTickerPart: asOptional(asString),
-        sectors: asOptional(asArray(asString)),
-        watchList: asOptional(asString)
+        sectors: asOptional(asArray(asString))
       })
     }),
     async ({query}) => {
@@ -23,8 +22,6 @@ export const assets = ({assetRepository}: Services) => {
         return responseOf({data: await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart)});
       } else if (query.currentPage && query.perPage) {
         return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
-      } else if (query.watchList) {
-        return responseOf({data: await assetRepository.findWatchList(query.watchList)});
       } else {
         return responseOf(await assetRepository.findAll());
       }
