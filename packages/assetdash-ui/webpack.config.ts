@@ -74,6 +74,7 @@ const config: Configuration = {
     new DefinePlugin({
       'process.env': JSON.stringify({
         NODE_ENV: process.env.NODE_ENV,
+        BASE_URL: process.env.BASE_URL,
       })
     })
   ],

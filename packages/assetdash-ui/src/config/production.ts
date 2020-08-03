@@ -1,5 +1,5 @@
 export const getProdConfig = () => {
   return {
-    baseURL: 'https://assetdash.herokuapp.com/'
+    baseURL: process.env.BASE_URL || 'https://assetdash.herokuapp.com/'
   };
 };
