@@ -31,3 +31,11 @@ export function findWeeklyDashResetTime(date: Date) {
   const nyDate = utcDate.setZone('America/New_York');
   return nyDate.startOf('week').set({hour: 9, minute: 0, second: 0, millisecond: 0}).toUTC().toJSDate();
 }
+
+export const isStocksDashUpdateTime = (now: Date) => {
+  const utcDate = DateTime.fromJSDate(now);
+  const nyDate = utcDate.setZone('America/New_York');
+  const isTradingHour = () => nyDate.hour > 8 && nyDate.hour < 16;
+  const isTradingDay = () => nyDate.weekday < 6;
+  return isTradingHour() && isTradingDay();
+};

@@ -1,17 +1,13 @@
-import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
-import {AssetRepository} from '../integration/db/repositories/AssetRepository';
-import {
-  cryptoDataToCryptoPricingData,
-  logIfError,
-  stocksAndETFsDataToStocksAndETFsPricingData
-} from '../core/utils';
 import {config} from '../config/config';
-import {sleep} from '../core/models/utils';
-import {IexCloudService} from '../integration/http/IexCloudService';
-import {RanksRepository} from '../integration/db/repositories/RanksRepository';
-import {Rank} from '../core/models/rank';
+import {isStocksDashUpdateTime} from '../core/dashResetTimes';
 import {DashService} from '../core/DashService';
-import {DateTime} from 'luxon';
+import {Rank} from '../core/models/rank';
+import {sleep} from '../core/models/utils';
+import {cryptoDataToCryptoPricingData, logIfError, stocksAndETFsDataToStocksAndETFsPricingData} from '../core/utils';
+import {AssetRepository} from '../integration/db/repositories/AssetRepository';
+import {RanksRepository} from '../integration/db/repositories/RanksRepository';
+import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
+import {IexCloudService} from '../integration/http/IexCloudService';
 
 export class PricingDataUpdater {
   get running(): boolean {
@@ -93,19 +89,13 @@ export class PricingDataUpdater {
     }
   }
 
-  stocksDashUpdateTime = (now: Date) => {
-    const utcDate = DateTime.fromJSDate(now);
-    const nyDate = utcDate.setZone('America/New_York');
-    return nyDate.hour > 8 && nyDate.hour < 16;
-  }
-
   updateDash = async (now: Date) => {
     const allAssets = await this.assetRepository.findAll();
     for (const asset of allAssets) {
       const dashDaily = await this.dashService.dailyDash(now, asset.id);
       const dashWeekly = await this.dashService.weeklyDash(now, asset.id);
       const dashMonthly = await this.dashService.monthlyDash(now, asset.id);
-      if (this.stocksDashUpdateTime(now) || asset.type === 'Cryptocurrency') {
+      if (isStocksDashUpdateTime(now) || asset.type === 'Cryptocurrency') {
         await this.assetRepository.updateDash(asset.id, dashDaily, dashWeekly, dashMonthly);
       }
     }
