@@ -33,11 +33,10 @@ export const Assets = (props: AssetsProps) => {
   const {checkedItems} = useContext(SectorsContext);
   const {nameOrTickerPart, setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
-  const [emptySortResults, setEmptySortResults] = useState<boolean>(false);
-  const [tab, setTab] = useState('Assets');
+  const [tab, setTab] = useState<string>(props.path === '/watchlist' ? 'Watchlist' : 'Assets');
   const tabs = ['Assets', 'Watchlist'];
 
-  const {api} = useServices();
+  const {api, watchlist} = useServices();
 
   const getSectors = useCallback(() => {
     return Object.entries(checkedItems).filter(([, v]) => !!v).map(([k]) => k);
@@ -63,41 +62,25 @@ export const Assets = (props: AssetsProps) => {
     api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
-  const showSectorsDataForWatchList = useCallback((sectors: string[], watchList: string) => {
-    api.getAssetsForSectorsForWatchList(currentPage, perPage, sectors, watchList)
-      .then((res: GetPageResponse) => {
-        setEmptySortResults(res.data.data.length === 0);
-        paginateData(res);
-      });
-  }, [api, currentPage, perPage, paginateData]);
-
   const showCurrentPage = useCallback(() => {
     api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
-  const showCurrentPageForWatchList = useCallback((watchList: string) => {
-    api.getPageForWatchList(currentPage, perPage, watchList).then((res: GetPageResponse) => paginateData(res));
+  const showWatchList = useCallback((watchList: string) => {
+    api.getWatchList(watchList).then((res) => setPageData(sortAssets(res.data.data, assetsSort)));
   }, [api, currentPage, perPage, paginateData]);
 
-  const {watchlist} = useServices();
-
   useEffect(() => {
+    const sectors = getSectors();
     if (nameOrTickerPart) {
       showSearchedData();
+    } else if (sectors.length > 0) {
+      setTab('Assets');
+      showSectorsData(sectors);
     } else if (tab === 'Assets') {
-      const sectors = getSectors();
-      if (sectors.length > 0) {
-        showSectorsData(sectors);
-      } else {
-        showCurrentPage();
-      }
+      showCurrentPage();
     } else {
-      const sectors = getSectors();
-      if (sectors.length > 0) {
-        showSectorsDataForWatchList(sectors, watchlist.get('watchlist'));
-      } else {
-        showCurrentPageForWatchList(watchlist.get('watchlist'));
-      }
+      showWatchList(watchlist.get('watchlist'));
     }
   }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData, perPage, tab]);
 
@@ -112,19 +95,26 @@ export const Assets = (props: AssetsProps) => {
     setNameOrTickerPart('');
     setPageData([]);
     setSearchInputValue('');
+    setTab('Assets');
   };
 
   useEffect(() => {
-    if (!props.currentPage && props.path !== '/all') {
+    if (!props.currentPage && props.path !== '/all' && props.path !== '/watchlist') {
       resetPage();
     }
   }, [props.currentPage, props.path]);
 
   useEffect(() => {
-    if (!nameOrTickerPart || nameOrTickerPart === '') {
-      routeChange('/');
+    if (props.path === '/watchlist') {
+      setTab('Watchlist');
     }
-  }, [getSectors, nameOrTickerPart]);
+  }, [props.path]);
+
+  // useEffect(() => {
+  //   if (!nameOrTickerPart || nameOrTickerPart === '') {
+  //     routeChange('/');
+  //   }
+  // }, [getSectors, nameOrTickerPart]);
 
   const history = useHistory();
   const routeChange = (path: string) => {
@@ -170,33 +160,37 @@ export const Assets = (props: AssetsProps) => {
 
   const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
 
+  console.log(props.path);
   return <>
     <Container>
       <ButtonsRow>
-        <Tabs activeTab={tab} tabs={tabs} setTab={setTab} resetPage={resetPage}/>
-        <TableButtons>
-          { !nameOrTickerPart
-            ? <>
-              { perPage > 100
-                ? <ButtonArrow onClick={onBackToTopClick} direction="left">
-              Back to Top 100
-                </ButtonArrow>
-                : <>
-                  { currentPage > 1
-                    ? <ButtonArrow onClick={onPreviousClick} direction="left">
-                  Previous 100
-                    </ButtonArrow>
-                    : null }
-                  { currentPage < lastPage
-                    ? <ButtonArrow onClick={onNextClick} direction="right">
-                  Next 100
-                    </ButtonArrow>
-                    : null }
-                  <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
-                </>
-              } </>
-            : null }
-        </TableButtons>
+        <Tabs activeTab={tab} tabs={tabs} setTab={setTab}
+          path={props.path} routeChange={routeChange}/>
+        { props.path !== '/watchlist'
+          ? <TableButtons>
+            { !nameOrTickerPart
+              ? <>
+                { perPage > 100
+                  ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+                  Back to Top 100
+                  </ButtonArrow>
+                  : <>
+                    { currentPage > 1
+                      ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                      Previous 100
+                      </ButtonArrow>
+                      : null }
+                    { currentPage < lastPage
+                      ? <ButtonArrow onClick={onNextClick} direction="right">
+                      Next 100
+                      </ButtonArrow>
+                      : null }
+                    <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+                  </>
+                } </>
+              : null }
+          </TableButtons>
+          : null}
       </ButtonsRow>
     </Container>
     { !watchlist.get('watchlist') && tab === 'Watchlist'
@@ -305,7 +299,7 @@ export const Assets = (props: AssetsProps) => {
         </TableButtons>
       </Container>
       : null }
-    { pageData.length === 0 && !emptySearchResults && !emptySortResults ? <Loader/> : null}
+    { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
     { nameOrTickerPart && emptySearchResults
       ? <NoResultsContainer>
         <NoResults>

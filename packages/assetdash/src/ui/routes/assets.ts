@@ -18,12 +18,13 @@ export const assets = ({assetRepository}: Services) => {
     }),
     async ({query}) => {
       if (query.sectors && query.currentPage && query.perPage) {
-        return responseOf(
-          await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage, query.watchList));
+        return responseOf(await assetRepository.findByTags(query.sectors, query.currentPage, query.perPage));
       } else if (query.nameOrTickerPart) {
         return responseOf({data: await assetRepository.findByNameOrTickerPart(query.nameOrTickerPart)});
       } else if (query.currentPage && query.perPage) {
-        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage, query.watchList));
+        return responseOf(await assetRepository.findPage(query.currentPage, query.perPage));
+      } else if (query.watchList) {
+        return responseOf({data: await assetRepository.findWatchList(query.watchList)});
       } else {
         return responseOf(await assetRepository.findAll());
       }

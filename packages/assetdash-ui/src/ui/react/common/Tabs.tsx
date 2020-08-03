@@ -5,12 +5,17 @@ export interface TabsProps {
   activeTab: string;
   tabs: Array<string>;
   setTab: (tab: string) => void;
-  resetPage: () => void;
+  path: string | undefined;
+  routeChange: (path: string) => void;
 }
 
-export const Tabs = ({activeTab, setTab, tabs, resetPage}: TabsProps) => {
+export const Tabs = ({activeTab, setTab, tabs, path, routeChange}: TabsProps) => {
   const onClickTabButton = (tab: string) => {
-    resetPage();
+    if (path === '/watchlist') {
+      routeChange('/');
+    } else {
+      routeChange('/watchlist');
+    }
     setTab(tab);
   };
 
