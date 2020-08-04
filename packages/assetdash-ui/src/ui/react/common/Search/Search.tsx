@@ -4,7 +4,11 @@ import searchIcon from '../../../assets/icons/search.svg';
 import {SearchedContext} from '../../hooks/SearchedContext';
 import {SectorsContext} from '../../hooks/SectorsContext';
 
-export const Search = () => {
+export interface SearchProps {
+  routeChange: (path: string) => void;
+}
+
+export const Search = ({routeChange}: SearchProps) => {
   const {setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
   const {resetFilter} = useContext(SectorsContext);
   const onChangeInput = (value: string) => {
@@ -12,6 +16,7 @@ export const Search = () => {
     if (value.length > 1) {
       setNameOrTickerPart(value);
       resetFilter();
+      routeChange('/');
     } else {
       setNameOrTickerPart('');
     }

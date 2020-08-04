@@ -23,9 +23,13 @@ import {DropdownContent} from '../DropdownContent';
 import {SectorsContext} from '../../hooks/SectorsContext';
 import {SearchedContext} from '../../hooks/SearchedContext';
 
-export const Sort = () => {
+export interface SortProps {
+  path: string;
+}
+
+export const Sort = ({path}: SortProps) => {
   const [theme] = useContext(ThemeContext);
-  const {checkedItems, setCheckedItems, resetFilter} = useContext(SectorsContext);
+  const {checkedItems, setCheckedItems, resetFilter, setIsItemsChange} = useContext(SectorsContext);
   const {resetSearch} = useContext(SearchedContext);
   const [maxElements, setMaxElements] = useState(5);
   const [dropDownWidth, setDropDownWidth] = useState(145);
@@ -37,6 +41,9 @@ export const Sort = () => {
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     resetSearch();
+    if (path !== '/') {
+      setIsItemsChange(true);
+    }
     setCheckedItems({...checkedItems, [event.target.name]: event.target.checked});
   };
 

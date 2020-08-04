@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {RouteComponentProps, useHistory, withRouter} from 'react-router-dom';
 import {Screen, ScreenContent} from '../common/Screen';
 import {Container} from '../common/Container';
 import {PageTitle} from '../common/Text/PageTitle';
@@ -16,6 +16,13 @@ const Home = ({match}: Props) => {
   const [nameOrTickerPart, setNameOrTickerPart] = useState<string>('');
   const [searchInputValue, setSearchInputValue] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [isItemsChange, setIsItemsChange] = useState<boolean>(false);
+
+  const history = useHistory();
+  const routeChange = (path: string) => {
+    history.push(path);
+  };
+
   const resetSearch = () => {
     setNameOrTickerPart('');
     setSearchInputValue('');
@@ -25,7 +32,12 @@ const Home = ({match}: Props) => {
   };
   return (
     <Screen>
-      <SectorsContext.Provider value={{checkedItems, setCheckedItems, resetFilter}}>
+      <SectorsContext.Provider
+        value={{checkedItems,
+          setCheckedItems,
+          resetFilter,
+          isItemsChange,
+          setIsItemsChange}}>
         <SearchedContext.Provider
           value={{nameOrTickerPart,
             setNameOrTickerPart,
@@ -35,11 +47,11 @@ const Home = ({match}: Props) => {
           <Container>
             <PageTitle>Top Assets by Market Cap</PageTitle>
             <PageSubtitle/>
-            <Search/>
-            <Sort/>
+            <Search routeChange={routeChange}/>
+            <Sort path={match.path}/>
           </Container>
           <ScreenContent>
-            <Assets currentPage={match.params.currentPage} path={match.path}/>
+            <Assets currentPage={match.params.currentPage} path={match.path} routeChange={routeChange}/>
           </ScreenContent>
         </SearchedContext.Provider>
       </SectorsContext.Provider>
