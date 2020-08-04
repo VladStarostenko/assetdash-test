@@ -1,5 +1,4 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
@@ -12,16 +11,14 @@ import {Tabs} from '../common/Tabs';
 import {SearchedContext} from '../hooks/SearchedContext';
 import {SectorsContext} from '../hooks/SectorsContext';
 import {useServices} from '../hooks/useServices';
-import {AssetsSort, Column} from '../../../core/models/assetsSort';
-import {Table, Th} from '../common/Table/Table';
-import {Tooltip} from '../common/Tooltip';
-import {AssetItem} from './AssetItem';
+import {AssetsSort} from '../../../core/models/assetsSort';
 import {sortAssets} from '../../../core/utils';
-import {EmptyWatchList} from '../WatchList/EmptyWatchList';
+import {AssetsList} from '../common/AssetsList/AssetsList';
 
 export interface AssetsProps {
   currentPage?: string;
   path?: string;
+  routeChange: (path: string) => void;
 }
 
 export const Assets = (props: AssetsProps) => {
@@ -30,8 +27,8 @@ export const Assets = (props: AssetsProps) => {
   const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
   const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
   const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
-  const {checkedItems} = useContext(SectorsContext);
-  const {nameOrTickerPart, setNameOrTickerPart, setSearchInputValue} = useContext(SearchedContext);
+  const {checkedItems, setCheckedItems, isItemsChange, setIsItemsChange} = useContext(SectorsContext);
+  const {nameOrTickerPart, setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
   const [tab, setTab] = useState<string>(props.path === '/watchlist' ? 'Watchlist' : 'Assets');
   const tabs = ['Assets', 'Watchlist'];
@@ -71,6 +68,31 @@ export const Assets = (props: AssetsProps) => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
+    if (isItemsChange) {
+      props.routeChange('/');
+    }
+  }, [isItemsChange]);
+
+  useEffect(() => {
+    if (props.path === '/watchlist') {
+      resetPage();
+      setTab('Watchlist');
+    }
+    if (props.path === '/:currentPage') {
+      setCurrentPage(Number(props.currentPage));
+    }
+    if (props.path === '/') {
+      if (isItemsChange) {
+        resetPageForSectors();
+      } else if (searchInputValue) {
+        resetPageForSearch();
+      } else {
+        resetPage();
+      }
+    }
+  }, [props.path, props.currentPage]);
+
+  useEffect(() => {
     const sectors = getSectors();
     if (nameOrTickerPart) {
       showSearchedData();
@@ -95,34 +117,22 @@ export const Assets = (props: AssetsProps) => {
     setNameOrTickerPart('');
     setPageData([]);
     setSearchInputValue('');
+    setCheckedItems({});
     setTab('Assets');
   };
 
-  useEffect(() => {
-    if (!props.currentPage && props.path !== '/all' && props.path !== '/watchlist') {
-      resetPage();
-    }
-  }, [props.currentPage, props.path]);
+  const resetPageForSectors = () => {
+    setCurrentPage(1);
+    setPageData([]);
+    setIsItemsChange(false);
+  };
 
-  useEffect(() => {
-    if (props.path === '/watchlist') {
-      setTab('Watchlist');
-    }
-  }, [props.path]);
-
-  useEffect(() => {
-    if (!nameOrTickerPart || nameOrTickerPart === '') {
-      routeChange('/');
-    }
-  }, [getSectors]);
-
-  const history = useHistory();
-  const routeChange = (path: string) => {
-    history.push(path);
+  const resetPageForSearch = () => {
+    setCurrentPage(1);
   };
 
   const routeForNextAndPrevious = (newPage: number) => {
-    newPage === 1 ? routeChange('/') : routeChange(`/${newPage}`);
+    newPage === 1 ? props.routeChange('/') : props.routeChange(`/${newPage}`);
   };
 
   const onNextClick = () => {
@@ -134,33 +144,26 @@ export const Assets = (props: AssetsProps) => {
   };
 
   const onBackToTopClick = () => {
-    routeChange('/');
+    setCurrentPage(1);
+    setPerPage(100);
+    props.routeChange('/');
   };
 
   const onViewAllClick = () => {
-    routeChange('/all');
+    setCurrentPage(1);
+    setPerPage(200);
+    props.routeChange('/all');
   };
 
   const onLoadMoreCLick = () => {
     setCurrentPage(currentPage + 1);
   };
 
-  const setAssetsSortForColumn = (column: Column) => {
-    if (assetsSort.column === column && assetsSort.order === 'asc') {
-      setAssetsSort({column: column, order: 'desc'});
-    } else {
-      setAssetsSort({column: column, order: 'asc'});
-    }
-  };
-
-  const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
-
-  console.log(props.path);
   return <>
     <Container>
       <ButtonsRow>
         <Tabs activeTab={tab} tabs={tabs} setTab={setTab}
-          path={props.path} routeChange={routeChange}/>
+          path={props.path} routeChange={props.routeChange}/>
         { props.path !== '/watchlist'
           ? <TableButtons>
             { !nameOrTickerPart
@@ -188,103 +191,13 @@ export const Assets = (props: AssetsProps) => {
           : null}
       </ButtonsRow>
     </Container>
-    { !watchlist.get('watchlist') && tab === 'Watchlist'
-      ? <EmptyWatchList/>
-      : <AssetsView>
-        <Table>
-          <thead>
-            <tr>
-              <Th
-                data-testid='rank-column-header'
-                className={getIconClassName('rank')}
-                onClick={() => setAssetsSortForColumn('rank')}
-              >
-              Rank
-              </Th>
-              <Th
-                className={getIconClassName('dashDaily')}
-                onClick={() => setAssetsSortForColumn('dashDaily')}
-              >
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Daily Dash tracks how many places
-                    an asset has moved up or down in the leaderboard over the course of the day."
-                  position="left"
-                >
-                  <P
-                    className={getIconClassName('dashDaily')}
-                  >Daily Dash</P>
-                </Tooltip>
-              </Th>
-              <Th
-                data-testid='name-column-header'
-                className={getIconClassName('name')}
-                onClick={() => setAssetsSortForColumn('name')}
-              >
-              Asset Name
-              </Th>
-              <Th
-                data-testid='symbol-column-header'
-                className={getIconClassName('ticker')}
-                onClick={() => setAssetsSortForColumn('ticker')}
-              >
-              Symbol
-              </Th>
-              <Th
-                data-testid='marketcap-column-header'
-                className={getIconClassName('currentMarketcap')}
-                onClick={() => setAssetsSortForColumn('currentMarketcap')}
-              >
-              Market Cap
-              </Th>
-              <Th
-                data-testid='price-column-header'
-                className={getIconClassName('currentPrice')}
-                onClick={() => setAssetsSortForColumn('currentPrice')}
-              >
-              Price
-              </Th>
-              <Th
-                data-testid='today-column-header'
-                className={getIconClassName('currentChange')}
-                onClick={() => setAssetsSortForColumn('currentChange')}
-              >
-              Today
-              </Th>
-              <Th
-                className={getIconClassName('dashWeekly')}
-                onClick={() => setAssetsSortForColumn('dashWeekly')}
-              >
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
-                     an asset has moved up or down in the leaderboard over the course of the week."
-                >
-                  <P
-                    className={getIconClassName('dashWeekly')}
-                  >Weekly Dash</P>
-                </Tooltip>
-              </Th>
-              <Th
-                className={getIconClassName('dashMonthly')}
-                onClick={() => setAssetsSortForColumn('dashMonthly')}
-              >
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
-                     an asset has moved up or down in the leaderboard over the course of the month."
-                >
-                  <P
-                    className={getIconClassName('dashMonthly')}
-                  >Monthly Dash</P>
-                </Tooltip>
-              </Th>
-              <Th/>
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
-          </tbody>
-        </Table>
-      </AssetsView>
-    }
+    <AssetsList
+      watchlist={watchlist}
+      assetsSort={assetsSort}
+      setAssetsSort={setAssetsSort}
+      tab={tab}
+      pageData={pageData}
+    />
     { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
       ? <Container>
         <TableButtons>
@@ -308,14 +221,6 @@ export const Assets = (props: AssetsProps) => {
       : null }
   </>;
 };
-
-const AssetsView = styled.div`
-  max-width: 1210px;
-  width: 100%;
-  padding: 0 20px;
-  margin: 0 auto;
-  overflow-x: scroll;
-`;
 
 const NotFoundTitle = styled.h1`
   font-weight: bold;
@@ -431,13 +336,5 @@ const Loader = styled.div`
       -webkit-transform: rotate(360deg);
       transform: rotate(360deg);
     }
-  }
-`;
-
-const P = styled.p`
- &.asc,
- &.desc {
-    position: relative;
-    color: ${({theme}) => theme.colors.colorPrimary};
   }
 `;
