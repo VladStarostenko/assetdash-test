@@ -8,6 +8,7 @@ import {AssetRepository} from '../integration/db/repositories/AssetRepository';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 import {CoinmarketCapService} from '../integration/http/CoinmarketCapService';
 import {IexCloudService} from '../integration/http/IexCloudService';
+import {Logger} from '../core/Logger';
 
 export class PricingDataUpdater {
   get running(): boolean {
@@ -25,13 +26,15 @@ export class PricingDataUpdater {
   private _running: boolean;
   private ranksRepository: RanksRepository;
   private dashService: DashService;
+  private logger: Logger;
 
   constructor(
     iexCloudService: IexCloudService,
     coinmarketCapService: CoinmarketCapService,
     assetRepository: AssetRepository,
     ranksRepository: RanksRepository,
-    dashService: DashService
+    dashService: DashService,
+    logger: Logger
   ) {
     this.iexCloudService = iexCloudService;
     this.coinmarketCapService = coinmarketCapService;
@@ -39,6 +42,7 @@ export class PricingDataUpdater {
     this.ranksRepository = ranksRepository;
     this.dashService = dashService;
     this._running = true;
+    this.logger = logger;
   }
 
   start = () => {
@@ -51,12 +55,20 @@ export class PricingDataUpdater {
 
   loop = async (cryptoTickers: string[], stocksAndETFsTickers: string[]) => {
     while (this._running) {
+      this.logger.logStatus('Start of loop');
       const now = new Date();
-      await logIfError(this.updateCryptoAssetPrices(cryptoTickers));
-      await logIfError(this.updateStocksAndETFsAssetPrices(stocksAndETFsTickers));
-      await logIfError(this.updateRanksForAssets(now));
-      await logIfError(this.updateDash(now));
+      this.logger.logStatus('Updating prices ...');
+      await logIfError(this.updateCryptoAssetPrices(cryptoTickers), this.logger);
+      this.logger.logStatus(`Prices updated for ${cryptoTickers.length} / ${cryptoTickers.length} cryptocurrencies`);
+      await logIfError(this.updateStocksAndETFsAssetPrices(stocksAndETFsTickers), this.logger);
+      this.logger.logStatus('Updating ranks ...');
+      await logIfError(this.updateRanksForAssets(now), this.logger);
+      this.logger.logStatus('Updating dash ...');
+      await logIfError(this.updateDash(now), this.logger);
+      this.logger.logStatus('End of updating');
+      this.logger.logStatus('Sleeping time...');
       await sleep(config.priceUpdateTime);
+      this.logger.logStatus('End of loop');
     }
   }
 
@@ -69,7 +81,7 @@ export class PricingDataUpdater {
   }
 
   updateStocksAndETFsAssetPrices = async (stocksAndETFsTickers: string[]) => {
-    const stocksAndETFsAssets = await this.iexCloudService.getAssetsData(stocksAndETFsTickers);
+    const stocksAndETFsAssets = await this.iexCloudService.getAssetsData(stocksAndETFsTickers, this.logger);
     for (const stocksAndETFsAsset in stocksAndETFsAssets) {
       const pricingData = await stocksAndETFsDataToStocksAndETFsPricingData(stocksAndETFsAssets[stocksAndETFsAsset]);
       await this.assetRepository.updatePrice(pricingData);

@@ -8,6 +8,7 @@ import {attachPaginate} from 'knex-paginate';
 import {TagRepository} from '../integration/db/repositories/TagRepository';
 import {RanksRepository} from '../integration/db/repositories/RanksRepository';
 import {DashService} from './DashService';
+import {Logger} from './Logger';
 
 const PG_DECIMAL_OID = 1700;
 
@@ -27,7 +28,8 @@ export const initServices = (db, config: Config) => {
     ranksRepository: ranksRepository,
     coinmarketCapService: new CoinmarketCapService(config.coinmarketCapBaseUrl),
     iexCloudService: new IexCloudService(config.iexCloudBaseUrl, config.iexBatchSize),
-    dashService: new DashService(ranksRepository)
+    dashService: new DashService(ranksRepository),
+    logger: new Logger()
   });
 };
 

@@ -2,12 +2,14 @@ import {createServices} from '../core/createServices';
 import {config} from '../config/config';
 import {PricingDataUpdater} from '../app/PricingDataUpdater';
 
-const {iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService} = createServices(config);
+const {iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService, logger} = createServices(config);
 const pricingDataUpdater = new PricingDataUpdater(
   iexCloudService,
-  coinmarketCapService, assetRepository,
+  coinmarketCapService,
+  assetRepository,
   ranksRepository,
-  dashService
+  dashService,
+  logger
 );
 
 const run = async () => {
