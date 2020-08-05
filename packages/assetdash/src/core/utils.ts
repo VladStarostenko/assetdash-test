@@ -1,15 +1,16 @@
 import {AssetPricingData} from './models/assetPricingData';
 import {DateTime} from 'luxon';
+import {Logger} from './Logger';
 
 interface ErrorConstructor<T extends any[]> {
   new (...args: T): Error;
 }
 
-export async function logIfError(promise: Promise<void>) {
+export async function logIfError(promise: Promise<void>, logger: Logger) {
   try {
     await promise;
   } catch (e) {
-    console.error(e);
+    logger.logError(e);
   }
 }
 
