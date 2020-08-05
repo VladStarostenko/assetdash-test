@@ -15,14 +15,15 @@ describe('PricingDataUpdater', () => {
   let ranksRepository;
   let db;
   let storeRanks: (ranks: Rank[]) => Promise<void>;
+  let logger;
 
   beforeEach(() => {
     let iexCloudService;
     let coinmarketCapService;
     let dashService;
-    ({db, assetRepository, iexCloudService, coinmarketCapService, ranksRepository, dashService} = createTestServices(true));
+    ({db, assetRepository, iexCloudService, coinmarketCapService, ranksRepository, dashService, logger} = createTestServices(true));
     pricingDataUpdater = new PricingDataUpdater(
-      iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService
+      iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService, logger
     );
     storeRanks = insertRanks(ranksRepository);
   });

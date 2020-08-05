@@ -26,7 +26,7 @@ export class PricingDataUpdater {
   private _running: boolean;
   private ranksRepository: RanksRepository;
   private dashService: DashService;
-  private logger: Logger;
+  private readonly logger: Logger;
 
   constructor(
     iexCloudService: IexCloudService,

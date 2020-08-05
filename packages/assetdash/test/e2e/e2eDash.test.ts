@@ -11,13 +11,21 @@ import {IexCloudService} from '../../src/integration/http/IexCloudService';
 import {clearDatabase} from '../helpers/clear-db';
 import {createTestServices} from '../helpers/createTestServices';
 import {anAsset, cryptoAssetData, stockAssetData} from '../helpers/fixtures';
+import {Logger} from '../../src/core/Logger';
 
 const updater = (iexCloudService: IexCloudService,
   coinmarketCapService: CoinmarketCapService,
   assetRepository: AssetRepository,
   ranksRepository: RanksRepository,
-  dashService: DashService) => async (date: string) => {
-  const pricingDataUpdater = new PricingDataUpdater(iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService);
+  dashService: DashService,
+  logger: Logger) => async (date: string) => {
+  const pricingDataUpdater = new PricingDataUpdater(
+    iexCloudService,
+    coinmarketCapService,
+    assetRepository,
+    ranksRepository,
+    dashService,
+    logger);
   await pricingDataUpdater.updateCryptoAssetPrices(await assetRepository.getTickers('Cryptocurrency'));
   const stockAndETFTickers = (await assetRepository.getTickers('Stock')).concat(await assetRepository.getTickers('ETF'));
   await pricingDataUpdater.updateStocksAndETFsAssetPrices(stockAndETFTickers);
@@ -86,8 +94,8 @@ describe('Whole flow', () => {
   let findAssets: () => Promise<Asset[]>;
 
   beforeEach(async () => {
-    const {db, iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService} = createTestServices();
-    doOneUpdate = updater(iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService);
+    const {db, iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService, logger} = createTestServices();
+    doOneUpdate = updater(iexCloudService, coinmarketCapService, assetRepository, ranksRepository, dashService, logger);
     seedAssets = testSeedAssets(assetRepository);
     findAssets = testFindAssets(assetRepository);
     await clearDatabase(db);
