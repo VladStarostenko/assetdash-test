@@ -16,3 +16,5 @@ export const getAssetsFromCSV = (filePath: string) => new Promise<string[][]>(re
       resolve(csvData);
     });
 });
+
+export const tagIdOf = (tag: string) => tagNames.indexOf(tag) + 1;
