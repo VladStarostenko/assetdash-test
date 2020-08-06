@@ -1,11 +1,9 @@
-import {getAssetsFromCSV, tagNames} from '../utils';
+import {getAssetsFromCSV, tagIdOf} from '../utils';
 
 interface AssetWithTag {
   tagId: number;
   assetId: number;
 }
-
-const tagIdOf = (tag: string) => tagNames.indexOf(tag) + 1;
 
 const assetIdOf = (assetIndex: number) => assetIndex + 1;
 
