@@ -55,7 +55,7 @@ export class PricingDataUpdater {
 
   loop = async (cryptoTickers: string[], stocksAndETFsTickers: string[]) => {
     while (this._running) {
-      const startOfLoop = new Date().getTime();
+      const startOfLoop = Date.now();
       this.logger.logStatus('Start of loop');
       const now = new Date();
       this.logger.logStatus('Updating prices ...');
@@ -68,7 +68,7 @@ export class PricingDataUpdater {
       await logIfError(this.updateDash(now), this.logger);
       this.logger.logStatus('End of updating');
       this.logger.logStatus('Sleeping time...');
-      const timeInLoop = new Date().getTime() - startOfLoop;
+      const timeInLoop = Date.now() - startOfLoop;
       const sleepingTime = timeInLoop > config.priceUpdateTime ? 0 : config.priceUpdateTime - timeInLoop;
       await sleep(sleepingTime);
       this.logger.logStatus('End of loop');
