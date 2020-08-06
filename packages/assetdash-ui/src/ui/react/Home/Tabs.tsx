@@ -1,22 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import styled, {css} from 'styled-components';
 
-export interface TabsProps {
-  activeTab: string;
-  tabs: Array<string>;
-  setTab: (tab: string) => void;
-  path: string | undefined;
-  routeChange: (path: string) => void;
-}
+export const Tabs = () => {
+  const [activeTab, setActiveTab] = useState<string>('Assets');
+  const tabs = ['Assets', 'Watchlist'];
 
-export const Tabs = ({activeTab, setTab, tabs, path, routeChange}: TabsProps) => {
+  const history = useHistory();
+
+  function usePathUpdate() {
+    const watchlistMatch = useRouteMatch('/watchlist');
+
+    useEffect(() => {
+      setActiveTab(watchlistMatch ? 'Watchlist' : 'Assets');
+    }, [watchlistMatch]);
+  }
+
+  usePathUpdate();
+
   const onClickTabButton = (tab: string) => {
-    if (path === '/watchlist') {
-      routeChange('/');
+    if (tab === 'Watchlist') {
+      history.push('/watchlist');
     } else {
-      routeChange('/watchlist');
+      history.push('/');
     }
-    setTab(tab);
+    setActiveTab(tab);
   };
 
   return <>
@@ -26,6 +34,7 @@ export const Tabs = ({activeTab, setTab, tabs, path, routeChange}: TabsProps) =>
           key={index}
           isActive={activeTab === tab}
           onClick={() => onClickTabButton(tab)}
+          data-testid={`tab-${tab}${activeTab === tab ? '-active' : ''}`}
         >
           {tab}
         </TabButton>

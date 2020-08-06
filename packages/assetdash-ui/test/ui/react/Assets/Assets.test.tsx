@@ -1,4 +1,3 @@
-import {Matcher, MatcherOptions} from '@testing-library/dom/types/matches';
 import {fireEvent, render, waitFor} from '@testing-library/react';
 import adapter from 'axios/lib/adapters/http';
 import chai, {expect} from 'chai';
@@ -7,19 +6,15 @@ import nock from 'nock';
 import React from 'react';
 import {MemoryRouter} from 'react-router-dom';
 import {Api} from '../../../../src/integration/http/api';
-import Home from '../../../../src/ui/react/Home/Home';
+import {HomeWithRouter} from '../../../../src/ui/react/Home/HomeWithRouter';
 import {ServiceContext} from '../../../../src/ui/react/hooks/useServices';
 import {Services} from '../../../../src/ui/react/services';
-import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
-import '../../../shims/types';
 import {WatchListService} from '../../../../src/ui/react/services/WatchListService';
+import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
+import {waitForPageLoad} from '../../../fixtures/assetsPage';
+import '../../../shims/types';
 
 chai.use(chaiDom);
-
-type AllByBoundAttributeOnContainer = (
-  id: Matcher,
-  options?: MatcherOptions,
-) => HTMLElement[]
 
 function createTestServices(): Services {
   const config = Object.freeze({baseURL: 'http://127.0.0.1'});
@@ -36,14 +31,10 @@ function renderHome() {
     <MemoryRouter>
       <ServiceContext.Provider value={createTestServices()}>
         <ThemeContextProvider>
-          <Home/>
+          <HomeWithRouter/>
         </ThemeContextProvider>
       </ServiceContext.Provider>
     </MemoryRouter>);
-}
-
-async function waifForPageLoad(getAllByTestId: AllByBoundAttributeOnContainer) {
-  await waitFor(() => expect(getAllByTestId('asset-row-name')).to.have.length(3));
 }
 
 const exampleAssets = [
@@ -107,6 +98,9 @@ describe('Assets', () => {
         pagination
       });
   });
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
   describe('Current Page', () => {
     it('are sorted by rank by default', async () => {
@@ -119,7 +113,7 @@ describe('Assets', () => {
 
     it('change sorting direction after click', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('rank-column-header');
       fireEvent.click(node);
@@ -131,7 +125,7 @@ describe('Assets', () => {
 
     it('sorts by name', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('name-column-header');
       fireEvent.click(node);
@@ -143,7 +137,7 @@ describe('Assets', () => {
 
     it('sorts by name reversed', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('name-column-header');
       fireEvent.click(node);
@@ -171,7 +165,7 @@ describe('Assets', () => {
 
     it('sorts by ticker', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('symbol-column-header');
       fireEvent.click(node);
@@ -183,7 +177,7 @@ describe('Assets', () => {
 
     it('sorts by ticker reversed', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('symbol-column-header');
       fireEvent.click(node);
@@ -196,7 +190,7 @@ describe('Assets', () => {
 
     it('sorts by marketcap', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('marketcap-column-header');
       fireEvent.click(node);
@@ -209,7 +203,7 @@ describe('Assets', () => {
 
     it('sorts by marketcap reversed', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('marketcap-column-header');
       fireEvent.click(node);
@@ -221,7 +215,7 @@ describe('Assets', () => {
 
     it('sorts by price', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('price-column-header');
       fireEvent.click(node);
@@ -233,7 +227,7 @@ describe('Assets', () => {
 
     it('sorts by price reversed', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('price-column-header');
       fireEvent.click(node);
@@ -246,7 +240,7 @@ describe('Assets', () => {
 
     it('sorts by today', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('today-column-header');
       fireEvent.click(node);
@@ -258,7 +252,7 @@ describe('Assets', () => {
 
     it('sorts by today reversed', async () => {
       const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
       const node = await findByTestId('today-column-header');
       fireEvent.click(node);
@@ -294,12 +288,12 @@ describe('Assets', () => {
       const searchInput = await findByTestId('search-input');
       fireEvent.change(searchInput, {target: {value: 'ap'}});
 
-      await waifForPageLoad(getAllByTestId);
+      await waitForPageLoad(getAllByTestId);
 
-      sectors.forEach(sector => {
+      await waitFor(() => sectors.forEach(sector => {
         const hiddenCheckbox = sector as HTMLInputElement;
         expect(hiddenCheckbox.checked).to.be.false;
-      });
+      }));
     });
   });
 });

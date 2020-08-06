@@ -1,25 +1,33 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
 import styled from 'styled-components';
 import searchIcon from '../../../assets/icons/search.svg';
-import {SearchedContext} from '../../hooks/SearchedContext';
-import {SectorsContext} from '../../hooks/SectorsContext';
+import {debounce} from '../../helpers/debounce';
+import {getQueryParam} from '../../helpers/queryString';
 
-export interface SearchProps {
-  routeChange: (path: string) => void;
-}
+export const Search = () => {
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const location = useLocation();
+  const history = useHistory();
+  const triggerSearch = (value: string) => {
+    if (!(value)) {
+      history.push('/');
+    }
+    if (value.length > 1) {
+      history.push(`/?q=${value}`);
+    }
+  };
 
-export const Search = ({routeChange}: SearchProps) => {
-  const {setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
-  const {resetFilter} = useContext(SectorsContext);
+  const debouncedTriggerSearch = useCallback(debounce(triggerSearch, 700), []);
+
+  useEffect(() => {
+    const query = getQueryParam('q', location);
+    setSearchInputValue(query || '');
+  }, [location]);
+
   const onChangeInput = (value: string) => {
     setSearchInputValue(value);
-    if (value.length > 1) {
-      setNameOrTickerPart(value);
-      resetFilter();
-      routeChange('/');
-    } else {
-      setNameOrTickerPart('');
-    }
+    debouncedTriggerSearch(value);
   };
 
   return (

@@ -1,138 +1,112 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import styled from 'styled-components';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
 import magnifierIcon from '../../assets/icons/magnifier.svg';
+import {AssetsList} from '../common/AssetsList/AssetsList';
 import {ButtonArrow} from '../common/Button/ButtonArrow';
 import {ButtonsRow} from '../common/Button/ButtonsRow';
 import {ButtonTertiary} from '../common/Button/ButtonTertiary';
 import {Container} from '../common/Container';
-import {Tabs} from '../common/Tabs';
-import {SearchedContext} from '../hooks/SearchedContext';
-import {SectorsContext} from '../hooks/SectorsContext';
+import {getQueryParam} from '../helpers/queryString';
+import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
-import {AssetsSort} from '../../../core/models/assetsSort';
-import {sortAssets} from '../../../core/utils';
-import {AssetsList} from '../common/AssetsList/AssetsList';
 
-export interface AssetsProps {
-  currentPage?: string;
-  path?: string;
-  routeChange: (path: string) => void;
-}
-
-export const Assets = (props: AssetsProps) => {
+export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
-  const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
-  const [currentPage, setCurrentPage] = useState<number>(Number(props.currentPage) || 1);
-  const [lastPage, setLastPage] = useState<number>(Number(props.currentPage) + 1 || 1);
-  const [perPage, setPerPage] = useState<number>(props.path === '/all' ? 200 : 100);
-  const {checkedItems, setCheckedItems, isItemsChange, setIsItemsChange} = useContext(SectorsContext);
-  const {nameOrTickerPart, setNameOrTickerPart, searchInputValue, setSearchInputValue} = useContext(SearchedContext);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [lastPage, setLastPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(100);
+  const [nameOrTickerPart, setNameOrTickerPart] = useState('');
+  const [sectors, setSectors] = useState<string[]>([]);
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
-  const [tab, setTab] = useState<string>(props.path === '/watchlist' ? 'Watchlist' : 'Assets');
-  const tabs = ['Assets', 'Watchlist'];
+  const [isLoading, setIsLoading] = useState(false);
+  const history = useHistory();
+  const {api} = useServices();
+  const location = useLocation();
 
-  const {api, watchlist} = useServices();
+  function usePageUpdate() {
+    useEffect(() => {
+      const currentPage = getQueryParam('p', location);
+      setCurrentPage(Number(currentPage) || 1);
+      const nameOrTickerPart = getQueryParam('q', location);
+      setNameOrTickerPart(nameOrTickerPart || '');
+      const sectors = getQueryParam('sectors', location)?.split(',') || [];
+      setSectors(sectors);
+    }, [location]);
+  }
 
-  const getSectors = useCallback(() => {
-    return Object.entries(checkedItems).filter(([, v]) => !!v).map(([k]) => k);
-  }, [checkedItems]);
+  function usePathUpdate() {
+    const allMatch = useRouteMatch('/all');
 
-  const showSearchedData = useCallback(() => {
+    useEffect(() => {
+      setPerPage(allMatch ? 200 : 100);
+    }, [allMatch]);
+  }
+
+  usePageUpdate();
+  usePathUpdate();
+
+  const isShowingAll = () => perPage === 200;
+
+  const loadAssetSearchResult = useCallback(() => {
     api.searchAssets(nameOrTickerPart).then((res: GetPageResponse) => {
       setEmptySearchResults(res.data.data.length === 0);
-      setPageData(sortAssets(res.data.data, assetsSort));
+      setPageData(res.data.data);
+      setIsLoading(false);
     });
   }, [api, nameOrTickerPart]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
-    if (currentPage > 1 && perPage === 200) {
-      setPageData((pageData) => sortAssets(pageData.concat(res.data.data), assetsSort));
+    if (currentPage > 1 && isShowingAll()) {
+      setPageData((pageData) => pageData.concat(res.data.data));
     } else {
-      setPageData(sortAssets(res.data.data, assetsSort));
+      setPageData(res.data.data);
     }
     setLastPage(res.data.pagination.lastPage);
-  }, [currentPage, perPage]);
+    setIsLoading(false);
+  }, [currentPage]);
 
-  const showSectorsData = useCallback((sectors: string[]) => {
+  const loadFilteredAssets = useCallback((sectors: string[]) => {
     api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
-  const showCurrentPage = useCallback(() => {
+  const loadCurrentPage = useCallback(() => {
+    if (currentPage < 1) {
+      return;
+    }
     api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
-  const showWatchList = useCallback((watchList: string) => {
-    api.getWatchList(watchList).then((res) => setPageData(sortAssets(res.data.data, assetsSort)));
-  }, [api, currentPage, perPage, paginateData]);
-
   useEffect(() => {
-    if (isItemsChange) {
-      props.routeChange('/');
+    setIsLoading(true);
+    if (!isShowingAll()) {
+      setPageData([]);
     }
-  }, [isItemsChange]);
-
-  useEffect(() => {
-    if (props.path === '/watchlist') {
-      resetPage();
-      setTab('Watchlist');
-    }
-    if (props.path === '/:currentPage') {
-      setCurrentPage(Number(props.currentPage));
-    }
-    if (props.path === '/') {
-      if (isItemsChange) {
-        resetPageForSectors();
-      } else if (searchInputValue) {
-        resetPageForSearch();
-      } else {
-        resetPage();
-      }
-    }
-  }, [props.path, props.currentPage]);
-
-  useEffect(() => {
-    const sectors = getSectors();
     if (nameOrTickerPart) {
-      showSearchedData();
+      loadAssetSearchResult();
     } else if (sectors.length > 0) {
-      setTab('Assets');
-      showSectorsData(sectors);
-    } else if (tab === 'Assets') {
-      showCurrentPage();
+      loadFilteredAssets(sectors);
     } else {
-      showWatchList(watchlist.get('watchlist'));
+      loadCurrentPage();
     }
-  }, [nameOrTickerPart, showSearchedData, getSectors, showCurrentPage, showSectorsData, perPage, tab]);
+  }, [nameOrTickerPart, loadAssetSearchResult, sectors, loadCurrentPage, loadFilteredAssets, perPage]);
 
-  useEffect(() => {
-    setPageData(sortAssets(pageData, assetsSort));
-  }, [assetsSort]);
-
-  const resetPage = () => {
-    setCurrentPage(1);
-    setPerPage(100);
-    setAssetsSort({column: 'rank', order: 'asc'});
-    setNameOrTickerPart('');
-    setPageData([]);
-    setSearchInputValue('');
-    setCheckedItems({});
-    setTab('Assets');
-  };
-
-  const resetPageForSectors = () => {
-    setCurrentPage(1);
-    setPageData([]);
-    setIsItemsChange(false);
-  };
-
-  const resetPageForSearch = () => {
-    setCurrentPage(1);
-  };
+  function updatePageInParams(newPage: number) {
+    const urlSearchParams = new URLSearchParams(location.search);
+    if (newPage > 1) {
+      urlSearchParams.set('p', newPage.toString());
+    } else {
+      urlSearchParams.delete('p');
+    }
+    return urlSearchParams.toString();
+  }
 
   const routeForNextAndPrevious = (newPage: number) => {
-    newPage === 1 ? props.routeChange('/') : props.routeChange(`/${newPage}`);
+    const urlSearchString = updatePageInParams(newPage);
+    const newPath = urlSearchString ? `/?${urlSearchString}` : '/';
+    history.push(newPath);
   };
 
   const onNextClick = () => {
@@ -144,15 +118,11 @@ export const Assets = (props: AssetsProps) => {
   };
 
   const onBackToTopClick = () => {
-    setCurrentPage(1);
-    setPerPage(100);
-    props.routeChange('/');
+    history.push('/');
   };
 
   const onViewAllClick = () => {
-    setCurrentPage(1);
-    setPerPage(200);
-    props.routeChange('/all');
+    history.push('/all');
   };
 
   const onLoadMoreCLick = () => {
@@ -162,43 +132,36 @@ export const Assets = (props: AssetsProps) => {
   return <>
     <Container>
       <ButtonsRow>
-        <Tabs activeTab={tab} tabs={tabs} setTab={setTab}
-          path={props.path} routeChange={props.routeChange}/>
-        { props.path !== '/watchlist'
-          ? <TableButtons>
-            { !nameOrTickerPart
-              ? <>
-                { perPage > 100
-                  ? <ButtonArrow onClick={onBackToTopClick} direction="left">
+        <Tabs/>
+        <TableButtons>
+          { !nameOrTickerPart
+            ? <>
+              { perPage > 100
+                ? <ButtonArrow onClick={onBackToTopClick} direction="left">
                   Back to Top 100
-                  </ButtonArrow>
-                  : <>
-                    { currentPage > 1
-                      ? <ButtonArrow onClick={onPreviousClick} direction="left">
+                </ButtonArrow>
+                : <>
+                  { currentPage > 1
+                    ? <ButtonArrow onClick={onPreviousClick} direction="left">
                       Previous 100
-                      </ButtonArrow>
-                      : null }
-                    { currentPage < lastPage
-                      ? <ButtonArrow onClick={onNextClick} direction="right">
+                    </ButtonArrow>
+                    : null }
+                  { currentPage < lastPage
+                    ? <ButtonArrow onClick={onNextClick} direction="right">
                       Next 100
-                      </ButtonArrow>
-                      : null }
-                    <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
-                  </>
-                } </>
-              : null }
-          </TableButtons>
-          : null}
+                    </ButtonArrow>
+                    : null }
+                  <ButtonTertiary onClick={onViewAllClick}>View all</ButtonTertiary>
+                </>
+              } </>
+            : null }
+        </TableButtons>
       </ButtonsRow>
     </Container>
     <AssetsList
-      watchlist={watchlist}
-      assetsSort={assetsSort}
-      setAssetsSort={setAssetsSort}
-      tab={tab}
       pageData={pageData}
     />
-    { props.path === '/all' && currentPage < lastPage && !nameOrTickerPart
+    { isShowingAll() && currentPage < lastPage && !nameOrTickerPart
       ? <Container>
         <TableButtons>
           <ButtonTertiary onClick={onLoadMoreCLick}>
@@ -207,12 +170,12 @@ export const Assets = (props: AssetsProps) => {
         </TableButtons>
       </Container>
       : null }
-    { pageData.length === 0 && !emptySearchResults ? <Loader/> : null}
+    { isLoading ? <Loader/> : null}
     { nameOrTickerPart && emptySearchResults
       ? <NoResultsContainer>
         <NoResults>
           <NotFoundIconWrapper>
-            <img src={magnifierIcon}/>
+            <img src={magnifierIcon} alt="search"/>
           </NotFoundIconWrapper>
           <NotFoundTitle>No results</NotFoundTitle>
           <NotFoundMessage>Try different asset name</NotFoundMessage>

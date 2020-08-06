@@ -1,50 +1,63 @@
-import React, {useRef, useState, ChangeEvent, useEffect, useContext} from 'react';
+import React, {ChangeEvent, useContext, useEffect, useRef, useState} from 'react';
+import {useHistory, useLocation} from 'react-router-dom';
 import styled from 'styled-components';
-import {SortCheckbox} from './SortCheckbox';
-import internetIcon from '../../../assets/icons/internet.svg';
-import financeIcon from '../../../assets/icons/finance.svg';
-import homeIcon from '../../../assets/icons/home.svg';
-import cartIcon from '../../../assets/icons/shopping-cart.svg';
-import healthIcon from '../../../assets/icons/health.svg';
+import airlinesIcon from '../../../assets/icons/airlines.svg';
+import cannabisIcon from '../../../assets/icons/cannabis.svg';
+import carIcon from '../../../assets/icons/car.svg';
 import cloudIcon from '../../../assets/icons/cloud.svg';
+import cryptoIcon from '../../../assets/icons/crypto.svg';
+import cubeIcon from '../../../assets/icons/cube.svg';
 import ecommerceIcon from '../../../assets/icons/e-commerce.svg';
 import emergingIcon from '../../../assets/icons/emerging.svg';
-import airlinesIcon from '../../../assets/icons/airlines.svg';
-import carIcon from '../../../assets/icons/car.svg';
+import financeIcon from '../../../assets/icons/finance.svg';
 import gambleIcon from '../../../assets/icons/gamble.svg';
 import goldIcon from '../../../assets/icons/gold.svg';
-import cryptoIcon from '../../../assets/icons/crypto.svg';
-import cannabisIcon from '../../../assets/icons/cannabis.svg';
-import cubeIcon from '../../../assets/icons/cube.svg';
-import {SortDropdownButton} from './SortDropdown';
+import healthIcon from '../../../assets/icons/health.svg';
+import homeIcon from '../../../assets/icons/home.svg';
+import internetIcon from '../../../assets/icons/internet.svg';
+import cartIcon from '../../../assets/icons/shopping-cart.svg';
+import {getQueryParam} from '../../helpers/queryString';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
 import {ThemeContext} from '../../Theme/ThemeContextProvider';
 import {DropdownContent} from '../DropdownContent';
-import {SectorsContext} from '../../hooks/SectorsContext';
-import {SearchedContext} from '../../hooks/SearchedContext';
+import {SortCheckbox} from './SortCheckbox';
+import {SortDropdownButton} from './SortDropdown';
 
-export interface SortProps {
-  path: string;
-}
-
-export const Sort = ({path}: SortProps) => {
+export const Sort = () => {
   const [theme] = useContext(ThemeContext);
-  const {checkedItems, setCheckedItems, resetFilter, setIsItemsChange} = useContext(SectorsContext);
-  const {resetSearch} = useContext(SearchedContext);
   const [maxElements, setMaxElements] = useState(5);
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
   const dropDownRef = useRef<HTMLLIElement>(null);
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const itemWidth = 165;
   const marginRight = 16;
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    const sectors = getQueryParam('sectors', location)?.split(',') || [];
+    const checkedItems = {} as Record<string, boolean>;
+    sectors.forEach((sectorName) => { checkedItems[sectorName] = true; });
+    setCheckedItems(checkedItems);
+  }, [location]);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    resetSearch();
-    if (path !== '/') {
-      setIsItemsChange(true);
+    const newCheckedItems = {...checkedItems, [event.target.name]: event.target.checked};
+    const sectors = Object.entries(newCheckedItems).filter(([, v]) => !!v).map(([k]) => k);
+    if (sectors.length === 0) {
+      history.push('/');
+      return;
     }
-    setCheckedItems({...checkedItems, [event.target.name]: event.target.checked});
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('sectors', sectors.join(','));
+    history.push(`/?${urlSearchParams.toString()}`);
+  };
+
+  const resetFilter = () => {
+    history.push('/');
   };
 
   useEffect(() => {
