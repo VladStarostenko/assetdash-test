@@ -26,17 +26,23 @@ export const SocialDropdown = () => {
       {isExpanded &&
         <SocialDropdownContent ref={dropdownRef}>
           <SocialItem
-            href="#"
+            href="https://twitter.com/assetdash"
+            target="_blank"
+            rel="noopener noreferrer"
             icon={twitterIcon}
             text="Twitter"
           />
           <SocialItem
-            href="#"
+            href="https://t.me/assetdashdotcom"
+            target="_blank"
+            rel="noopener noreferrer"
             icon={telegramIcon}
             text="Telegram"
           />
           <SocialItem
             href="#"
+            target="_blank"
+            rel="noopener noreferrer"
             icon={alphaIcon}
             text="SeekingAlpha"
           />
@@ -48,11 +54,13 @@ export const SocialDropdown = () => {
 
 interface SocialItemProps extends TextWithIconProps {
   href: string;
+  target: string;
+  rel: string;
 }
 
-const SocialItem = ({href, icon, text}: SocialItemProps) => (
+const SocialItem = ({href, icon, text, target, rel}: SocialItemProps) => (
   <li>
-    <SocialLink href={href}>
+    <SocialLink href={href} target={target} rel={rel}>
       <TextWithIcon
         icon={icon}
         text={text}
