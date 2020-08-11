@@ -23,8 +23,7 @@ const App: React.FC = () => {
     window.OneSignal = window.OneSignal || [];
     window.OneSignal.push(function () {
       window.OneSignal.init({
-        appId: config.oneSignalAppId,
-        path: 'onesignal'
+        appId: config.oneSignalAppId
       });
     });
   }, [oneSignalLoaded]);
