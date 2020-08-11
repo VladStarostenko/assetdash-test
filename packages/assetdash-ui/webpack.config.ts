@@ -3,6 +3,7 @@ import {Configuration, DefinePlugin, IgnorePlugin} from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const config: Configuration = {
   entry: [
@@ -23,8 +24,8 @@ const config: Configuration = {
     modules: [
       path.resolve('./node_modules'),
       path.resolve('../../node_modules'),
-      path.resolve('.'),
-    ],
+      path.resolve('.')
+    ]
   },
 
   module: {
@@ -35,7 +36,7 @@ const config: Configuration = {
         use: {
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true,
+            cacheDirectory: true
           }
         }
       },
@@ -46,9 +47,9 @@ const config: Configuration = {
             loader: 'file-loader',
             options: {
               name: '[name].[hash].[ext]'
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       {
         test: /\.(s[ac]|c)ss$/,
@@ -65,7 +66,7 @@ const config: Configuration = {
     new ForkTsCheckerWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',
-      chunkFilename: '[id].[hash].css',
+      chunkFilename: '[id].[hash].css'
     }),
     new HtmlWebpackPlugin({
       template: 'src/ui/index.html'
@@ -75,8 +76,10 @@ const config: Configuration = {
       'process.env': JSON.stringify({
         NODE_ENV: process.env.NODE_ENV,
         BASE_URL: process.env.BASE_URL,
+        ONE_SIGNAL_APP_ID: process.env.ONE_SIGNAL_APP_ID
       })
-    })
+    }),
+    new CopyWebpackPlugin({patterns: [{from: 'lib'}]})
   ],
 
   devtool: 'source-map',
