@@ -56,7 +56,7 @@ export const AssetItem = (props: AssetItemProps) => {
     <Tr>
       <Td>{rank}</Td>
       <Td>
-        <Dash direction={dashDaily > 0 ? 'up' : 'down'}>{dashDaily}</Dash>
+        <Dash direction={dashDaily >= 0 ? 'up' : 'down'}>{dashDaily}</Dash>
       </Td>
       <Td>
         <AssetName data-testid={'asset-row-name'}>

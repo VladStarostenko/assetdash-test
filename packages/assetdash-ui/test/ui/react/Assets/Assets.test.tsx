@@ -1,30 +1,17 @@
 import {fireEvent, render, waitFor} from '@testing-library/react';
-import adapter from 'axios/lib/adapters/http';
 import chai, {expect} from 'chai';
 import chaiDom from 'chai-dom';
 import nock from 'nock';
 import React from 'react';
 import {MemoryRouter} from 'react-router-dom';
-import {Api} from '../../../../src/integration/http/api';
 import {HomeWithRouter} from '../../../../src/ui/react/Home/HomeWithRouter';
 import {ServiceContext} from '../../../../src/ui/react/hooks/useServices';
-import {Services} from '../../../../src/ui/react/services';
-import {WatchListService} from '../../../../src/ui/react/services/WatchListService';
 import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
 import {waitForPageLoad} from '../../../fixtures/assetsPage';
+import {createTestServices} from '../../../helpers/testServices';
 import '../../../shims/types';
 
 chai.use(chaiDom);
-
-function createTestServices(): Services {
-  const config = Object.freeze({baseURL: 'http://127.0.0.1'});
-  const axiosConfig = {...config, adapter};
-  return {
-    config,
-    api: new Api(axiosConfig),
-    watchlist: new WatchListService()
-  };
-}
 
 function renderHome() {
   return render(
