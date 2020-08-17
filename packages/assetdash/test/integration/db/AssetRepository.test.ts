@@ -16,21 +16,18 @@ describe('Asset Repository', () => {
     id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
-    imageUrl: 'eth.img',
     type: 'Cryptocurrency',
     currentMarketcap: 10
   }, {
     id: 2,
     ticker: 'BTC',
     name: 'Bitcoin',
-    imageUrl: 'btc.img',
     type: 'Cryptocurrency',
     currentMarketcap: 20
   }, {
     id: 3,
     ticker: 'AAPL',
     name: 'Apple',
-    imageUrl: 'aapl.img',
     type: 'Stock',
     currentMarketcap: 5
   }];
@@ -115,7 +112,6 @@ describe('Asset Repository', () => {
           dashWeekly: 0,
           id: 1,
           rank: 2,
-          imageUrl: 'eth.img',
           name: 'Ethereum',
           ticker: 'ETH',
           type: 'Cryptocurrency'

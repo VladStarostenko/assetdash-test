@@ -7,7 +7,7 @@ let lastId = 0;
 import {RanksRepository} from '../../src/integration/db/repositories/RanksRepository';
 
 export function assetWithId(id: number): Asset {
-  return {id, imageUrl: '', name: 'Bitcoin', ticker: 'BTC', type: 'Cryptocurrency'};
+  return {id, name: 'Bitcoin', ticker: 'BTC', type: 'Cryptocurrency'};
 }
 
 export function anAsset({
@@ -16,7 +16,7 @@ export function anAsset({
   assetType = 'Cryptocurrency' as AssetType
 } = {}): Asset {
   return {
-    id: lastId++, imageUrl: '', name, ticker, type: assetType
+    id: lastId++, name, ticker, type: assetType
   };
 }
 
