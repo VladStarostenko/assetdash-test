@@ -18,3 +18,24 @@ export const getAssetsFromCSV = (filePath: string) => new Promise<string[][]>(re
 });
 
 export const tagIdOf = (tag: string) => tagNames.indexOf(tag) + 1;
+
+export const getTypeOfAsset = (tag: string) => {
+  return tag === 'ETFs' ? 'ETF' : tag === 'Cryptocurrency' ? 'Cryptocurrency' : 'Stock';
+};
+
+interface AssetWithTag {
+  tagId: number;
+  assetId: number;
+}
+
+export const assetIdOf = (assetIndex: number) => assetIndex + 1;
+
+export const addTagsForAssets = (assets: string[][], startIndex: number): AssetWithTag[] => {
+  return assets.map((asset, assetIndex) => {
+    return asset.slice(2)
+      .filter(elem => !!elem)
+      .map(tag => ({
+        tagId: tagIdOf(tag), assetId: assetIdOf(startIndex + assetIndex)
+      }));
+  }).reduce((acc, val) => [...acc, ...val], []);
+};
