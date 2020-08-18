@@ -30,12 +30,12 @@ interface AssetWithTag {
 
 export const assetIdOf = (assetIndex: number) => assetIndex + 1;
 
-export const addTagsForAssets = (assets: string[][], startIndex: number): AssetWithTag[] => {
+export const addTagsForAssets = (assets: string[][], assetIds: number[]): AssetWithTag[] => {
   return assets.map((asset, assetIndex) => {
     return asset.slice(2)
       .filter(elem => !!elem)
       .map(tag => ({
-        tagId: tagIdOf(tag), assetId: assetIdOf(startIndex + assetIndex)
+        tagId: tagIdOf(tag), assetId: assetIds[assetIndex]
       }));
   }).reduce((acc, val) => [...acc, ...val], []);
 };

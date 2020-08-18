@@ -8,7 +8,7 @@ describe('extract tags', () => {
         '', '', '', 'Hospitality', '', '', '', '', '', '', '', '', 'Gamble', '', ''],
       ['CODI', '"""Compass Diversified Holdings"""',
         '', '', '', 'Hospitality', '', '', '', '', '', '', '', '', '', 'Green', '']
-    ], 51);
+    ], [52, 53]);
     expect(result).to.deep.eq([
       {
         assetId: 52,

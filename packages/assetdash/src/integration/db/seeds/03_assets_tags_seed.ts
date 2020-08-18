@@ -7,7 +7,11 @@ export const seed = async function (knex) {
     tagId: tagIdOf('Cryptocurrency'),
     assetId: assetIdOf(index)
   }));
-  const stocksAssetsWithTags = addTagsForAssets(stocksAssets, cryptoAssets.length);
+  const assetIds: number[] = [];
+  for (const asset of stocksAssets) {
+    assetIds.push(((await knex('assets').select('id').where('ticker', '=', asset[0])).map(id => id.id))[0]);
+  }
+  const stocksAssetsWithTags = addTagsForAssets(stocksAssets, assetIds);
   const assetsWithTags = cryptoAssetsWithTags.concat(stocksAssetsWithTags);
   return knex('assets_tags').insert(assetsWithTags);
 };

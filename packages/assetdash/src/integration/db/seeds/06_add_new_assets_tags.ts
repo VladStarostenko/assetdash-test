@@ -2,7 +2,10 @@ import {addTagsForAssets, getAssetsFromCSV} from '../utils';
 
 export const seed = async function (knex) {
   const assetDataFromCSV = await getAssetsFromCSV('src/integration/db/seeds/Asset_Update_1.csv');
-  const stratIndex = Number((await knex('assets').count())[0].count);
-  const assetsWithTags = addTagsForAssets(assetDataFromCSV, stratIndex - assetDataFromCSV.length + 1);
+  const assetIds: number[] = [];
+  for (const asset of assetDataFromCSV) {
+    assetIds.push(((await knex('assets').select('id').where('ticker', '=', asset[0])).map(id => id.id))[0]);
+  }
+  const assetsWithTags = addTagsForAssets(assetDataFromCSV, assetIds);
   return knex('assets_tags').insert(assetsWithTags);
 };
