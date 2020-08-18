@@ -6,3 +6,4 @@ knex seed:run --specific=$1
 knex seed:run --specific=$2
 knex seed:run --specific=$3
 knex seed:run --specific=$4
+knex seed:run --specific=$5
