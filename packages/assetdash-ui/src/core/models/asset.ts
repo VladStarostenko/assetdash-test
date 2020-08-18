@@ -3,7 +3,6 @@ export interface Asset {
   rank: number;
   ticker: string;
   name: string;
-  imageUrl: string;
   currentPrice: number;
   currentMarketcap: number;
   currentChange: number;

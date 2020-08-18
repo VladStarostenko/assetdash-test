@@ -34,7 +34,6 @@ describe('PricingDataUpdater', () => {
       await assetRepository.insertAsset({
         ticker: 'ETH',
         name: 'Ethereum',
-        imageUrl: 'eth.img',
         type: 'Cryptocurrency',
         id: 1
       });
@@ -56,14 +55,12 @@ describe('PricingDataUpdater', () => {
       await assetRepository.insertAssets([{
         ticker: 'ETH',
         name: 'Ethereum',
-        imageUrl: 'eth.img',
         type: 'Cryptocurrency',
         id: 1,
         currentMarketcap: 10
       }, {
         ticker: 'BTC',
         name: 'Bitcoin',
-        imageUrl: 'btc.img',
         type: 'Cryptocurrency',
         id: 2,
         currentMarketcap: 20

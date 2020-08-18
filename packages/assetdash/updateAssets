@@ -1,0 +1,8 @@
+#!/bin/bash
+
+knex migrate:latest
+
+knex knex seed:run --specific=$1
+knex knex seed:run --specific=$2
+knex knex seed:run --specific=$3
+knex knex seed:run --specific=$4
