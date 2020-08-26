@@ -15,7 +15,7 @@ import goldIcon from '../../../assets/icons/gold.svg';
 import healthIcon from '../../../assets/icons/health.svg';
 import homeIcon from '../../../assets/icons/home.svg';
 import internetIcon from '../../../assets/icons/internet.svg';
-import spIcon from '../../../assets/icons/internet.svg';
+import spIcon from '../../../assets/icons/SP500.svg';
 import cartIcon from '../../../assets/icons/shopping-cart.svg';
 import {getQueryParam} from '../../helpers/queryString';
 import {useOutsideClick} from '../../hooks/useOutsideClick';

@@ -7,15 +7,7 @@ export const seed = async function (knex) {
     assetIds.push((await knex('assets').select('id').where('ticker', '=', asset[0]).pluck('id'))[0]);
   }
   const tagId = await knex('tags').select('id').where('name', 'SP500').pluck('id');
-  const assetsWithTags = assetIds.map((assetId, index) => {
-    if (assetId) {
-      return {
-        tagId: tagId[0], assetId
-      };
-    } else {
-      console.log(index);
-    }
-  });
+  const assetsWithTags = assetIds.map(assetId => ({tagId: tagId[0], assetId}));
 
   return knex('assets_tags').insert(assetsWithTags);
 };
