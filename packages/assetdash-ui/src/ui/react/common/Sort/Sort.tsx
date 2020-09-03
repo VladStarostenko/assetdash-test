@@ -99,7 +99,7 @@ export const Sort = () => {
   return (
     <SortView>
       <SortRow style={{maxWidth}}>
-        <Title>Sort by sector:</Title>
+        <Title>Sort by:</Title>
         <ResetButton isVisible={isResetButtonVisible()} onClick={resetFilter}>Reset filters</ResetButton>
       </SortRow>
       <SortList ref={sortListRef}>
@@ -156,13 +156,13 @@ export interface CheckBox {
 const checkboxes: Array<CheckBox> = [
   {
     icon: internetIcon,
-    name: 'Internet',
-    label: 'Internet'
+    name: 'Stock',
+    label: 'Stocks'
   },
   {
-    icon: financeIcon,
-    name: 'Finance',
-    label: 'Finance'
+    icon: internetIcon,
+    name: 'Internet',
+    label: 'Internet'
   },
   {
     icon: homeIcon,
@@ -178,6 +178,11 @@ const checkboxes: Array<CheckBox> = [
     icon: spIcon,
     name: 'SP500',
     label: 'S&P 500'
+  },
+  {
+    icon: financeIcon,
+    name: 'Finance',
+    label: 'Finance'
   },
   {
     icon: healthIcon,

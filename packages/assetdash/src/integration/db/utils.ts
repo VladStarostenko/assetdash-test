@@ -3,7 +3,7 @@ import path from 'path';
 import * as csv from 'fast-csv';
 
 export const tagNames: string[] = ['Cryptocurrency', 'ETFs', 'Internet', 'Finance', 'Hospitality', 'Retail', 'Health',
-  'Emerging Markets', 'Airline', 'E-commerce', 'Cloud', 'Energy', 'Gold', 'Gamble', 'Green', 'Cars', 'SP500'];
+  'Emerging Markets', 'Airline', 'E-commerce', 'Cloud', 'Energy', 'Gold', 'Gamble', 'Green', 'Cars', 'SP500', 'Stock'];
 
 export const getAssetsFromCSV = (filePath: string) => new Promise<string[][]>(resolve => {
   const csvData: string[][] = [];
