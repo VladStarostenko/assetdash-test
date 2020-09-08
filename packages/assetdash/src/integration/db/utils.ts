@@ -43,7 +43,7 @@ export const addTagsForAssets = (assets: string[][], assetIds: number[]): AssetW
 export const findIdsOfAssetsFromCSV = async (knex: any, assetDataFromCSV: string[][]) => {
   const assetIds: number[] = [];
   for (const asset of assetDataFromCSV) {
-    assetIds.push((await knex('assets').select('id').where('ticker', '=', asset[0]).pluck('id'))[0]);
+    assetIds.push((await knex('assets').first('id').where('ticker', '=', asset[0])).id);
   }
   return assetIds;
 };
