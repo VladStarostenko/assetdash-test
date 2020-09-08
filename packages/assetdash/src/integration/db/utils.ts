@@ -39,3 +39,11 @@ export const addTagsForAssets = (assets: string[][], assetIds: number[]): AssetW
       }));
   }).reduce((acc, val) => [...acc, ...val], []);
 };
+
+export const findIdsOfAssetsFromCSV = async (knex: any, assetDataFromCSV: string[][]) => {
+  const assetIds: number[] = [];
+  for (const asset of assetDataFromCSV) {
+    assetIds.push((await knex('assets').select('id').where('ticker', '=', asset[0]).pluck('id'))[0]);
+  }
+  return assetIds;
+};
