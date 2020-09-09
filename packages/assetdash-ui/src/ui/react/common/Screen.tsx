@@ -2,6 +2,7 @@ import React, {ReactNode} from 'react';
 import styled from 'styled-components';
 import {Header} from './Header/Header';
 import {Footer} from './Footer/Footer';
+import {Advertisement} from './Advertisement';
 
 interface ScreenProps {
   children: ReactNode;
@@ -9,17 +10,19 @@ interface ScreenProps {
 
 export const Screen = ({children}: ScreenProps) => (
   <ScreenView>
+    <Advertisement/>
     <Header/>
     <Main>
       {children}
     </Main>
     <Footer/>
+    <Advertisement/>
   </ScreenView>
 );
 
 const ScreenView = styled.div`
   min-height: 100vh;
-  display: flex;  
+  display: flex;
   flex-direction: column;
   background: ${({theme}) => theme.colors.backgroundPrimary};
 `;
