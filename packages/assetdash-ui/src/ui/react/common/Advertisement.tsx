@@ -3,15 +3,13 @@ import adImage from '../../assets/ad/Assetdash@2x.png';
 import styled from 'styled-components';
 
 export const Advertisement = () => (
-  <div>
-    <a
-      href="https://unstoppabledomains.com/r/da702815756540f"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Ad/>
-    </a>
-  </div>
+  <a
+    href="https://unstoppabledomains.com/r/da702815756540f"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Ad/>
+  </a>
 );
 
 const Ad = styled.div`
