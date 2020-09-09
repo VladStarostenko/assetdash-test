@@ -29,7 +29,7 @@ describe('Watchlist', () => {
         data: assetsOnWatchlist
       }).persist();
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100&sectors[]=Internet')
+      .get('/assets?currentPage=1&perPage=100&sectors[]=Stock')
       .reply(200, {
         data: assetsFilterResult,
         pagination: page(1)

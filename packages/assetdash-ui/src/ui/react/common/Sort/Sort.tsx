@@ -16,6 +16,7 @@ import healthIcon from '../../../assets/icons/health.svg';
 import homeIcon from '../../../assets/icons/home.svg';
 import internetIcon from '../../../assets/icons/internet.svg';
 import spIcon from '../../../assets/icons/SP500.svg';
+import stocksIcon from '../../../assets/icons/stocks.svg';
 import cartIcon from '../../../assets/icons/shopping-cart.svg';
 import {getQueryParam} from '../../helpers/queryString';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
@@ -99,7 +100,7 @@ export const Sort = () => {
   return (
     <SortView>
       <SortRow style={{maxWidth}}>
-        <Title>Sort by sector:</Title>
+        <Title>Sort by:</Title>
         <ResetButton isVisible={isResetButtonVisible()} onClick={resetFilter}>Reset filters</ResetButton>
       </SortRow>
       <SortList ref={sortListRef}>
@@ -155,14 +156,14 @@ export interface CheckBox {
 
 const checkboxes: Array<CheckBox> = [
   {
+    icon: stocksIcon,
+    name: 'Stock',
+    label: 'Stocks'
+  },
+  {
     icon: internetIcon,
     name: 'Internet',
     label: 'Internet'
-  },
-  {
-    icon: financeIcon,
-    name: 'Finance',
-    label: 'Finance'
   },
   {
     icon: homeIcon,
@@ -178,6 +179,11 @@ const checkboxes: Array<CheckBox> = [
     icon: spIcon,
     name: 'SP500',
     label: 'S&P 500'
+  },
+  {
+    icon: financeIcon,
+    name: 'Finance',
+    label: 'Finance'
   },
   {
     icon: healthIcon,
