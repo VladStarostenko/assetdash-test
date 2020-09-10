@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import styled from 'styled-components';
-import {Td, Tr} from '../common/Table/Table';
+import {Td, TdRank, Tr} from '../common/Table/Table';
 import angleDownIcon from '../../assets/icons/angle-down-bright.svg';
 import angleUpIcon from '../../assets/icons/angle-up-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
@@ -11,6 +11,7 @@ import {useServices} from '../hooks/useServices';
 
 interface AssetItemProps {
   asset: Asset;
+  id?: number;
 }
 
 export const AssetItem = (props: AssetItemProps) => {
@@ -26,6 +27,8 @@ export const AssetItem = (props: AssetItemProps) => {
     dashWeekly,
     dashMonthly
   } = props.asset;
+
+  const id = props.id;
 
   const {watchlist} = useServices();
 
@@ -54,6 +57,7 @@ export const AssetItem = (props: AssetItemProps) => {
 
   return (
     <Tr>
+      { id ? <TdRank>{id}</TdRank> : null }
       <Td>{rank}</Td>
       <Td>
         <Dash direction={dashDaily >= 0 ? 'up' : 'down'}>{dashDaily}</Dash>

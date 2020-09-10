@@ -23,7 +23,7 @@ export const Th = styled.th`
   &:last-child {
     padding-right: 24px;
   }
-  
+
   &:nth-child(3) {
     text-align: left;
   }
@@ -76,10 +76,21 @@ export const Td = styled.td`
   &:nth-child(4) {
     text-align: left;
   }
-  
+
   @media(max-width: 990px) {
     font-size: 14px;
     line-height: 17px;
+  }
+`;
+
+export const TdRank = styled(Td)`
+  background: ${({theme}) => theme.colors.backgroundSecondary};
+  padding: 8px;
+  font-size: 10px;
+  color: ${({theme}) => theme.colors.colorSecondary};
+
+  @media(max-width: 990px) {
+    font-size: 18px;
   }
 `;
 

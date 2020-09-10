@@ -31,7 +31,7 @@ export const WatchList = () => {
       </ButtonsRow>
     </Container>
 
-    {hasWatchlistData() && <AssetsList pageData={watchlistData}/>}
+    {hasWatchlistData() && <AssetsList pageData={watchlistData} isShowIds={true}/>}
     {!hasWatchlistData() && <EmptyWatchList/>}
   </>;
 };
