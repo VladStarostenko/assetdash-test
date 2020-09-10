@@ -4,6 +4,7 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 
 const config: Configuration = {
   entry: [
@@ -41,7 +42,7 @@ const config: Configuration = {
         }
       },
       {
-        test: /\.(png|jpg|gif|ttf|woff|woff2|eot|svg)$/,
+        test: /\.(png|jpg|gif|ttf|woff|woff2|eot|svg|ico)$/,
         use: [
           {
             loader: 'file-loader',
@@ -79,7 +80,8 @@ const config: Configuration = {
         ONE_SIGNAL_APP_ID: process.env.ONE_SIGNAL_APP_ID
       })
     }),
-    new CopyWebpackPlugin({patterns: [{from: 'lib'}]})
+    new CopyWebpackPlugin({patterns: [{from: 'lib'}]}),
+    new FaviconsWebpackPlugin('src/ui/favicon.png')
   ],
 
   devtool: 'source-map',
