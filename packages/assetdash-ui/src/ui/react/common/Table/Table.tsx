@@ -54,6 +54,12 @@ export const Th = styled.th`
   }
 `;
 
+export const ThId = styled(Th)`
+  &:first-child {
+    padding-left: 0;
+  }
+`;
+
 export const Td = styled.td`
   padding: 18px;
   vertical-align: middle;
@@ -83,14 +89,18 @@ export const Td = styled.td`
   }
 `;
 
-export const TdRank = styled(Td)`
+export const TdId = styled(Td)`
   background: ${({theme}) => theme.colors.backgroundSecondary};
   padding: 8px;
   font-size: 10px;
   color: ${({theme}) => theme.colors.colorSecondary};
 
   @media(max-width: 990px) {
-    font-size: 18px;
+    font-size: 8px;
+  }
+
+  &:first-child {
+    padding-left: 0;
   }
 `;
 
