@@ -9,6 +9,7 @@ import {ThemeContextProvider} from './Theme/ThemeContextProvider';
 
 interface AssetDashWindow extends Window {
   OneSignal: any;
+  dataLayer: any;
 }
 
 declare const window: AssetDashWindow;
@@ -27,6 +28,21 @@ const App: React.FC = () => {
       });
     });
   }, [oneSignalLoaded]);
+
+  const [gtagLoaded] = useScript(`https://www.googletagmanager.com/gtag/js?id=${config.ga_measurement_id}`);
+
+  function gtag(args: any[]) {
+    window.dataLayer.push(args);
+  }
+  useEffect(() => {
+    if (!gtagLoaded) {
+      return;
+    }
+    window.dataLayer = window.dataLayer || [];
+    gtag(['js', new Date()]);
+    gtag(['config', config.ga_measurement_id]);
+  }, [gtagLoaded]);
+
   return (
     <ThemeContextProvider>
       <Router>
