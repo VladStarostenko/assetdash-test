@@ -29,19 +29,10 @@ const App: React.FC = () => {
     });
   }, [oneSignalLoaded]);
 
-  const [gtagLoaded] = useScript(`https://www.googletagmanager.com/gtag/js?id=${config.ga_measurement_id}`);
-
-  function gtag(args: any[]) {
-    window.dataLayer.push(args);
-  }
-  useEffect(() => {
-    if (!gtagLoaded) {
-      return;
-    }
-    window.dataLayer = window.dataLayer || [];
-    gtag(['js', new Date()]);
-    gtag(['config', config.ga_measurement_id]);
-  }, [gtagLoaded]);
+  useScript(`https://www.googletagmanager.com/gtag/js?id=${config.ga_measurement_id}`);
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push('js', new Date());
+  window.dataLayer.push('config', config.ga_measurement_id);
 
   return (
     <ThemeContextProvider>
