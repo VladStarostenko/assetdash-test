@@ -9,7 +9,6 @@ import {ThemeContextProvider} from './Theme/ThemeContextProvider';
 
 interface AssetDashWindow extends Window {
   OneSignal: any;
-  dataLayer: any;
 }
 
 declare const window: AssetDashWindow;
@@ -28,11 +27,6 @@ const App: React.FC = () => {
       });
     });
   }, [oneSignalLoaded]);
-
-  useScript(`https://www.googletagmanager.com/gtag/js?id=${config.ga_measurement_id}`);
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push('js', new Date());
-  window.dataLayer.push('config', config.ga_measurement_id);
 
   return (
     <ThemeContextProvider>

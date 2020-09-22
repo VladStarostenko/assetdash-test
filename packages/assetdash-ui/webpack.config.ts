@@ -77,8 +77,7 @@ const config: Configuration = {
       'process.env': JSON.stringify({
         NODE_ENV: process.env.NODE_ENV,
         BASE_URL: process.env.BASE_URL,
-        ONE_SIGNAL_APP_ID: process.env.ONE_SIGNAL_APP_ID,
-        GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID
+        ONE_SIGNAL_APP_ID: process.env.ONE_SIGNAL_APP_ID
       })
     }),
     new CopyWebpackPlugin({patterns: [{from: 'lib'}]}),
