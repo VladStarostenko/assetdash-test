@@ -46,7 +46,26 @@ describe('Asset searching', () => {
     fireEvent.change(searchInput, {target: {value: 'ap'}});
     await waitFor(() => expect((getAllByTestId('asset-row-name')).map(el => el.textContent))
       .to.deep.eq(['Starbucks']));
+
     fireEvent.change(searchInput, {target: {value: ''}});
     await waitForPageLoad(getAllByTestId);
+  });
+
+  it('shows ids only for searching results', async () => {
+    const {findByTestId, getAllByTestId, findAllByTestId} = renderHome();
+    await waitForPageLoad(getAllByTestId);
+
+    await expect(findAllByTestId('asset-row-id')).to.be.rejected;
+
+    const searchInput = await findByTestId('search-input');
+    fireEvent.change(searchInput, {target: {value: 'ap'}});
+
+    const ids = await findAllByTestId('asset-row-id');
+    expect(ids.map(el => el.textContent))
+      .to.deep.eq(['1']);
+
+    fireEvent.change(searchInput, {target: {value: ''}});
+    await waitForPageLoad(getAllByTestId);
+    await expect(findAllByTestId('asset-row-id')).to.be.rejected;
   });
 });

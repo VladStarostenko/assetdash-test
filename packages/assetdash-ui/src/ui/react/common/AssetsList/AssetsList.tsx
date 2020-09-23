@@ -4,14 +4,15 @@ import {Asset} from '../../../../core/models/asset';
 import {AssetsSort, Column} from '../../../../core/models/assetsSort';
 import {sortAssets} from '../../../../core/utils';
 import {AssetItem} from '../../Assets/AssetItem';
-import {Table, Th} from '../Table/Table';
+import {Table, Th, ThId} from '../Table/Table';
 import {Tooltip} from '../Tooltip';
 
 export interface AssetListProps {
   pageData: Asset[];
+  showIds: boolean;
 }
 
-export const AssetsList = ({pageData}: AssetListProps) => {
+export const AssetsList = ({pageData, showIds}: AssetListProps) => {
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
 
   const setAssetsSortForColumn = (column: Column) => {
@@ -26,10 +27,11 @@ export const AssetsList = ({pageData}: AssetListProps) => {
 
   return (
     <>
-      <AssetsView>
+      <AssetsView showIds={showIds}>
         <Table>
           <thead>
             <tr>
+              { showIds ? <ThId/> : null }
               <Th
                 data-testid='rank-column-header'
                 className={getIconClassName('rank')}
@@ -116,7 +118,11 @@ export const AssetsList = ({pageData}: AssetListProps) => {
             </tr>
           </thead>
           <tbody>
-            {sortAssets(pageData, assetsSort).map((asset) => <AssetItem key={asset.id} asset={asset}/>)}
+            {sortAssets(pageData, assetsSort).map((asset, index) => (
+              showIds
+                ? <AssetItem key={asset.id} asset={asset} id={index + 1}/>
+                : <AssetItem key={asset.id} asset={asset}/>
+            ))}
           </tbody>
         </Table>
       </AssetsView>
@@ -124,10 +130,14 @@ export const AssetsList = ({pageData}: AssetListProps) => {
   );
 };
 
-const AssetsView = styled.div`
+interface AssetsViewProps {
+  showIds: boolean;
+}
+
+const AssetsView = styled.div<AssetsViewProps>`
   max-width: 1210px;
   width: 100%;
-  padding: 0 20px;
+  padding: ${({showIds}) => showIds ? '0 20px 0 0' : '0 20px'};
   margin: 0 auto;
   overflow-x: scroll;
 `;

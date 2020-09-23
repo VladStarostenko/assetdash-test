@@ -25,6 +25,7 @@ export const Assets = () => {
   const history = useHistory();
   const {api} = useServices();
   const location = useLocation();
+  const [showIds, setShowIds] = useState<boolean>(location.search !== '');
 
   function usePageUpdate() {
     useEffect(() => {
@@ -78,6 +79,10 @@ export const Assets = () => {
     }
     api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
+
+  useEffect(() => {
+    setShowIds(location.search !== '');
+  }, [location]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -160,6 +165,7 @@ export const Assets = () => {
     </Container>
     <AssetsList
       pageData={pageData}
+      showIds={showIds}
     />
     { isShowingAll() && currentPage < lastPage && !nameOrTickerPart
       ? <Container>
