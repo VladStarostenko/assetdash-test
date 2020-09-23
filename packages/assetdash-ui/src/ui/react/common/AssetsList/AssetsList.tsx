@@ -9,10 +9,10 @@ import {Tooltip} from '../Tooltip';
 
 export interface AssetListProps {
   pageData: Asset[];
-  isShowIds: boolean;
+  showIds: boolean;
 }
 
-export const AssetsList = ({pageData, isShowIds}: AssetListProps) => {
+export const AssetsList = ({pageData, showIds}: AssetListProps) => {
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
 
   const setAssetsSortForColumn = (column: Column) => {
@@ -27,11 +27,11 @@ export const AssetsList = ({pageData, isShowIds}: AssetListProps) => {
 
   return (
     <>
-      <AssetsView isShowIds={isShowIds}>
+      <AssetsView showIds={showIds}>
         <Table>
           <thead>
             <tr>
-              { isShowIds ? <ThId/> : null }
+              { showIds ? <ThId/> : null }
               <Th
                 data-testid='rank-column-header'
                 className={getIconClassName('rank')}
@@ -119,7 +119,7 @@ export const AssetsList = ({pageData, isShowIds}: AssetListProps) => {
           </thead>
           <tbody>
             {sortAssets(pageData, assetsSort).map((asset, index) => (
-              isShowIds
+              showIds
                 ? <AssetItem key={asset.id} asset={asset} id={index + 1}/>
                 : <AssetItem key={asset.id} asset={asset}/>
             ))}
@@ -131,13 +131,13 @@ export const AssetsList = ({pageData, isShowIds}: AssetListProps) => {
 };
 
 interface AssetsViewProps {
-  isShowIds: boolean;
+  showIds: boolean;
 }
 
 const AssetsView = styled.div<AssetsViewProps>`
   max-width: 1210px;
   width: 100%;
-  padding: ${({isShowIds}) => isShowIds ? '0 20px 0 0' : '0 20px'};
+  padding: ${({showIds}) => showIds ? '0 20px 0 0' : '0 20px'};
   margin: 0 auto;
   overflow-x: scroll;
 `;

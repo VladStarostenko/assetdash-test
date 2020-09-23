@@ -40,13 +40,18 @@ describe('Asset searching', () => {
   });
 
   it('shows first page when query deleted', async () => {
-    const {findByTestId, getAllByTestId} = renderHome();
+    const {findByTestId, getAllByTestId, findAllByTestId} = renderHome();
     await waitForPageLoad(getAllByTestId);
     const searchInput = await findByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'ap'}});
     await waitFor(() => expect((getAllByTestId('asset-row-name')).map(el => el.textContent))
       .to.deep.eq(['Starbucks']));
+    const ids = await findAllByTestId('asset-row-id');
+    expect(ids.map(el => el.textContent))
+      .to.deep.eq(['1']);
+
     fireEvent.change(searchInput, {target: {value: ''}});
     await waitForPageLoad(getAllByTestId);
+    expect(findAllByTestId('asset-row-id')).to.be.throws;
   });
 });

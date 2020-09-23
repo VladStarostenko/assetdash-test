@@ -14,7 +14,7 @@ interface AssetItemProps {
   id?: number;
 }
 
-export const AssetItem = (props: AssetItemProps) => {
+export const AssetItem = ({asset, id}: AssetItemProps) => {
   const {
     rank,
     ticker,
@@ -26,9 +26,7 @@ export const AssetItem = (props: AssetItemProps) => {
     dashDaily,
     dashWeekly,
     dashMonthly
-  } = props.asset;
-
-  const id = props.id;
+  } = asset;
 
   const {watchlist} = useServices();
 
@@ -57,7 +55,7 @@ export const AssetItem = (props: AssetItemProps) => {
 
   return (
     <Tr>
-      { id ? <TdId>{id}</TdId> : null }
+      { id !== undefined && <TdId data-testid={'asset-row-id'}>{id}</TdId> }
       <Td>{rank}</Td>
       <Td>
         <Dash direction={dashDaily >= 0 ? 'up' : 'down'}>{dashDaily}</Dash>

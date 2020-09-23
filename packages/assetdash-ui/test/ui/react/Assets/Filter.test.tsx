@@ -1,4 +1,4 @@
-import chai from 'chai';
+import chai, {expect} from 'chai';
 import chaiDom from 'chai-dom';
 import nock from 'nock';
 import {Simulate} from 'react-dom/test-utils';
@@ -17,7 +17,7 @@ describe('Asset filtering', () => {
       .reply(200, {
         data: assetsPage1,
         pagination: page(1)
-      });
+      }).persist();
     nock('http://127.0.0.1/')
       .get('/assets?currentPage=2&perPage=100')
       .reply(200, {
@@ -48,6 +48,16 @@ describe('Asset filtering', () => {
     await clickFirstSector(findAllByTestId);
 
     await waitForNames(getAllByTestId, ['Anheuser-Busch']);
+
+    const ids = await findAllByTestId('asset-row-id');
+    expect(ids.map(el => el.textContent))
+      .to.deep.eq(['1']);
+
+    await clickFirstSector(findAllByTestId);
+
+    await waitForNames(getAllByTestId, ['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.']);
+
+    expect(findAllByTestId('asset-row-id')).to.be.throws;
   });
 
   it('triggering filter should reset page', async () => {
