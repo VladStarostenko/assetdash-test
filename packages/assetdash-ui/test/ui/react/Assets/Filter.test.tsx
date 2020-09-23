@@ -51,13 +51,24 @@ describe('Asset filtering', () => {
 
     await waitForNames(getAllByTestId, ['Anheuser-Busch']);
 
+    await clickFirstSector(findAllByTestId);
+
+    await waitForNames(getAllByTestId, ['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.']);
+  });
+
+  it('shows ids only when assets are filtered', async () => {
+    const {findAllByTestId, getAllByTestId} = renderHome();
+    await waitForPageLoad(getAllByTestId);
+
+    await expect(findAllByTestId('asset-row-id')).to.be.rejected;
+
+    await clickFirstSector(findAllByTestId);
+
     const ids = await findAllByTestId('asset-row-id');
     expect(ids.map(el => el.textContent))
       .to.deep.eq(['1']);
 
     await clickFirstSector(findAllByTestId);
-
-    await waitForNames(getAllByTestId, ['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.']);
 
     await expect(findAllByTestId('asset-row-id')).to.be.rejected;
   });
