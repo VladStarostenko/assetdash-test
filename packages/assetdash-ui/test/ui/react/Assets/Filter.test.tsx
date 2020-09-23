@@ -1,5 +1,6 @@
 import chai, {expect} from 'chai';
 import chaiDom from 'chai-dom';
+import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
 import {Simulate} from 'react-dom/test-utils';
 import {assetsFilterResult, assetsFilterResult2ndPage, assetsPage1, assetsPage2} from '../../../fixtures/assets';
@@ -9,6 +10,7 @@ import {page} from '../../../fixtures/pagination';
 import click = Simulate.click;
 
 chai.use(chaiDom);
+chai.use(chaiAsPromised);
 
 describe('Asset filtering', () => {
   beforeEach(() => {
@@ -57,7 +59,7 @@ describe('Asset filtering', () => {
 
     await waitForNames(getAllByTestId, ['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.']);
 
-    expect(findAllByTestId('asset-row-id')).to.be.throws;
+    await expect(findAllByTestId('asset-row-id')).to.be.rejected;
   });
 
   it('triggering filter should reset page', async () => {

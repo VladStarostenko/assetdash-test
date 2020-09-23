@@ -52,6 +52,6 @@ describe('Asset searching', () => {
 
     fireEvent.change(searchInput, {target: {value: ''}});
     await waitForPageLoad(getAllByTestId);
-    expect(findAllByTestId('asset-row-id')).to.be.throws;
+    await expect(findAllByTestId('asset-row-id')).to.be.rejected;
   });
 });
