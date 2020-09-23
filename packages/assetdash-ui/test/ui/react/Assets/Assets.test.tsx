@@ -7,11 +7,9 @@ import {MemoryRouter} from 'react-router-dom';
 import {HomeWithRouter} from '../../../../src/ui/react/Home/HomeWithRouter';
 import {ServiceContext} from '../../../../src/ui/react/hooks/useServices';
 import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextProvider';
-import {clickFirstSector, waitForPageLoad} from '../../../fixtures/assetsPage';
+import {waitForPageLoad} from '../../../fixtures/assetsPage';
 import {createTestServices} from '../../../helpers/testServices';
 import '../../../shims/types';
-import {assetsFilterResult} from '../../../fixtures/assets';
-import {page} from '../../../fixtures/pagination';
 
 chai.use(chaiDom);
 
