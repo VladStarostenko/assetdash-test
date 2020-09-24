@@ -22,7 +22,7 @@ export class Api {
     return this.instance.get('assets', {params: {nameOrTickerPart}});
   }
 
-  getAssetsForSectors(currentPage: number, perPage: number, sectors: string[]) {
-    return this.instance.get('assets', {params: {currentPage, perPage, sectors}});
+  getAssetsForSectors(currentPage: number, perPage: number, sector: string) {
+    return this.instance.get('assets', {params: {currentPage, perPage, sector}});
   }
 }

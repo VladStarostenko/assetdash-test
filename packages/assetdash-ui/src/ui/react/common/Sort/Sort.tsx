@@ -31,7 +31,7 @@ export const Sort = () => {
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
   const dropDownRef = useRef<HTMLLIElement>(null);
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [checkedItem, setCheckedItem] = useState<Record<string, boolean>>({});
   const itemWidth = 165;
   const marginRight = 16;
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
@@ -40,21 +40,19 @@ export const Sort = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const sectors = getQueryParam('sectors', location)?.split(',') || [];
-    const checkedItems = {} as Record<string, boolean>;
-    sectors.forEach((sectorName) => { checkedItems[sectorName] = true; });
-    setCheckedItems(checkedItems);
+    const sector = getQueryParam('sector', location) || '';
+    const checkedItem = {} as Record<string, boolean>;
+    checkedItem[sector] = sector !== '';
+    setCheckedItem(checkedItem);
   }, [location]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newCheckedItems = {...checkedItems, [event.target.name]: event.target.checked};
-    const sectors = Object.entries(newCheckedItems).filter(([, v]) => !!v).map(([k]) => k);
-    if (sectors.length === 0) {
+    if (!event.target.checked) {
       history.push('/');
       return;
     }
     const urlSearchParams = new URLSearchParams();
-    urlSearchParams.append('sectors', sectors.join(','));
+    urlSearchParams.append('sector', event.target.name);
     history.push(`/?${urlSearchParams.toString()}`);
   };
 
@@ -82,7 +80,8 @@ export const Sort = () => {
   useOutsideClick(sortDropdownRef, () => isExpanded && setIsExpanded(false));
 
   const isResetButtonVisible = () => {
-    return [...Object.values(checkedItems)].some(value => !!value);
+    console.log(checkedItem);
+    return [...Object.values(checkedItem)].some(value => !!value);
   };
 
   const [selectedDropdownCheckboxes, setSelectedDropdownCheckboxes] = useState(0);
@@ -90,12 +89,12 @@ export const Sort = () => {
     const displayCheckedCheckboxesAmount = () => {
       let amount = 0;
       checkboxes.slice(maxElements).forEach(checkbox => {
-        if (checkedItems[checkbox.name]) amount++;
+        if (checkedItem[checkbox.name]) amount++;
       });
       setSelectedDropdownCheckboxes(amount);
     };
     displayCheckedCheckboxesAmount();
-  }, [checkedItems, maxElements]);
+  }, [checkedItem, maxElements]);
 
   return (
     <SortView>
@@ -110,7 +109,7 @@ export const Sort = () => {
               icon={icon}
               label={label}
               name={name}
-              value={checkedItems[name] || false}
+              value={checkedItem[name] || false}
               onChange={handleChange}
             />
           </SortItem>
@@ -135,7 +134,7 @@ export const Sort = () => {
                     icon={icon}
                     label={label}
                     name={name}
-                    value={checkedItems[name] || false}
+                    value={checkedItem[name] || false}
                     onChange={handleChange}
                   />
                 </li>

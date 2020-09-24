@@ -19,7 +19,7 @@ export const Assets = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(100);
   const [nameOrTickerPart, setNameOrTickerPart] = useState('');
-  const [sectors, setSectors] = useState<string[]>([]);
+  const [sector, setSector] = useState<string>('');
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
@@ -33,8 +33,8 @@ export const Assets = () => {
       setCurrentPage(Number(currentPage) || 1);
       const nameOrTickerPart = getQueryParam('q', location);
       setNameOrTickerPart(nameOrTickerPart || '');
-      const sectors = getQueryParam('sectors', location)?.split(',') || [];
-      setSectors(sectors);
+      const sector = getQueryParam('sector', location) || '';
+      setSector(sector);
     }, [location]);
   }
 
@@ -69,8 +69,8 @@ export const Assets = () => {
     setIsLoading(false);
   }, [currentPage]);
 
-  const loadFilteredAssets = useCallback((sectors: string[]) => {
-    api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
+  const loadFilteredAssets = useCallback((sector: string) => {
+    api.getAssetsForSectors(currentPage, perPage, sector).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
   const loadCurrentPage = useCallback(() => {
@@ -91,12 +91,12 @@ export const Assets = () => {
     }
     if (nameOrTickerPart) {
       loadAssetSearchResult();
-    } else if (sectors.length > 0) {
-      loadFilteredAssets(sectors);
+    } else if (sector.length > 0) {
+      loadFilteredAssets(sector);
     } else {
       loadCurrentPage();
     }
-  }, [nameOrTickerPart, loadAssetSearchResult, sectors, loadCurrentPage, loadFilteredAssets, perPage]);
+  }, [nameOrTickerPart, loadAssetSearchResult, sector, loadCurrentPage, loadFilteredAssets, perPage]);
 
   function updatePageInParams(newPage: number) {
     const urlSearchParams = new URLSearchParams(location.search);
