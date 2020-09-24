@@ -6,6 +6,8 @@ import {sortAssets} from '../../../../core/utils';
 import {AssetItem} from '../../Assets/AssetItem';
 import {Table, Th, ThId} from '../Table/Table';
 import {Tooltip} from '../Tooltip';
+import {useLocation} from 'react-router-dom';
+import {getQueryParam} from '../../helpers/queryString';
 
 export interface AssetListProps {
   pageData: Asset[];
@@ -14,6 +16,7 @@ export interface AssetListProps {
 
 export const AssetsList = ({pageData, showIds}: AssetListProps) => {
   const [assetsSort, setAssetsSort] = useState<AssetsSort>({column: 'rank', order: 'asc'});
+  const location = useLocation();
 
   const setAssetsSortForColumn = (column: Column) => {
     if (assetsSort.column === column && assetsSort.order === 'asc') {
@@ -24,6 +27,15 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
   };
 
   const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
+
+  const getId = (index: number) => {
+    const currentPage = getQueryParam('p', location);
+    if (currentPage !== null) {
+      return (Number(currentPage) - 1) * 100 + index + 1;
+    } else {
+      return index + 1;
+    }
+  };
 
   return (
     <>
@@ -120,7 +132,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
           <tbody>
             {sortAssets(pageData, assetsSort).map((asset, index) => (
               showIds
-                ? <AssetItem key={asset.id} asset={asset} id={index + 1}/>
+                ? <AssetItem key={asset.id} asset={asset} id={getId(index)}/>
                 : <AssetItem key={asset.id} asset={asset}/>
             ))}
           </tbody>
