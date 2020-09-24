@@ -49,12 +49,13 @@ export class AssetRepository {
     return asset;
   }
 
-  async findByTags(tags: string[], currentPage: number, perPage: number) {
+  async findByTags(tag: string, currentPage: number, perPage: number) {
     return this.findAssetQuery()
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
-        this.on('assets_tags.tagId', '=', 'tags.id').onIn('tags.name', tags);
+        this.on('assets_tags.tagId', '=', 'tags.id');
       })
+      .where('tags.name', tag)
       .distinct()
       .paginate({perPage, currentPage, isLengthAware: true});
   }

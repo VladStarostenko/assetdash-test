@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import styled from 'styled-components';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
@@ -26,6 +26,7 @@ export const Assets = () => {
   const {api} = useServices();
   const location = useLocation();
   const [showIds, setShowIds] = useState<boolean>(location.search !== '');
+  const {sectorName} = useParams();
 
   function usePageUpdate() {
     useEffect(() => {
@@ -33,7 +34,7 @@ export const Assets = () => {
       setCurrentPage(Number(currentPage) || 1);
       const nameOrTickerPart = getQueryParam('q', location);
       setNameOrTickerPart(nameOrTickerPart || '');
-      const sector = getQueryParam('sector', location) || '';
+      const sector = sectorName || '';
       setSector(sector);
     }, [location]);
   }
@@ -110,7 +111,7 @@ export const Assets = () => {
 
   const routeForNextAndPrevious = (newPage: number) => {
     const urlSearchString = updatePageInParams(newPage);
-    const newPath = urlSearchString ? `/?${urlSearchString}` : '/';
+    const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
     history.push(newPath);
   };
 
