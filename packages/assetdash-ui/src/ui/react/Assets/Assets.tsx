@@ -25,7 +25,8 @@ export const Assets = () => {
   const history = useHistory();
   const {api} = useServices();
   const location = useLocation();
-  const [showIds, setShowIds] = useState<boolean>(location.search !== '');
+  const [showIds, setShowIds] =
+    useState<boolean>(!(location.pathname === '/all' || (location.pathname === '/' && !getQueryParam('q', location))));
   const {sectorName} = useParams();
 
   function usePageUpdate() {
@@ -82,7 +83,7 @@ export const Assets = () => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
-    setShowIds(location.search !== '');
+    setShowIds(!(location.pathname === '/all' || (location.pathname === '/' && !getQueryParam('q', location))));
   }, [location]);
 
   useEffect(() => {

@@ -27,13 +27,13 @@ describe('Asset filtering', () => {
         pagination: page(2)
       });
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100&sectors[]=Stock')
+      .get('/assets?currentPage=1&perPage=100&sector=Stock')
       .reply(200, {
         data: assetsFilterResult,
         pagination: page(1)
       }).persist();
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=2&perPage=100&sectors[]=Stock')
+      .get('/assets?currentPage=2&perPage=100&sector=Stock')
       .reply(200, {
         data: assetsFilterResult2ndPage,
         pagination: page(2)
