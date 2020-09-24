@@ -1,7 +1,7 @@
 import {Services} from '../../core/createServices';
 import {Router as expressRouter} from 'express';
 import {asyncHandler, sanitize, responseOf} from '@restless/restless';
-import {asArray, asNumber, asObject, asOptional, asString} from '@restless/sanitizers';
+import {asNumber, asObject, asOptional, asString} from '@restless/sanitizers';
 
 export const assets = ({assetRepository}: Services) => {
   const router = expressRouter();
