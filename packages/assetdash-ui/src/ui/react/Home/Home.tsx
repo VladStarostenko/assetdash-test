@@ -1,5 +1,5 @@
 import React from 'react';
-import {useRouteMatch} from 'react-router-dom';
+import {useParams, useRouteMatch} from 'react-router-dom';
 import {Assets} from '../Assets/Assets';
 import {Container} from '../common/Container';
 import {Screen, ScreenContent} from '../common/Screen';
@@ -11,11 +11,12 @@ import {WatchList} from '../WatchList/WatchList';
 
 const Home = () => {
   const watchlistMatch = useRouteMatch('/watchlist');
+  const {sectorName} = useParams();
 
   return (
     <Screen>
       <Container>
-        <PageTitle>Top Assets by Market Cap</PageTitle>
+        <PageTitle>Top {sectorName ? `"${sectorName}"` : 'Asset'} by Market Cap</PageTitle>
         <PageSubtitle/>
         <Search/>
         <Sort/>
