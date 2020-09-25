@@ -12,6 +12,7 @@ import {Container} from '../common/Container';
 import {getQueryParam} from '../helpers/queryString';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
+import {isIdsVisible} from '../helpers/isIdsVisible';
 
 export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
@@ -26,7 +27,7 @@ export const Assets = () => {
   const {api} = useServices();
   const location = useLocation();
   const [showIds, setShowIds] =
-    useState<boolean>(!(location.pathname === '/all' || (location.pathname === '/' && !getQueryParam('q', location))));
+    useState<boolean>(isIdsVisible(location));
   const {sectorName} = useParams();
 
   function usePageUpdate() {
@@ -83,7 +84,7 @@ export const Assets = () => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
-    setShowIds(!(location.pathname === '/all' || (location.pathname === '/' && !getQueryParam('q', location))));
+    setShowIds(isIdsVisible(location));
   }, [location]);
 
   useEffect(() => {

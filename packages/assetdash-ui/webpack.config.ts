@@ -32,7 +32,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.[jt]sx?$/,
+        test: /\.([jt]sx|ts)?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',

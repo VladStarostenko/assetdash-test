@@ -50,12 +50,7 @@ export const Sort = () => {
       history.push('/');
       return;
     }
-    let key = '';
-    checkboxes.forEach(checkbox => {
-      if (checkbox.name === event.target.name) {
-        key = checkbox.key;
-      }
-    });
+    const key = checkboxes.find(({name}) => name === event.target.name)?.key || '';
     history.push(`/${event.target.name}/${key}`);
   };
 
