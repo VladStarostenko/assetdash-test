@@ -81,4 +81,13 @@ describe('Watchlist', () => {
     expect(await findByTestId('tab-Assets-active')).to.exist;
     expect(await findByTestId('tab-Watchlist')).to.exist;
   });
+
+  it('shows ids for watchlist', async () => {
+    const {getAllByTestId, findAllByTestId} = renderHome({path: '/watchlist', services});
+    await waitForNames(getAllByTestId, ['Apple Inc.']);
+
+    const ids = await findAllByTestId('asset-row-id');
+    expect(ids.map(el => el.textContent))
+      .to.deep.eq(['1']);
+  });
 });
