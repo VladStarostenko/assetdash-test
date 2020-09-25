@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <Screen>
       <Container>
-        <PageTitle>Top {sectorName ? `${getPageTitle(sectorName)}` : 'Asset'} by Market Cap</PageTitle>
+        <PageTitle>{sectorName ? `${getPageTitle(sectorName)}` : 'Top Asset'} by Market Cap</PageTitle>
         <PageSubtitle/>
         <Search/>
         <Sort/>
