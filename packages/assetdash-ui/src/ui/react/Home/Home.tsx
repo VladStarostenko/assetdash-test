@@ -8,6 +8,7 @@ import {Sort} from '../common/Sort/Sort';
 import {PageSubtitle} from '../common/Text/PageSubtitle';
 import {PageTitle} from '../common/Text/PageTitle';
 import {WatchList} from '../WatchList/WatchList';
+import {getPageTitle} from '../helpers/getPageTitle';
 
 const Home = () => {
   const watchlistMatch = useRouteMatch('/watchlist');
@@ -16,7 +17,7 @@ const Home = () => {
   return (
     <Screen>
       <Container>
-        <PageTitle>Top {sectorName ? `"${sectorName}"` : 'Asset'} by Market Cap</PageTitle>
+        <PageTitle>Top {sectorName ? `${getPageTitle(sectorName)}` : 'Asset'} by Market Cap</PageTitle>
         <PageSubtitle/>
         <Search/>
         <Sort/>
