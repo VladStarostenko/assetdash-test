@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
 import styled from 'styled-components';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
@@ -12,6 +12,7 @@ import {Container} from '../common/Container';
 import {getQueryParam} from '../helpers/queryString';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
+import {areIdsVisible} from '../helpers/areIdsVisible';
 
 export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
@@ -19,13 +20,15 @@ export const Assets = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(100);
   const [nameOrTickerPart, setNameOrTickerPart] = useState('');
-  const [sectors, setSectors] = useState<string[]>([]);
+  const [sector, setSector] = useState<string>('');
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const {api} = useServices();
   const location = useLocation();
-  const [showIds, setShowIds] = useState<boolean>(location.search !== '');
+  const [showIds, setShowIds] =
+    useState<boolean>(areIdsVisible(location));
+  const {sectorName} = useParams();
 
   function usePageUpdate() {
     useEffect(() => {
@@ -33,8 +36,8 @@ export const Assets = () => {
       setCurrentPage(Number(currentPage) || 1);
       const nameOrTickerPart = getQueryParam('q', location);
       setNameOrTickerPart(nameOrTickerPart || '');
-      const sectors = getQueryParam('sectors', location)?.split(',') || [];
-      setSectors(sectors);
+      const sector = sectorName || '';
+      setSector(sector);
     }, [location]);
   }
 
@@ -69,8 +72,8 @@ export const Assets = () => {
     setIsLoading(false);
   }, [currentPage]);
 
-  const loadFilteredAssets = useCallback((sectors: string[]) => {
-    api.getAssetsForSectors(currentPage, perPage, sectors).then((res: GetPageResponse) => paginateData(res));
+  const loadFilteredAssets = useCallback((sector: string) => {
+    api.getAssetsForSectors(currentPage, perPage, sector).then((res: GetPageResponse) => paginateData(res));
   }, [api, currentPage, perPage, paginateData]);
 
   const loadCurrentPage = useCallback(() => {
@@ -81,7 +84,7 @@ export const Assets = () => {
   }, [api, currentPage, perPage, paginateData]);
 
   useEffect(() => {
-    setShowIds(location.search !== '');
+    setShowIds(areIdsVisible(location));
   }, [location]);
 
   useEffect(() => {
@@ -91,12 +94,12 @@ export const Assets = () => {
     }
     if (nameOrTickerPart) {
       loadAssetSearchResult();
-    } else if (sectors.length > 0) {
-      loadFilteredAssets(sectors);
+    } else if (sector.length > 0) {
+      loadFilteredAssets(sector);
     } else {
       loadCurrentPage();
     }
-  }, [nameOrTickerPart, loadAssetSearchResult, sectors, loadCurrentPage, loadFilteredAssets, perPage]);
+  }, [nameOrTickerPart, loadAssetSearchResult, sector, loadCurrentPage, loadFilteredAssets, perPage]);
 
   function updatePageInParams(newPage: number) {
     const urlSearchParams = new URLSearchParams(location.search);
@@ -110,7 +113,7 @@ export const Assets = () => {
 
   const routeForNextAndPrevious = (newPage: number) => {
     const urlSearchString = updatePageInParams(newPage);
-    const newPath = urlSearchString ? `/?${urlSearchString}` : '/';
+    const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
     history.push(newPath);
   };
 

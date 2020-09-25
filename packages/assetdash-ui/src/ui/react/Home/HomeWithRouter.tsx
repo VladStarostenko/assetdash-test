@@ -7,6 +7,9 @@ export const HomeWithRouter: React.FC = () => {
     <Switch>
       <Route exact path="/all" component={Home}/>
       <Route exact path="/watchlist" component={Home}/>
+      <Route path="/:sectorName/:key">
+        <Home/>
+      </Route>
       <Route path="/" component={Home}/>
     </Switch>
   );

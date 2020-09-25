@@ -139,7 +139,7 @@ describe('Asset Repository', () => {
 
   describe('findByTags', () => {
     it('returns assets with selected tags', async () => {
-      const data = (await assetRepository.findByTags(['Internet', 'Finance'], 1, 10)).data;
+      const data = (await assetRepository.findByTags('Internet', 1, 10)).data;
       expect(data).to.have.length(1);
       expect(data[0]).to.deep.include({ticker: 'AAPL'});
     });

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useContext, useEffect, useRef, useState} from 'react';
-import {useHistory, useLocation} from 'react-router-dom';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import airlinesIcon from '../../../assets/icons/airlines.svg';
 import cannabisIcon from '../../../assets/icons/cannabis.svg';
@@ -18,7 +18,6 @@ import internetIcon from '../../../assets/icons/internet.svg';
 import spIcon from '../../../assets/icons/SP500.svg';
 import stocksIcon from '../../../assets/icons/stocks.svg';
 import cartIcon from '../../../assets/icons/shopping-cart.svg';
-import {getQueryParam} from '../../helpers/queryString';
 import {useOutsideClick} from '../../hooks/useOutsideClick';
 import {ThemeContext} from '../../Theme/ThemeContextProvider';
 import {DropdownContent} from '../DropdownContent';
@@ -31,31 +30,28 @@ export const Sort = () => {
   const [dropDownWidth, setDropDownWidth] = useState(145);
   const sortListRef = useRef<HTMLUListElement>(null);
   const dropDownRef = useRef<HTMLLIElement>(null);
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [checkedItem, setCheckedItem] = useState<Record<string, boolean>>({});
   const itemWidth = 165;
   const marginRight = 16;
   const maxWidth = (itemWidth + marginRight) * maxElements + dropDownWidth;
 
+  const {sectorName} = useParams();
   const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
-    const sectors = getQueryParam('sectors', location)?.split(',') || [];
-    const checkedItems = {} as Record<string, boolean>;
-    sectors.forEach((sectorName) => { checkedItems[sectorName] = true; });
-    setCheckedItems(checkedItems);
+    const checkedItem = {} as Record<string, boolean>;
+    checkedItem[sectorName] = !!sectorName;
+    setCheckedItem(checkedItem);
   }, [location]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newCheckedItems = {...checkedItems, [event.target.name]: event.target.checked};
-    const sectors = Object.entries(newCheckedItems).filter(([, v]) => !!v).map(([k]) => k);
-    if (sectors.length === 0) {
+    if (!event.target.checked) {
       history.push('/');
       return;
     }
-    const urlSearchParams = new URLSearchParams();
-    urlSearchParams.append('sectors', sectors.join(','));
-    history.push(`/?${urlSearchParams.toString()}`);
+    const key = checkboxes.find(({name}) => name === event.target.name)?.key || '';
+    history.push(`/${event.target.name}/${key}`);
   };
 
   const resetFilter = () => {
@@ -82,7 +78,7 @@ export const Sort = () => {
   useOutsideClick(sortDropdownRef, () => isExpanded && setIsExpanded(false));
 
   const isResetButtonVisible = () => {
-    return [...Object.values(checkedItems)].some(value => !!value);
+    return [...Object.values(checkedItem)].some(value => !!value);
   };
 
   const [selectedDropdownCheckboxes, setSelectedDropdownCheckboxes] = useState(0);
@@ -90,12 +86,12 @@ export const Sort = () => {
     const displayCheckedCheckboxesAmount = () => {
       let amount = 0;
       checkboxes.slice(maxElements).forEach(checkbox => {
-        if (checkedItems[checkbox.name]) amount++;
+        if (checkedItem[checkbox.name]) amount++;
       });
       setSelectedDropdownCheckboxes(amount);
     };
     displayCheckedCheckboxesAmount();
-  }, [checkedItems, maxElements]);
+  }, [checkedItem, maxElements]);
 
   return (
     <SortView>
@@ -110,7 +106,7 @@ export const Sort = () => {
               icon={icon}
               label={label}
               name={name}
-              value={checkedItems[name] || false}
+              value={checkedItem[name] || false}
               onChange={handleChange}
             />
           </SortItem>
@@ -135,7 +131,7 @@ export const Sort = () => {
                     icon={icon}
                     label={label}
                     name={name}
-                    value={checkedItems[name] || false}
+                    value={checkedItem[name] || false}
                     onChange={handleChange}
                   />
                 </li>
@@ -152,93 +148,111 @@ export interface CheckBox {
   name: string;
   icon: string;
   label: string;
+  key: string;
 }
 
 const checkboxes: Array<CheckBox> = [
   {
     icon: stocksIcon,
     name: 'Stock',
-    label: 'Stocks'
+    label: 'Stocks',
+    key: 'largest-companies-by-market-cap'
   },
   {
     icon: internetIcon,
     name: 'Internet',
-    label: 'Internet'
+    label: 'Internet',
+    key: 'internet-stocks'
   },
   {
     icon: homeIcon,
     name: 'Hospitality',
-    label: 'Hospitality'
+    label: 'Hospitality',
+    key: 'hospitality-stocks'
   },
   {
     icon: cartIcon,
     name: 'Retail',
-    label: 'Retail'
+    label: 'Retail',
+    key: 'retail-stocks'
   },
   {
     icon: spIcon,
     name: 'SP500',
-    label: 'S&P 500'
+    label: 'S&P 500',
+    key: 'sp-500-companies-by-market-cap'
   },
   {
     icon: financeIcon,
     name: 'Finance',
-    label: 'Finance'
+    label: 'Finance',
+    key: 'finance-sector-stocks'
   },
   {
     icon: healthIcon,
     name: 'Health',
-    label: 'Health'
+    label: 'Health',
+    key: 'health-stocks'
   },
   {
     icon: cloudIcon,
     name: 'Cloud',
-    label: 'Cloud'
+    label: 'Cloud',
+    key: 'cloud-stocks'
   },
   {
     icon: ecommerceIcon,
     name: 'E-commerce',
-    label: 'E-commerce'
+    label: 'E-commerce',
+    key: 'ecommerce-stocks'
   },
   {
     icon: emergingIcon,
     name: 'Emerging Markets',
-    label: 'Emerging Markets'
+    label: 'Emerging Markets',
+    key: 'emerging-markets-stocks'
   },
   {
     icon: airlinesIcon,
     name: 'Airline',
-    label: 'Airlines '
+    label: 'Airlines',
+    key: 'airline-stocks'
   },
   {
     icon: carIcon,
     name: 'Cars',
-    label: 'Cars '
+    label: 'Cars',
+    key: 'car-stocks'
   },
   {
     icon: gambleIcon,
     name: 'Gamble',
-    label: 'Gamble '
+    label: 'Gamble',
+    key: 'casino-stocks'
   },
   {
     icon: goldIcon,
     name: 'Gold',
-    label: 'Gold '
+    label: 'Gold',
+    key: 'gold-stocks'
   },
   {
     icon: cryptoIcon,
     name: 'Cryptocurrency',
-    label: 'Cryptocurrencies '
+    label: 'Cryptocurrencies',
+    key: 'cryptos-market-cap'
   },
   {
     icon: cannabisIcon,
     name: 'Green',
-    label: 'Cannabis '
+    label: 'Cannabis',
+    key: 'cannabis-stocks'
   },
   {
     icon: cubeIcon,
     name: 'ETFs',
-    label: 'ETFs '
+    label: 'ETFs',
+    key: 'etfs'
   }
 ];
 
