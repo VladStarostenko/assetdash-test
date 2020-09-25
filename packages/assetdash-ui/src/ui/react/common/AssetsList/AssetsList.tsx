@@ -29,12 +29,8 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
   const getIconClassName = (column: Column) => assetsSort.column !== column ? '' : assetsSort.order;
 
   const getId = (index: number) => {
-    const currentPage = getQueryParam('p', location);
-    if (currentPage !== null) {
-      return (Number(currentPage) - 1) * 100 + index + 1;
-    } else {
-      return index + 1;
-    }
+    const currentPage = getQueryParam('p', location) || 1;
+    return (Number(currentPage) - 1) * 100 + index + 1;
   };
 
   return (
