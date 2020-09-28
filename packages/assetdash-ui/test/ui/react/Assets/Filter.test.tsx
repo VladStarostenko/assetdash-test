@@ -114,4 +114,18 @@ describe('Asset filtering', () => {
 
     await waitForNames(getAllByTestId, ['Anheuser-Busch']);
   });
+
+  it('change page title after filtering', async () => {
+    const {findAllByTestId, getAllByTestId, findByTestId} = renderHome();
+    await waitForPageLoad(getAllByTestId);
+
+    const titleBeforeFiltering = await findByTestId('title');
+    expect(titleBeforeFiltering.textContent).to.eq('Top Assets by Market Cap');
+
+    await clickFirstSector(findAllByTestId);
+    await waitForNames(getAllByTestId, ['Anheuser-Busch']);
+
+    const titleAfterFiltering = await findByTestId('title');
+    expect(titleAfterFiltering.textContent).to.eq('Largest Companies by Market Cap');
+  });
 });
