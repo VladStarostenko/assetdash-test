@@ -12,27 +12,34 @@ chai.use(chaiAsPromised);
 describe('Asset Repository', () => {
   let assetRepository: AssetRepository;
   let ranksRepository: RanksRepository;
+  const date = new Date();
+
   const assets: Asset[] = [{
     id: 1,
     ticker: 'ETH',
     name: 'Ethereum',
     type: 'Cryptocurrency',
-    currentMarketcap: 10
+    currentMarketcap: 10,
+    earningsDate: date,
+    eps: 5
   }, {
     id: 2,
     ticker: 'BTC',
     name: 'Bitcoin',
     type: 'Cryptocurrency',
-    currentMarketcap: 20
+    currentMarketcap: 20,
+    earningsDate: date,
+    eps: 5
   }, {
     id: 3,
     ticker: 'AAPL',
     name: 'Apple',
     type: 'Stock',
-    currentMarketcap: 5
+    currentMarketcap: 5,
+    earningsDate: date,
+    eps: 5
   }];
 
-  const date = new Date();
   const ranks = [{
     id: 1,
     assetId: 1,
@@ -142,6 +149,24 @@ describe('Asset Repository', () => {
       const data = (await assetRepository.findByTags('Internet', 1, 10)).data;
       expect(data).to.have.length(1);
       expect(data[0]).to.deep.include({ticker: 'AAPL'});
+    });
+  });
+
+  describe('updateEarningsDate', () => {
+    it('updates earnings date for stock', async () => {
+      const newDate = new Date('2010-10-10');
+      await assetRepository.updateEarningsDate('AAPL', newDate);
+      expect((await assetRepository.findById(3))['earningsDate'])
+        .be.deep.eq(newDate);
+    });
+  });
+
+  describe('updateEps', () => {
+    it('updates EPS for stock', async () => {
+      const newEps = 10;
+      await assetRepository.updateEps('AAPL', newEps);
+      expect((await assetRepository.findById(3)).eps)
+        .be.eq(newEps);
     });
   });
 });

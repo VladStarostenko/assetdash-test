@@ -93,4 +93,22 @@ export class AssetRepository {
         dashMonthly
       });
   }
+
+  async updateEarningsDate(ticker: string, earningsDate: Date) {
+    return this.db('assets')
+      .where('ticker', ticker)
+      .andWhere('type', 'Stock')
+      .update({
+        earningsDate
+      });
+  }
+
+  async updateEps(ticker: string, eps: number) {
+    return this.db('assets')
+      .where('ticker', ticker)
+      .andWhere('type', 'Stock')
+      .update({
+        eps
+      });
+  }
 }
