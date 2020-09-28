@@ -2,6 +2,7 @@ import {AssetRepository} from '../integration/db/repositories/AssetRepository';
 import {IexCloudService} from '../integration/http/IexCloudService';
 import {Logger} from '../core/Logger';
 import {CronJob} from 'cron';
+import {getCronTime} from '../core/utils';
 
 export class EarningsDataUpdater {
   private iexCloudService: IexCloudService;
@@ -35,8 +36,9 @@ export class EarningsDataUpdater {
     this.logger.logStatus('End of loop');
   }
 
-  loop = async (stocksTickers: string[]) => {
-    const earningsUpdater = new CronJob('00 00 9 * * 5', this.updateEarnings(stocksTickers));
+  loop = async (stocksTickers: string[], updatingTime?: string) => {
+    const cronTime = updatingTime || getCronTime('09:00');
+    const earningsUpdater = new CronJob(cronTime, this.updateEarnings(stocksTickers));
     earningsUpdater.start();
   }
 }
