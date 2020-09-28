@@ -73,6 +73,23 @@ describe('Asset filtering', () => {
     await expect(findAllByTestId('asset-row-id')).to.be.rejected;
   });
 
+  it('shows ids for second page of filtering results', async () => {
+    const {findAllByTestId, getAllByTestId, findByRole} = renderHome();
+
+    await waitForPageLoad(getAllByTestId);
+    await clickFirstSector(findAllByTestId);
+
+    const nextPageButton = await findByRole('button', {name: /Next 100/});
+
+    click(nextPageButton);
+
+    await waitForNames(getAllByTestId, ['Microsoft Corporation']);
+
+    const ids = await findAllByTestId('asset-row-id');
+    expect(ids.map(el => el.textContent))
+      .to.deep.eq(['101']);
+  });
+
   it('triggering filter should reset page', async () => {
     const {findAllByTestId, getAllByTestId} = renderHome({pageNumber: 2});
     await waitForPageLoad(getAllByTestId);
