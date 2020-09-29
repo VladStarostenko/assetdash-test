@@ -75,7 +75,7 @@ describe('update times', () => {
 describe('cron time', () => {
   it('get cron time in EST', () => {
     const cronTime = getCronTimeForEarningsUpdater('09:00');
-    expect(cronTime).to.eq('0 0 16 * * 5');
+    expect(cronTime).to.match(new RegExp('0 0 [1-9][0-9]? \\* \\* 5'));
   });
 });
 

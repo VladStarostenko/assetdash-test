@@ -41,8 +41,8 @@ describe('EarningsDataUpdater', () => {
 
     it('Updates EPS and Earnings Date', async () => {
       await earningsDataUpdater.updateEarnings(['AAPL']);
-      expect((await assetRepository.findById(1)).eps).to.not.be.undefined;
-      expect((await assetRepository.findById(1)).earningsDate).to.not.be.undefined;
+      expect((await assetRepository.findById(1)).eps).to.not.be.null;
+      expect((await assetRepository.findById(1)).earningsDate).to.not.be.null;
     });
 
     it('Sets EPS null if not found', async () => {

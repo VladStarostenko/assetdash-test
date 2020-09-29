@@ -161,11 +161,25 @@ describe('Asset Repository', () => {
       expect((await assetRepository.findById(3))['earningsDate'])
         .be.deep.eq(newDate);
     });
+
+    it('updates earnings date for stock when earnings date null', async () => {
+      const newDate = null;
+      await assetRepository.updateEarningsDate('AAPL', newDate);
+      expect((await assetRepository.findById(3))['earningsDate'])
+        .be.deep.eq(newDate);
+    });
   });
 
   describe('updateEps', () => {
     it('updates EPS for stock', async () => {
       const newEps = 10;
+      await assetRepository.updateEps('AAPL', newEps);
+      expect((await assetRepository.findById(3)).eps)
+        .be.eq(newEps);
+    });
+
+    it('updates EPS for stock when EPS null', async () => {
+      const newEps = null;
       await assetRepository.updateEps('AAPL', newEps);
       expect((await assetRepository.findById(3)).eps)
         .be.eq(newEps);

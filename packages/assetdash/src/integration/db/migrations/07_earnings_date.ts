@@ -1,7 +1,7 @@
 exports.up = async (knex) => {
   await knex.schema
     .alterTable('assets', (table) => {
-      table.timestamp('earningsDate').defaultTo('2000-01-01Z');
+      table.timestamp('earningsDate').defaultTo(null);
     });
 };
 
