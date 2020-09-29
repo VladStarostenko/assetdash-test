@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
+    "@types/cron": "^1.7.2",
     "@types/express": "^4.17.3",
     "@types/luxon": "^1.24.3",
     "@types/mocha": "^7.0.2",
@@ -38,6 +39,7 @@
   "dependencies": {
     "@restless/restless": "^0.4.2",
     "@restless/sanitizers": "^0.2.4",
+    "cron": "^1.8.2",
     "express": "^4.17.1",
     "fast-csv": "^4.3.0",
     "knex": "^0.20.11",
@@ -45,7 +47,6 @@
     "luxon": "^1.24.1",
     "node-fetch": "^2.6.0",
     "pg": "^8.2.1",
-    "ts-node": "^8.6.2",
-    "cron": "^1.8.2"
+    "ts-node": "^8.6.2"
   }
 }

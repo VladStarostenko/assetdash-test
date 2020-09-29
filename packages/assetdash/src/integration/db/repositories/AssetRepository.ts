@@ -94,7 +94,7 @@ export class AssetRepository {
       });
   }
 
-  async updateEarningsDate(ticker: string, earningsDate: Date) {
+  async updateEarningsDate(ticker: string, earningsDate: Date | null) {
     return this.db('assets')
       .where('ticker', ticker)
       .andWhere('type', 'Stock')
@@ -103,7 +103,7 @@ export class AssetRepository {
       });
   }
 
-  async updateEps(ticker: string, eps: number) {
+  async updateEps(ticker: string, eps: number | null) {
     return this.db('assets')
       .where('ticker', ticker)
       .andWhere('type', 'Stock')

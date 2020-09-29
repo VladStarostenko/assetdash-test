@@ -36,10 +36,13 @@ export class IexCloudService {
     return `/stable/stock/market/batch?symbols=${tickersAsString}&types=quote&token=${iexCloudKey}`;
   }
 
-  async getEarningsDate(ticker: string): Promise<Date> {
+  async getEarningsDate(ticker: string): Promise<Date | null> {
     try {
       return new Date(await this.fetch(this.getPathForEarningsDateRequest(ticker)));
     } catch (err) {
+      if (err === 'Not found') {
+        return null;
+      }
       throw new Error(err);
     }
   }
@@ -49,10 +52,13 @@ export class IexCloudService {
     return `/stable/stock/${ticker}/stats/nextEarningsDate?token=${iexCloudKey}`;
   }
 
-  async getEps(ticker: string): Promise<number> {
+  async getEps(ticker: string): Promise<number | null> {
     try {
       return await this.fetch(this.getPathForEpsRequest(ticker));
     } catch (err) {
+      if (err === 'Not found') {
+        return null;
+      }
       throw new Error(err);
     }
   }
