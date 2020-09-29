@@ -121,7 +121,9 @@ describe('Asset Repository', () => {
           rank: 2,
           name: 'Ethereum',
           ticker: 'ETH',
-          type: 'Cryptocurrency'
+          type: 'Cryptocurrency',
+          earningsDate: date,
+          eps: 5
         }],
         pagination: {
           currentPage: 2,

@@ -7,7 +7,7 @@ import {
   findWeeklyDashResetTime,
   isStocksDashUpdateTime
 } from '../../src/core/dashResetTimes';
-import {parseAsEstDate} from '../../src/core/utils';
+import {getCronTimeForEarningsUpdater, parseAsEstDate} from '../../src/core/utils';
 
 describe('reset times', () => {
   it('converts to EST', () => {
@@ -69,6 +69,13 @@ describe('update times', () => {
     it(`${formatInEst(date)} - ${isUpdateTime ? 'yes' : 'no'}`, () => {
       expect(isStocksDashUpdateTime(date)).to.eql(isUpdateTime);
     });
+  });
+});
+
+describe('cron time', () => {
+  it('get cron time in EST', () => {
+    const cronTime = getCronTimeForEarningsUpdater('09:00');
+    expect(cronTime).to.eq('0 0 16 * * 5');
   });
 });
 

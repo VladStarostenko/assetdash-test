@@ -45,7 +45,7 @@ export const parseAsEstDate = (isoDateString: string) => {
   return DateTime.fromSQL(isoDateString, {zone: 'America/New_York'}).toUTC().toJSDate();
 };
 
-export const getCronTime = (time: string) => {
+export const getCronTimeForEarningsUpdater = (time: string) => {
   const timeAsEst = parseAsEstDate(time);
   return `${timeAsEst.getSeconds()} ${timeAsEst.getMinutes()} ${timeAsEst.getHours()} * * 5`;
 };
