@@ -21,18 +21,38 @@ describe('EarningsDataUpdater', () => {
   describe('updateEarnings', () => {
     beforeEach(async () => {
       await clearDatabase(db);
-      await assetRepository.insertAsset({
+      await assetRepository.insertAssets([{
         ticker: 'AAPL',
         name: 'Apple',
         type: 'Stock',
         id: 1
-      });
+      }, {
+        ticker: 'AKR',
+        name: 'Acadia Realty Trust',
+        type: 'Stock',
+        id: 2
+      }, {
+        ticker: 'AACG',
+        name: 'ATA Creativity Global',
+        type: 'Stock',
+        id: 3
+      }]);
     });
 
-    it('Update EPS and Earnings Date', async () => {
+    it('Updates EPS and Earnings Date', async () => {
       await earningsDataUpdater.updateEarnings(['AAPL']);
       expect((await assetRepository.findById(1)).eps).to.not.be.undefined;
       expect((await assetRepository.findById(1)).earningsDate).to.not.be.undefined;
+    });
+
+    it('Sets EPS null if not found', async () => {
+      await earningsDataUpdater.updateEarnings(['AKR']);
+      expect((await assetRepository.findById(2)).eps).to.be.null;
+    });
+
+    it('Sets Earnings Date null if not found', async () => {
+      await earningsDataUpdater.updateEarnings(['AACG']);
+      expect((await assetRepository.findById(3)).earningsDate).to.be.null;
     });
   });
 });
