@@ -12,7 +12,11 @@ export const WatchList = () => {
   const [watchlistData, setWatchlistData] = useState<Asset[]>([]);
 
   const showWatchList = useCallback((watchList: string) => {
-    api.getWatchList(watchList).then((res) => setWatchlistData(res.data.data));
+    if (watchList) {
+      api.getWatchList(watchList).then((res) => setWatchlistData(res.data.data));
+    } else {
+      setWatchlistData([]);
+    }
   }, [api]);
 
   useEffect(() => {

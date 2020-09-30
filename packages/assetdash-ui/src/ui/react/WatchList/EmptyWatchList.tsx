@@ -5,7 +5,7 @@ import starIcon from '../../assets/icons/star.svg';
 export const EmptyWatchList = () => (
   <EmptyView>
     <img src={starIcon} alt="star"/>
-    <EmptyViewTitle>You have not added any assets to your watchlist</EmptyViewTitle>
+    <EmptyViewTitle data-testid="emptyWatchlistTitle">You have not added any assets to your watchlist</EmptyViewTitle>
     <EmptyViewText>Use the Asset Leaderboard to build your watchlist</EmptyViewText>
   </EmptyView>
 );
