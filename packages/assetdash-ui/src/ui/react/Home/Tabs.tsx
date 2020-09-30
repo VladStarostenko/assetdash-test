@@ -5,6 +5,7 @@ import angleDarkIcon from '../../assets/icons/angle-down-secondary-darkTheme.svg
 import angleLightIcon from '../../assets/icons/angle-down-secondary-lightTheme.svg';
 import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
+import {MetricButton} from './MetricButton';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
@@ -62,9 +63,36 @@ export const Tabs = () => {
       >
         View
       </TabDropdownButton>
+      {isExpanded &&
+      <TabDropdownContent>
+        {metrics.map(({label, typeOfAssets}, index) => (
+          <li key={index}>
+            <MetricButton
+              label={label}
+            />
+          </li>
+        ))}
+      </TabDropdownContent>
+
+      }
     </TabsRow>
   </>;
 };
+
+export interface Metric {
+  label: string;
+  typeOfAssets: string;
+}
+
+const metrics: Array<Metric> = [
+  {
+    label: 'Dash',
+    typeOfAssets: 'ALL'
+  }, {
+    label: 'Earnings',
+    typeOfAssets: 'STOCKS'
+  }
+];
 
 const TabsRow = styled.div`
   display: flex;
@@ -110,12 +138,13 @@ const TabButton = styled.button<TabButtonProps>`
 `;
 
 const TabDropdownButton = styled(TabButton)<TabDropdownButtonProps>`
+  padding: 0 72px 0 24px;
   &::after {
     content: '';
     position: absolute;
     top: 50%;
     width: 10px;
-    margin-left:10px;
+    margin: 0 21px;
     height: 6px;
     transform: ${({isExpanded}) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
     background-image: ${({themeMode}) => themeMode === 'light' ? `url(${angleLightIcon})` : `url(${angleDarkIcon})`};
@@ -124,4 +153,20 @@ const TabDropdownButton = styled(TabButton)<TabDropdownButtonProps>`
     background-size: contain;
     ${({isActive}) => isActive && activeTabDropdownButtonStyles}
   }
+`;
+
+const TabDropdownContent = styled.ul`
+  position: absolute;
+  bottom: -2px;
+  transform: translateY(100%);
+  margin-left: 210px;
+  width: 131px;
+  padding: 8px;
+  background: ${({theme}) => theme.colors.sortCheckboxBackground};
+  border: 1px solid;
+  border-color: ${({theme}) => theme.colors.borderSecondary};
+  box-shadow: ${({theme}) => theme.colors.boxShadowSecondary};
+  border-radius: 2px;
+  overflow-y: auto;
+  z-index: 1;
 `;
