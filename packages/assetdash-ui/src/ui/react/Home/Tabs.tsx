@@ -1,20 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import styled, {css} from 'styled-components';
 import angleDarkIcon from '../../assets/icons/angle-down-secondary-darkTheme.svg';
 import angleLightIcon from '../../assets/icons/angle-down-secondary-lightTheme.svg';
 import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
+import {getQueryParam} from '../helpers/queryString';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
   const [activeButton, setActiveButton] = useState<string>('Assets');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [checkedMetric, setCheckedMetric] = useState<Record<string, boolean>>({Dash: true});
+  const [checkedMetric, setCheckedMetric] = useState<string>('Dash');
   const [theme] = useContext(ThemeContext);
   const tabs = ['Assets', 'Watchlist'];
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     isExpanded ? setActiveButton('View') : setActiveButton(activeTab);
@@ -28,7 +30,15 @@ export const Tabs = () => {
     }, [watchlistMatch]);
   }
 
+  function usePageUpdate() {
+    useEffect(() => {
+      const metric = getQueryParam('m', location);
+      setCheckedMetric(metric || 'Dash');
+    }, [location]);
+  }
+
   usePathUpdate();
+  usePageUpdate();
 
   const onClickTabButton = (tab: string) => {
     if (tab === 'Watchlist') {
@@ -43,10 +53,22 @@ export const Tabs = () => {
     setIsExpanded(!isExpanded);
   };
 
+  function updateMetricInParams(metric: string) {
+    const urlSearchParams = new URLSearchParams(location.search);
+    if (metric !== 'Dash') {
+      urlSearchParams.set('m', metric);
+    } else {
+      urlSearchParams.delete('m');
+    }
+    return urlSearchParams.toString();
+  }
+
   const onMetricButtonClick = (label: string) => {
-    const checkedMetric = {} as Record<string, boolean>;
-    checkedMetric[label] = true;
-    setCheckedMetric(checkedMetric);
+    setCheckedMetric(label);
+    setIsExpanded(false);
+    const urlSearchString = updateMetricInParams(label);
+    const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+    history.push(newPath);
   };
 
   return <>
@@ -75,7 +97,7 @@ export const Tabs = () => {
         {metrics.map(({label, typeOfAssets}, index) => (
           <li key={index}>
             <MetricButton
-              isMetricActive={checkedMetric[label]}
+              isMetricActive={checkedMetric === label}
               typeOfAsset={typeOfAssets}
               label={label}
               onMetricButtonClick={() => onMetricButtonClick(label)}
@@ -172,7 +194,7 @@ const TabDropdownContent = styled.ul`
   margin-left: 210px;
   width: 131px;
   padding: 8px;
-  background: ${({theme}) => theme.colors.sortCheckboxBackground};
+  background-color: ${({theme}) => theme.colors.backgroundPrimary};
   border: 1px solid;
   border-color: ${({theme}) => theme.colors.borderSecondary};
   box-shadow: ${({theme}) => theme.colors.boxShadowSecondary};
