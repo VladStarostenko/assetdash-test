@@ -1,12 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import styled, {css} from 'styled-components';
+import angleDarkIcon from '../../assets/icons/angle-down-secondary-darkTheme.svg';
+import angleLightIcon from '../../assets/icons/angle-down-secondary-lightTheme.svg';
+import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
+import {ThemeContext} from '../Theme/ThemeContextProvider';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
+  const [activeButton, setActiveButton] = useState<string>('Assets');
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [theme] = useContext(ThemeContext);
   const tabs = ['Assets', 'Watchlist'];
-
   const history = useHistory();
+
+  useEffect(() => {
+    isExpanded ? setActiveButton('View') : setActiveButton(activeTab);
+  }, [activeTab, isExpanded]);
 
   function usePathUpdate() {
     const watchlistMatch = useRouteMatch('/watchlist');
@@ -27,18 +37,31 @@ export const Tabs = () => {
     setActiveTab(tab);
   };
 
+  const onDropdownButtonClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return <>
     <TabsRow>
       {tabs.map((tab, index) => (
         <TabButton
           key={index}
-          isActive={activeTab === tab}
+          isActive={activeButton === tab}
           onClick={() => onClickTabButton(tab)}
           data-testid={`tab-${tab}${activeTab === tab ? '-active' : ''}`}
         >
           {tab}
         </TabButton>
       ))}
+      <TabDropdownButton
+        key={3}
+        isActive={activeButton === 'View'}
+        isExpanded={isExpanded}
+        onClick={onDropdownButtonClick}
+        themeMode={theme}
+      >
+        View
+      </TabDropdownButton>
     </TabsRow>
   </>;
 };
@@ -55,9 +78,19 @@ interface TabButtonProps {
   isActive: boolean;
 }
 
+interface TabDropdownButtonProps {
+  isActive: boolean;
+  isExpanded: boolean;
+  themeMode: string;
+}
+
 const activeTabButtonStyles = css`
   color: #FFFFFF;
   background: #21CE99;
+`;
+
+const activeTabDropdownButtonStyles = css`
+  background-image: url(${angleActiveIcon});
 `;
 
 const TabButton = styled.button<TabButtonProps>`
@@ -74,4 +107,21 @@ const TabButton = styled.button<TabButtonProps>`
   cursor: pointer;
 
   ${({isActive}) => isActive && activeTabButtonStyles}
+`;
+
+const TabDropdownButton = styled(TabButton)<TabDropdownButtonProps>`
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    margin-left:10px;
+    height: 6px;
+    transform: ${({isExpanded}) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
+    background-image: ${({themeMode}) => themeMode === 'light' ? `url(${angleLightIcon})` : `url(${angleDarkIcon})`};
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    ${({isActive}) => isActive && activeTabDropdownButtonStyles}
+  }
 `;
