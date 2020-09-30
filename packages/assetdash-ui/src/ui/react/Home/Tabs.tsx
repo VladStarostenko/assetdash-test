@@ -11,6 +11,7 @@ export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
   const [activeButton, setActiveButton] = useState<string>('Assets');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [checkedMetric, setCheckedMetric] = useState<Record<string, boolean>>({Dash: true});
   const [theme] = useContext(ThemeContext);
   const tabs = ['Assets', 'Watchlist'];
   const history = useHistory();
@@ -42,6 +43,12 @@ export const Tabs = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const onMetricButtonClick = (label: string) => {
+    const checkedMetric = {} as Record<string, boolean>;
+    checkedMetric[label] = true;
+    setCheckedMetric(checkedMetric);
+  };
+
   return <>
     <TabsRow>
       {tabs.map((tab, index) => (
@@ -68,8 +75,10 @@ export const Tabs = () => {
         {metrics.map(({label, typeOfAssets}, index) => (
           <li key={index}>
             <MetricButton
+              isMetricActive={checkedMetric[label]}
               typeOfAsset={typeOfAssets}
               label={label}
+              onMetricButtonClick={() => onMetricButtonClick(label)}
             />
           </li>
         ))}
@@ -145,7 +154,7 @@ const TabDropdownButton = styled(TabButton)<TabDropdownButtonProps>`
     position: absolute;
     top: 50%;
     width: 10px;
-    margin: 0 21px;
+    margin: 0 29px;
     height: 6px;
     transform: ${({isExpanded}) => isExpanded ? 'translateY(-50%) rotate(180deg)' : 'translateY(-50%)'};
     background-image: ${({themeMode}) => themeMode === 'light' ? `url(${angleLightIcon})` : `url(${angleDarkIcon})`};
