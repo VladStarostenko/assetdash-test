@@ -68,6 +68,7 @@ export const Tabs = () => {
         {metrics.map(({label, typeOfAssets}, index) => (
           <li key={index}>
             <MetricButton
+              typeOfAsset={typeOfAssets}
               label={label}
             />
           </li>
