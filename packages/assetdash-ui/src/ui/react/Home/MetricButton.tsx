@@ -59,8 +59,6 @@ const TypeBlock = styled.div`
   align-items: flex-start;
   padding: 2px;
   width: auto;
-  left: 380px;
-  top: 527px;
   background: rgba(33, 206, 153, 0.2);
   border-radius: 2px;
 `;
@@ -68,8 +66,6 @@ const TypeBlock = styled.div`
 const TypeTitle = styled.p`
   position: static;
   height: 10px;
-  left: 4px;
-  top: 1px;
   display:inline;
   float:right;
   font-family: Lato;
