@@ -109,7 +109,7 @@ describe('Asset Repository', () => {
 
   describe('findPage', () => {
     it('returns selected page of assets', async () => {
-      expect(await assetRepository.findPage(2, 1)).to.deep.eq({
+      expect(await assetRepository.findPage(2, 1, ['Stock', 'ETF', 'Cryptocurrency'])).to.deep.eq({
         data: [{
           currentChange: 0,
           currentMarketcap: 10,
@@ -139,7 +139,7 @@ describe('Asset Repository', () => {
 
   describe('findByString', () => {
     it('returns assets with string in name or ticker', async () => {
-      const assets = await assetRepository.findByNameOrTickerPart('t');
+      const assets = await assetRepository.findByNameOrTickerPart('t', ['Stock', 'ETF', 'Cryptocurrency']);
       expect(assets).to.have.length(2);
       expect(assets[0]).to.deep.include({name: 'Bitcoin'});
       expect(assets[1]).to.deep.include({name: 'Ethereum'});
@@ -148,7 +148,7 @@ describe('Asset Repository', () => {
 
   describe('findByTags', () => {
     it('returns assets with selected tags', async () => {
-      const data = (await assetRepository.findByTags('Internet', 1, 10)).data;
+      const data = (await assetRepository.findByTags('Internet', 1, 10, ['Stock', 'ETF', 'Cryptocurrency'])).data;
       expect(data).to.have.length(1);
       expect(data[0]).to.deep.include({ticker: 'AAPL'});
     });

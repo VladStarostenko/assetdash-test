@@ -146,7 +146,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                   >
                     <Tooltip
                       text="Earnings Per Share measures the profitability of a company. Our leaderboard reflects TTM
-                       EPS. TTM EPS means EPS for the last 12 months of the company."
+                       EPS. TTM EPS is the EPS for the last 12 months of the company."
                     >
                       <P
                         className={getIconClassName('eps')}
