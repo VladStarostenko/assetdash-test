@@ -14,8 +14,8 @@ export class Api {
     return this.instance.get('assets', {params: {currentPage, perPage, typesOfAssets}});
   };
 
-  getWatchList(tickers: string) {
-    return this.instance.get('watchlist', {params: {tickers}});
+  getWatchList(tickers: string, typesOfAssets: string[]) {
+    return this.instance.get('watchlist', {params: {tickers, typesOfAssets}});
   };
 
   searchAssets(nameOrTickerPart: string) {
