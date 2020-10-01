@@ -133,7 +133,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                     onClick={() => setAssetsSortForColumn('earningsDate')}
                   >
                     <Tooltip
-                      text="Earnings date"
+                      text="Earnings Date is the next expected earnings report date for the company."
                     >
                       <P
                         className={getIconClassName('earningsDate')}
@@ -145,7 +145,8 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                     onClick={() => setAssetsSortForColumn('eps')}
                   >
                     <Tooltip
-                      text="eps"
+                      text="Earnings Per Share measures the profitability of a company. Our leaderboard reflects TTM
+                       EPS. TTM EPS means EPS for the last 12 months of the company."
                     >
                       <P
                         className={getIconClassName('eps')}
