@@ -14,6 +14,7 @@ import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
 import {getMetricTypes} from '../helpers/getMetricTypes';
+import {getMetricParam} from '../helpers/getMetricParam';
 
 export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
@@ -131,11 +132,13 @@ export const Assets = () => {
   };
 
   const onBackToTopClick = () => {
-    history.push('/');
+    const metricParam = getMetricParam(location);
+    history.push('/' + metricParam);
   };
 
   const onViewAllClick = () => {
-    history.push('/all');
+    const metricParam = getMetricParam(location);
+    history.push('/all' + metricParam);
   };
 
   const onLoadMoreCLick = () => {
