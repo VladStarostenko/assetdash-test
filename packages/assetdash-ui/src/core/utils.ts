@@ -13,20 +13,16 @@ export const formatPrice = (price: number) => {
   }
 };
 
-export const formatEps = (eps: number | null) => {
-  if (eps) {
-    if (eps > 1.1) {
-      return `$${addSeparators(eps.toFixed(2))}`;
-    } else {
-      return `$${eps.toFixed(4)}`;
-    }
+export const formatEps = (eps: number) => {
+  if (eps > 1.1) {
+    return `$${addSeparators(eps.toFixed(2))}`;
   } else {
-    return 'Not Found';
+    return `$${eps.toFixed(4)}`;
   }
 };
 
 export const formatEarningsDate = (earningsDate: Date) => {
-  return earningsDate ? `${(new Date(earningsDate)).getMonth() + 1} - ${(new Date(earningsDate)).getDate()}` : 'Not Found';
+  return `${(new Date(earningsDate)).getMonth() + 1} - ${(new Date(earningsDate)).getDate()}`;
 };
 
 export const formatChange = (change: number) => {

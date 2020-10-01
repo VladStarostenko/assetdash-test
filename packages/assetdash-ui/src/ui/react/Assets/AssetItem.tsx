@@ -9,6 +9,7 @@ import {formatChange, formatEarningsDate, formatEps, formatMarketcap, formatPric
 import {Tooltip} from '../common/Tooltip';
 import {useServices} from '../hooks/useServices';
 import {getQueryParam} from '../helpers/queryString';
+import notFoundIcon from '../../assets/icons/not-found-data.svg';
 
 interface AssetItemProps {
   asset: Asset;
@@ -97,8 +98,18 @@ export const AssetItem = ({asset, id}: AssetItemProps) => {
           </Td>
         </>
         : <>
-          <Td>{formatEarningsDate(earningsDate)}</Td>
-          <Td>{formatEps(eps)}</Td>
+          <Td>
+            {earningsDate
+              ? formatEarningsDate(earningsDate)
+              : <img src={notFoundIcon}/>
+            }
+          </Td>
+          <Td>
+            {eps
+              ? formatEps(eps)
+              : <img src={notFoundIcon}/>
+            }
+          </Td>
         </>
       }
 
