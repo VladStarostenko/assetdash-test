@@ -18,11 +18,11 @@ export class Api {
     return this.instance.get('watchlist', {params: {tickers, typesOfAssets}});
   };
 
-  searchAssets(nameOrTickerPart: string) {
-    return this.instance.get('assets', {params: {nameOrTickerPart}});
+  searchAssets(nameOrTickerPart: string, typesOfAssets: string[]) {
+    return this.instance.get('assets', {params: {nameOrTickerPart, typesOfAssets}});
   }
 
-  getAssetsForSectors(currentPage: number, perPage: number, sector: string) {
-    return this.instance.get('assets', {params: {currentPage, perPage, sector}});
+  getAssetsForSectors(currentPage: number, perPage: number, sector: string, typesOfAssets: string[]) {
+    return this.instance.get('assets', {params: {currentPage, perPage, sector, typesOfAssets}});
   }
 }

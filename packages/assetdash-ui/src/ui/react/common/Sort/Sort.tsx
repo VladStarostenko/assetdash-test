@@ -23,6 +23,7 @@ import {ThemeContext} from '../../Theme/ThemeContextProvider';
 import {DropdownContent} from '../DropdownContent';
 import {SortCheckbox} from './SortCheckbox';
 import {SortDropdownButton} from './SortDropdown';
+import {getMetricParam} from '../../helpers/getMetricParam';
 
 export const Sort = () => {
   const [theme] = useContext(ThemeContext);
@@ -46,16 +47,18 @@ export const Sort = () => {
   }, [location]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const metricParam = getMetricParam(location);
     if (!event.target.checked) {
-      history.push('/');
+      history.push('/' + metricParam);
       return;
     }
     const key = checkboxes.find(({name}) => name === event.target.name)?.key || '';
-    history.push(`/${event.target.name}/${key}`);
+    history.push(`/${event.target.name}/${key}` + metricParam);
   };
 
   const resetFilter = () => {
-    history.push('/');
+    const metricParam = getMetricParam(location);
+    history.push('/' + metricParam);
   };
 
   useEffect(() => {

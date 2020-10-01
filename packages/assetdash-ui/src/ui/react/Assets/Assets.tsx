@@ -24,6 +24,7 @@ export const Assets = () => {
   const [nameOrTickerPart, setNameOrTickerPart] = useState('');
   const [sector, setSector] = useState<string>('');
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
+  const [emptySortResults, setEmptySortResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const {api} = useServices();
@@ -61,12 +62,12 @@ export const Assets = () => {
   const isShowingAll = () => perPage === 200;
 
   const loadAssetSearchResult = useCallback(() => {
-    api.searchAssets(nameOrTickerPart).then((res: GetPageResponse) => {
+    api.searchAssets(nameOrTickerPart, typesOfAssets).then((res: GetPageResponse) => {
       setEmptySearchResults(res.data.data.length === 0);
       setPageData(res.data.data);
       setIsLoading(false);
     });
-  }, [api, nameOrTickerPart]);
+  }, [api, nameOrTickerPart, typesOfAssets]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && isShowingAll()) {
@@ -79,8 +80,11 @@ export const Assets = () => {
   }, [currentPage]);
 
   const loadFilteredAssets = useCallback((sector: string) => {
-    api.getAssetsForSectors(currentPage, perPage, sector).then((res: GetPageResponse) => paginateData(res));
-  }, [api, currentPage, perPage, paginateData]);
+    api.getAssetsForSectors(currentPage, perPage, sector, typesOfAssets).then((res: GetPageResponse) => {
+      setEmptySortResults(res.data.data.length === 0);
+      paginateData(res);
+    });
+  }, [api, currentPage, perPage, paginateData, typesOfAssets]);
 
   const loadCurrentPage = useCallback(() => {
     if (currentPage < 1) {
@@ -100,7 +104,7 @@ export const Assets = () => {
     }
     if (nameOrTickerPart) {
       loadAssetSearchResult();
-    } else if (sector.length > 0) {
+    } else if (sector) {
       loadFilteredAssets(sector);
     } else {
       loadCurrentPage();
@@ -188,7 +192,7 @@ export const Assets = () => {
       </Container>
       : null }
     { isLoading ? <Loader/> : null}
-    { nameOrTickerPart && emptySearchResults
+    { (nameOrTickerPart && emptySearchResults) || (emptySortResults && sector)
       ? <NoResultsContainer>
         <NoResults>
           <NotFoundIconWrapper>
