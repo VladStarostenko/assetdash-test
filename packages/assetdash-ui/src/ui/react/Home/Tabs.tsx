@@ -8,6 +8,7 @@ import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
 import {getQueryParam} from '../helpers/queryString';
 import {MetricName, metrics} from '../../../core/models/metrics';
+import {getMetricParam} from '../helpers/getMetricParam';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
@@ -42,10 +43,11 @@ export const Tabs = () => {
   usePageUpdate();
 
   const onClickTabButton = (tab: string) => {
+    const metricParam = getMetricParam(location);
     if (tab === 'Watchlist') {
-      history.push('/watchlist');
+      history.push('/watchlist' + metricParam);
     } else {
-      history.push('/');
+      history.push('/' + metricParam);
     }
     setActiveTab(tab);
   };
