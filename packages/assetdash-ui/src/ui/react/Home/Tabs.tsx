@@ -7,7 +7,7 @@ import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
 import {getQueryParam} from '../helpers/queryString';
-import {Metric, MetricName} from '../../../core/models/metric';
+import {MetricName, metrics} from '../../../core/models/metrics';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
@@ -111,18 +111,6 @@ export const Tabs = () => {
     </TabsRow>
   </>;
 };
-
-const metrics: Array<Metric> = [
-  {
-    name: 'Dash',
-    label: 'ALL',
-    types: ['Stock', 'ETF', 'Cryptocurrency']
-  }, {
-    name: 'Earnings',
-    label: 'STOCKS',
-    types: ['Stock']
-  }
-];
 
 const TabsRow = styled.div`
   display: flex;
