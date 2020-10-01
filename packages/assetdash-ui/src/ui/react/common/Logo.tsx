@@ -1,12 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
+import {getMetricParam} from '../helpers/getMetricParam';
 
-export const Logo = () => (
-  <Link to="/">
-    <LogoText>Asset<span>Dash</span></LogoText>
-  </Link>
-);
+export const Logo = () => {
+  const location = useLocation();
+  const homeUrl = '/' + getMetricParam(location);
+
+  return (
+    <Link to={homeUrl}>
+      <LogoText>Asset<span>Dash</span></LogoText>
+    </Link>
+  );
+};
 
 const LogoText = styled.p`
   font-size: 22px;
