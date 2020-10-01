@@ -1,5 +1,5 @@
 export type Column = 'rank' | 'dashDaily' | 'dashWeekly' | 'dashMonthly' | 'name' | 'ticker' | 'currentMarketcap'
-| 'currentPrice' | 'currentChange' | 'none';
+| 'currentPrice' | 'currentChange' | 'earningsDate' | 'eps' | 'none';
 
 export type Order = 'desc' | 'asc';
 

@@ -33,6 +33,8 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
     return (Number(currentPage) - 1) * 100 + index + 1;
   };
 
+  const metric = getQueryParam('m', location);
+
   return (
     <>
       <AssetsView showIds={showIds}>
@@ -96,32 +98,62 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
               >
             Today
               </Th>
-              <Th
-                className={getIconClassName('dashWeekly')}
-                onClick={() => setAssetsSortForColumn('dashWeekly')}
-              >
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
-                     an asset has moved up or down in the leaderboard over the course of the week."
-                >
-                  <P
+              {!metric
+                ? <>
+                  <Th
                     className={getIconClassName('dashWeekly')}
-                  >Weekly Dash</P>
-                </Tooltip>
-              </Th>
-              <Th
-                className={getIconClassName('dashMonthly')}
-                onClick={() => setAssetsSortForColumn('dashMonthly')}
-              >
-                <Tooltip
-                  text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
-                     an asset has moved up or down in the leaderboard over the course of the month."
-                >
-                  <P
+                    onClick={() => setAssetsSortForColumn('dashWeekly')}
+                  >
+                    <Tooltip
+                      text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
+                       an asset has moved up or down in the leaderboard over the course of the week."
+                    >
+                      <P
+                        className={getIconClassName('dashWeekly')}
+                      >Weekly Dash</P>
+                    </Tooltip>
+                  </Th>
+                  <Th
                     className={getIconClassName('dashMonthly')}
-                  >Monthly Dash</P>
-                </Tooltip>
-              </Th>
+                    onClick={() => setAssetsSortForColumn('dashMonthly')}
+                  >
+                    <Tooltip
+                      text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
+                       an asset has moved up or down in the leaderboard over the course of the month."
+                    >
+                      <P
+                        className={getIconClassName('dashMonthly')}
+                      >Monthly Dash</P>
+                    </Tooltip>
+                  </Th>
+                </>
+                : <>
+                  <Th
+                    className={getIconClassName('earningsDate')}
+                    onClick={() => setAssetsSortForColumn('earningsDate')}
+                  >
+                    <Tooltip
+                      text="Earnings date"
+                    >
+                      <P
+                        className={getIconClassName('earningsDate')}
+                      >Earnings Date</P>
+                    </Tooltip>
+                  </Th>
+                  <Th
+                    className={getIconClassName('eps')}
+                    onClick={() => setAssetsSortForColumn('eps')}
+                  >
+                    <Tooltip
+                      text="eps"
+                    >
+                      <P
+                        className={getIconClassName('eps')}
+                      >EPS</P>
+                    </Tooltip>
+                  </Th>
+                </>
+              }
               <Th/>
             </tr>
           </thead>

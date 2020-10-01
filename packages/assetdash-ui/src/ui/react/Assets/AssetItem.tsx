@@ -5,9 +5,10 @@ import angleDownIcon from '../../assets/icons/angle-down-bright.svg';
 import angleUpIcon from '../../assets/icons/angle-up-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
-import {formatChange, formatMarketcap, formatPrice} from '../../../core/utils';
+import {formatChange, formatEarningsDate, formatEps, formatMarketcap, formatPrice} from '../../../core/utils';
 import {Tooltip} from '../common/Tooltip';
 import {useServices} from '../hooks/useServices';
+import {getQueryParam} from '../helpers/queryString';
 
 interface AssetItemProps {
   asset: Asset;
@@ -25,7 +26,9 @@ export const AssetItem = ({asset, id}: AssetItemProps) => {
     type,
     dashDaily,
     dashWeekly,
-    dashMonthly
+    dashMonthly,
+    earningsDate,
+    eps
   } = asset;
 
   const {watchlist} = useServices();
@@ -46,6 +49,8 @@ export const AssetItem = ({asset, id}: AssetItemProps) => {
       setIsTooltipVisible(true);
     } else setIsTooltipVisible(false);
   };
+
+  const metric = getQueryParam('m', location);
 
   useEffect(() => {
     showTooltip();
@@ -82,12 +87,21 @@ export const AssetItem = ({asset, id}: AssetItemProps) => {
       <Td>
         <Change {...{isPositive: currentChange > 0}}>{formatChange(currentChange)}%</Change>
       </Td>
-      <Td>
-        <Dash direction={dashWeekly >= 0 ? 'up' : 'down'}>{dashWeekly}</Dash>
-      </Td>
-      <Td>
-        <Dash direction={dashMonthly >= 0 ? 'up' : 'down'}>{dashMonthly}</Dash>
-      </Td>
+      {!metric
+        ? <>
+          <Td>
+            <Dash direction={dashWeekly >= 0 ? 'up' : 'down'}>{dashWeekly}</Dash>
+          </Td>
+          <Td>
+            <Dash direction={dashMonthly >= 0 ? 'up' : 'down'}>{dashMonthly}</Dash>
+          </Td>
+        </>
+        : <>
+          <Td>{formatEarningsDate(earningsDate)}</Td>
+          <Td>{formatEps(eps)}</Td>
+        </>
+      }
+
       <Td>
         <ButtonFavorite
           checked={watchlist.isInWatchList(ticker)}

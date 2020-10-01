@@ -10,4 +10,6 @@ export interface Asset {
   dashDaily: number;
   dashWeekly: number;
   dashMonthly: number;
+  earningsDate: Date;
+  eps: number;
 }
