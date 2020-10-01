@@ -2,18 +2,18 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 
 export interface MetricProps {
+  name: string;
   label: string;
-  typeOfAsset: string;
   isMetricActive: boolean;
   className?: string;
   onMetricButtonClick: () => void;
 }
 
-export const MetricButton = ({label, className, isMetricActive, typeOfAsset, onMetricButtonClick}: MetricProps) => (
+export const MetricButton = ({name, className, isMetricActive, label, onMetricButtonClick}: MetricProps) => (
   <MetricLabel className={className || ''} onClick={onMetricButtonClick}>
-    <Label isMetricActive={isMetricActive}>{label}</Label>
+    <Label isMetricActive={isMetricActive}>{name}</Label>
     <TypeBlock>
-      <TypeTitle>{typeOfAsset}</TypeTitle>
+      <TypeTitle>{label}</TypeTitle>
     </TypeBlock>
   </MetricLabel>
 );

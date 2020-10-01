@@ -7,7 +7,7 @@ import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
 import {getQueryParam} from '../helpers/queryString';
-import {MetricName} from '../../../core/models/metric';
+import {Metric, MetricName} from '../../../core/models/metric';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
@@ -95,13 +95,13 @@ export const Tabs = () => {
       </TabDropdownButton>
       {isExpanded &&
       <TabDropdownContent>
-        {metrics.map(({label, typeOfAssets}, index) => (
+        {metrics.map(({name, label}, index) => (
           <li key={index}>
             <MetricButton
-              isMetricActive={checkedMetric === label}
-              typeOfAsset={typeOfAssets}
+              isMetricActive={checkedMetric === name}
               label={label}
-              onMetricButtonClick={() => onMetricButtonClick(label)}
+              name={name}
+              onMetricButtonClick={() => onMetricButtonClick(name)}
             />
           </li>
         ))}
@@ -112,18 +112,15 @@ export const Tabs = () => {
   </>;
 };
 
-export interface Metric {
-  label: MetricName;
-  typeOfAssets: string;
-}
-
 const metrics: Array<Metric> = [
   {
-    label: 'Dash',
-    typeOfAssets: 'ALL'
+    name: 'Dash',
+    label: 'ALL',
+    types: ['Stock', 'ETF', 'Cryptocurrency']
   }, {
-    label: 'Earnings',
-    typeOfAssets: 'STOCKS'
+    name: 'Earnings',
+    label: 'STOCKS',
+    types: ['Stock']
   }
 ];
 
