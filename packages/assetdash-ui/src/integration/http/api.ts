@@ -10,8 +10,8 @@ export class Api {
     return this.instance.get('assets');
   };
 
-  getPage(currentPage: number, perPage: number) {
-    return this.instance.get('assets', {params: {currentPage, perPage}});
+  getPage(currentPage: number, perPage: number, typesOfAssets: string[]) {
+    return this.instance.get('assets', {params: {currentPage, perPage, typesOfAssets}});
   };
 
   getWatchList(tickers: string) {

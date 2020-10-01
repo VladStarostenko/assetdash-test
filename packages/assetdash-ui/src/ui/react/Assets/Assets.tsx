@@ -13,7 +13,6 @@ import {getQueryParam} from '../helpers/queryString';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
-import {MetricName} from '../../../core/models/metrics';
 import {getMetricTypes} from '../helpers/getMetricTypes';
 
 export const Assets = () => {
@@ -31,8 +30,7 @@ export const Assets = () => {
   const [showIds, setShowIds] =
     useState<boolean>(areIdsVisible(location));
   const {sectorName} = useParams();
-  const metric = getQueryParam('m', location) as MetricName;
-  const typesOfAssets = getMetricTypes(metric);
+  const [typesOfAssets, setTypesOfAssets] = useState<string[]>([]);
 
   function usePageUpdate() {
     useEffect(() => {
@@ -42,6 +40,9 @@ export const Assets = () => {
       setNameOrTickerPart(nameOrTickerPart || '');
       const sector = sectorName || '';
       setSector(sector);
+      const metric = getQueryParam('m', location) || 'Dash';
+      const typesOfAssets = getMetricTypes(metric);
+      setTypesOfAssets(typesOfAssets);
     }, [location]);
   }
 
@@ -84,8 +85,8 @@ export const Assets = () => {
     if (currentPage < 1) {
       return;
     }
-    api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
-  }, [api, currentPage, perPage, paginateData]);
+    api.getPage(currentPage, perPage, typesOfAssets).then((res: GetPageResponse) => paginateData(res));
+  }, [api, currentPage, perPage, paginateData, typesOfAssets]);
 
   useEffect(() => {
     setShowIds(areIdsVisible(location));

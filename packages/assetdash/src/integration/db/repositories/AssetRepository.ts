@@ -20,7 +20,7 @@ export class AssetRepository {
     return this.db('assets').orderBy('currentMarketcap', 'desc').select();
   }
 
-  findAssetQuery() {
+  findAssetQuery(typesOfAssets: string[]) {
     const maxDate = this.db('ranks')
       .distinctOn('assetId')
       .select('position', 'assetId')
@@ -28,16 +28,17 @@ export class AssetRepository {
       .as('currentRank');
     return this.db('assets')
       .join(maxDate, 'assets.id', '=', 'currentRank.assetId')
+      .whereIn('assets.type', typesOfAssets)
       .select('assets.*', 'currentRank.position as rank')
       .orderBy('currentMarketcap', 'desc');
   }
 
-  async findPage(currentPage: number, perPage: number) {
-    return this.findAssetQuery().paginate({perPage, currentPage, isLengthAware: true});
+  async findPage(currentPage: number, perPage: number, typesOfAssets: string[]) {
+    return this.findAssetQuery(typesOfAssets).paginate({perPage, currentPage, isLengthAware: true});
   }
 
-  async findWatchList(watchList: string) {
-    return this.findAssetQuery()
+  async findWatchList(watchList: string, typesOfAssets: string[]) {
+    return this.findAssetQuery(typesOfAssets)
       .whereIn('assets.ticker', watchList.split('-'));
   }
 
@@ -49,8 +50,8 @@ export class AssetRepository {
     return asset;
   }
 
-  async findByTags(tag: string, currentPage: number, perPage: number) {
-    return this.findAssetQuery()
+  async findByTags(tag: string, currentPage: number, perPage: number, typesOfAssets: string[]) {
+    return this.findAssetQuery(typesOfAssets)
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
         this.on('assets_tags.tagId', '=', 'tags.id');
@@ -78,8 +79,8 @@ export class AssetRepository {
       .pluck('ticker');
   }
 
-  async findByNameOrTickerPart(nameOrTickerPart: string): Promise<Asset[]> {
-    return this.findAssetQuery()
+  async findByNameOrTickerPart(nameOrTickerPart: string, typesOfAssets: string[]): Promise<Asset[]> {
+    return this.findAssetQuery(typesOfAssets)
       .where('name', 'ilike', `%${nameOrTickerPart}%`)
       .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
   }
