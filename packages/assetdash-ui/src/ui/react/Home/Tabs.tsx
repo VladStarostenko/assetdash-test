@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
 import styled, {css} from 'styled-components';
 import angleDarkIcon from '../../assets/icons/angle-down-secondary-darkTheme.svg';
@@ -7,12 +7,13 @@ import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
 import {getQueryParam} from '../helpers/queryString';
+import {MetricName} from '../../../core/models/metric';
 
 export const Tabs = () => {
   const [activeTab, setActiveTab] = useState<string>('Assets');
   const [activeButton, setActiveButton] = useState<string>('Assets');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [checkedMetric, setCheckedMetric] = useState<string>('Dash');
+  const [checkedMetric, setCheckedMetric] = useState<MetricName>('Dash');
   const [theme] = useContext(ThemeContext);
   const tabs = ['Assets', 'Watchlist'];
   const history = useHistory();
@@ -32,7 +33,7 @@ export const Tabs = () => {
 
   function usePageUpdate() {
     useEffect(() => {
-      const metric = getQueryParam('m', location);
+      const metric = getQueryParam('m', location) as MetricName;
       setCheckedMetric(metric || 'Dash');
     }, [location]);
   }
@@ -49,11 +50,11 @@ export const Tabs = () => {
     setActiveTab(tab);
   };
 
-  const onDropdownButtonClick = () => {
+  const onDropdownButtonClick = useCallback(() => {
     setIsExpanded(!isExpanded);
-  };
+  }, [isExpanded]);
 
-  function updateMetricInParams(metric: string) {
+  function updateMetricInParams(metric: MetricName) {
     const urlSearchParams = new URLSearchParams(location.search);
     if (metric !== 'Dash') {
       urlSearchParams.set('m', metric);
@@ -63,13 +64,13 @@ export const Tabs = () => {
     return urlSearchParams.toString();
   }
 
-  const onMetricButtonClick = (label: string) => {
+  const onMetricButtonClick = useCallback((label: MetricName) => {
     setCheckedMetric(label);
     setIsExpanded(false);
     const urlSearchString = updateMetricInParams(label);
     const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
     history.push(newPath);
-  };
+  }, [checkedMetric, isExpanded]);
 
   return <>
     <TabsRow>
@@ -112,7 +113,7 @@ export const Tabs = () => {
 };
 
 export interface Metric {
-  label: string;
+  label: MetricName;
   typeOfAssets: string;
 }
 
