@@ -7,9 +7,9 @@ export const exampleAssets = [
     currentMarketcap: 1625282860800,
     currentChange: 0.7000000000000001,
     type: 'Stock',
-    dashDaily: 0,
+    dashDaily: 1,
     dashWeekly: 0,
-    dashMonthly: 0,
+    dashMonthly: -1,
     rank: 2
   },
   {
@@ -21,8 +21,8 @@ export const exampleAssets = [
     currentChange: 0.357,
     type: 'Stock',
     dashDaily: 0,
-    dashWeekly: 0,
-    dashMonthly: 0,
+    dashWeekly: -1,
+    dashMonthly: 1,
     rank: 1
   }, {
     id: 160,
@@ -32,8 +32,8 @@ export const exampleAssets = [
     currentMarketcap: 1587419460880,
     currentChange: 3.295,
     type: 'Stock',
-    dashDaily: 0,
-    dashWeekly: 0,
+    dashDaily: -1,
+    dashWeekly: 1,
     dashMonthly: 0,
     rank: 3
   }];
@@ -144,3 +144,43 @@ export const assetsOnWatchlist = [
     rank: 1
   }
 ];
+
+export const exampleAssetsForEarningsMetric = [
+  {
+    id: 210,
+    ticker: 'MSFT',
+    name: 'Microsoft Corporation',
+    currentPrice: 214.32,
+    currentMarketcap: 1625282860800,
+    currentChange: 0.7000000000000001,
+    type: 'Stock',
+    dashDaily: 1,
+    eps: 0,
+    earningsDate: new Date('01-01-2000'),
+    rank: 2
+  },
+  {
+    id: 1093,
+    ticker: 'AAPL',
+    name: 'Apple Inc.',
+    currentPrice: 382.73,
+    currentMarketcap: 1658881948200,
+    currentChange: 0.357,
+    type: 'Stock',
+    dashDaily: 0,
+    eps: -1,
+    earningsDate: new Date('01-02-2000'),
+    rank: 1
+  }, {
+    id: 160,
+    ticker: 'AMZN',
+    name: 'Amazon.com, Inc.',
+    currentPrice: 3182.63,
+    currentMarketcap: 1587419460880,
+    currentChange: 3.295,
+    type: 'Stock',
+    dashDaily: -1,
+    eps: 1,
+    earningsDate: new Date('02-01-2000'),
+    rank: 3
+  }];

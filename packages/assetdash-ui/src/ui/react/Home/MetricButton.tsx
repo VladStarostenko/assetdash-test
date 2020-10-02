@@ -10,7 +10,7 @@ export interface MetricProps {
 }
 
 export const MetricButton = ({name, className, isMetricActive, label, onMetricButtonClick}: MetricProps) => (
-  <MetricLabel className={className || ''} onClick={onMetricButtonClick}>
+  <MetricLabel data-testid='metric-button' className={className || ''} onClick={onMetricButtonClick}>
     <Label isMetricActive={isMetricActive}>{name}</Label>
     <TypeBlock>
       <TypeTitle>{label}</TypeTitle>

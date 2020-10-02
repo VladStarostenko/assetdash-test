@@ -10,6 +10,8 @@ import {ThemeContextProvider} from '../../../../src/ui/react/Theme/ThemeContextP
 import {waitForPageLoad} from '../../../fixtures/assetsPage';
 import {createTestServices} from '../../../helpers/testServices';
 import '../../../shims/types';
+import {exampleAssets} from '../../../fixtures/assets';
+import {pagination} from '../../../fixtures/pagination';
 
 chai.use(chaiDom);
 
@@ -23,55 +25,6 @@ function renderHome() {
       </ServiceContext.Provider>
     </MemoryRouter>);
 }
-
-const exampleAssets = [
-  {
-    id: 210,
-    ticker: 'MSFT',
-    name: 'Microsoft Corporation',
-    currentPrice: 214.32,
-    currentMarketcap: 1625282860800,
-    currentChange: 0.7000000000000001,
-    type: 'Stock',
-    dashDaily: 0,
-    dashWeekly: 0,
-    dashMonthly: 0,
-    rank: 2
-  },
-  {
-    id: 1093,
-    ticker: 'AAPL',
-    name: 'Apple Inc.',
-    currentPrice: 382.73,
-    currentMarketcap: 1658881948200,
-    currentChange: 0.357,
-    type: 'Stock',
-    dashDaily: 0,
-    dashWeekly: 0,
-    dashMonthly: 0,
-    rank: 1
-  }, {
-    id: 160,
-    ticker: 'AMZN',
-    name: 'Amazon.com, Inc.',
-    currentPrice: 3182.63,
-    currentMarketcap: 1587419460880,
-    currentChange: 3.295,
-    type: 'Stock',
-    dashDaily: 0,
-    dashWeekly: 0,
-    dashMonthly: 0,
-    rank: 3
-  }];
-
-const pagination = {
-  total: 3,
-  lastPage: 1,
-  perPage: 100,
-  currentPage: 1,
-  from: 0,
-  to: 3
-};
 
 describe('Assets', () => {
   beforeEach(() => {
@@ -246,7 +199,58 @@ describe('Assets', () => {
       expect(names.map(el => el.textContent))
         .to.deep.eq(['Amazon.com, Inc.', 'Microsoft Corporation', 'Apple Inc.']);
     });
+
+    it('sorts by weekly dash', async () => {
+      const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
+      await waitForPageLoad(getAllByTestId);
+
+      const node = await findByTestId('dashWeekly-column-header');
+      fireEvent.click(node);
+
+      const names = await findAllByTestId('asset-row-name');
+      expect(names.map(el => el.textContent))
+        .to.deep.eq(['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.']);
+    });
+
+    it('sorts by weekly dash reversed', async () => {
+      const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
+      await waitForPageLoad(getAllByTestId);
+
+      const node = await findByTestId('dashWeekly-column-header');
+      fireEvent.click(node);
+      fireEvent.click(node);
+
+      const names = await findAllByTestId('asset-row-name');
+      expect(names.map(el => el.textContent))
+        .to.deep.eq(['Amazon.com, Inc.', 'Microsoft Corporation', 'Apple Inc.']);
+    });
+
+    it('sorts by monthly dash', async () => {
+      const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
+      await waitForPageLoad(getAllByTestId);
+
+      const node = await findByTestId('dashMonthly-column-header');
+      fireEvent.click(node);
+
+      const names = await findAllByTestId('asset-row-name');
+      expect(names.map(el => el.textContent))
+        .to.deep.eq(['Microsoft Corporation', 'Amazon.com, Inc.', 'Apple Inc.']);
+    });
+
+    it('sorts by monthly dash reversed', async () => {
+      const {findByTestId, findAllByTestId, getAllByTestId} = renderHome();
+      await waitForPageLoad(getAllByTestId);
+
+      const node = await findByTestId('dashMonthly-column-header');
+      fireEvent.click(node);
+      fireEvent.click(node);
+
+      const names = await findAllByTestId('asset-row-name');
+      expect(names.map(el => el.textContent))
+        .to.deep.eq(['Apple Inc.', 'Amazon.com, Inc.', 'Microsoft Corporation']);
+    });
   });
+
   describe('Searching', () => {
     beforeEach(() => {
       nock('http://127.0.0.1/')

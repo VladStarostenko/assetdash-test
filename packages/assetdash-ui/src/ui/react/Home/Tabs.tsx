@@ -87,6 +87,7 @@ export const Tabs = () => {
         </TabButton>
       ))}
       <TabDropdownButton
+        data-testid='tab-dropdown-button'
         key={3}
         isActive={activeButton === 'View'}
         isExpanded={isExpanded}

@@ -101,6 +101,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
               {!metric
                 ? <>
                   <Th
+                    data-testid='dashWeekly-column-header'
                     className={getIconClassName('dashWeekly')}
                     onClick={() => setAssetsSortForColumn('dashWeekly')}
                   >
@@ -114,6 +115,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                     </Tooltip>
                   </Th>
                   <Th
+                    data-testid='dashMonthly-column-header'
                     className={getIconClassName('dashMonthly')}
                     onClick={() => setAssetsSortForColumn('dashMonthly')}
                   >
@@ -129,6 +131,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                 </>
                 : <>
                   <Th
+                    data-testid='earningsDate-column-header'
                     className={getIconClassName('earningsDate')}
                     onClick={() => setAssetsSortForColumn('earningsDate')}
                   >
@@ -141,6 +144,7 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                     </Tooltip>
                   </Th>
                   <Th
+                    data-testid='eps-column-header'
                     className={getIconClassName('eps')}
                     onClick={() => setAssetsSortForColumn('eps')}
                   >
