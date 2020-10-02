@@ -6,14 +6,12 @@ import {RanksRepository} from '../../../src/integration/db/repositories/RanksRep
 import {clearDatabase} from '../../helpers/clear-db';
 import {createTestServices} from '../../helpers/createTestServices';
 import {insertRanks} from '../../helpers/fixtures';
-import {TagRepository} from '../../../src/integration/db/repositories/TagRepository';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   let assetRepository: AssetRepository;
   let ranksRepository: RanksRepository;
-  let tagRepository: TagRepository;
   const date = new Date();
 
   const assets: Asset[] = [{
@@ -104,6 +102,7 @@ describe('Asset Repository', () => {
 
   beforeEach(async () => {
     let db;
+    let tagRepository;
     ({db, assetRepository, ranksRepository, tagRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);

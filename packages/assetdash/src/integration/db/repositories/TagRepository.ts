@@ -13,14 +13,4 @@ export class TagRepository {
   async insertAssetsTags(assetsTags: AssetsTags[]) {
     return this.db('assets_tags').insert(assetsTags);
   }
-
-  async findAll() {
-    return this.db('assets_tags').select();
-  }
-
-  async findTagsAll() {
-    return this.db('tags').select();
-  }
-
-
 }
