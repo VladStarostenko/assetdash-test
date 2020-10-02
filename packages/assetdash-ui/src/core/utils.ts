@@ -22,7 +22,7 @@ export const formatEps = (eps: number) => {
 };
 
 export const formatEarningsDate = (earningsDate: Date) => {
-  return `${(new Date(earningsDate)).getMonth() + 1} - ${(new Date(earningsDate)).getDate()}`;
+  return `${(new Date(earningsDate)).toLocaleString('default', {month: 'short'})} - ${(new Date(earningsDate)).getDate()}`;
 };
 
 export const formatChange = (change: number) => {
