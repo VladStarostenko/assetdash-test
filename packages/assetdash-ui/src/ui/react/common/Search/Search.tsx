@@ -17,7 +17,8 @@ export const Search = () => {
     }
     if (value.length > 1) {
       const metricParam = getMetricParam(location);
-      history.push('/' + metricParam + `&q=${value}`);
+      const newUrl = metricParam ? '/' + metricParam + `&q=${value}` : `/?q=${value}`;
+      history.push(newUrl);
     }
   };
 

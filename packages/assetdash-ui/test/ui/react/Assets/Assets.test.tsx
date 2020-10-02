@@ -76,7 +76,7 @@ const pagination = {
 describe('Assets', () => {
   beforeEach(() => {
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100')
+      .get('/assets?currentPage=1&perPage=100&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: exampleAssets,
         pagination
