@@ -6,12 +6,14 @@ import {RanksRepository} from '../../../src/integration/db/repositories/RanksRep
 import {clearDatabase} from '../../helpers/clear-db';
 import {createTestServices} from '../../helpers/createTestServices';
 import {insertRanks} from '../../helpers/fixtures';
+import {TagRepository} from '../../../src/integration/db/repositories/TagRepository';
 
 chai.use(chaiAsPromised);
 
 describe('Asset Repository', () => {
   let assetRepository: AssetRepository;
   let ranksRepository: RanksRepository;
+  let tagRepository: TagRepository;
   const date = new Date();
 
   const assets: Asset[] = [{
@@ -36,6 +38,14 @@ describe('Asset Repository', () => {
     name: 'Apple',
     type: 'Stock',
     currentMarketcap: 5,
+    earningsDate: date,
+    eps: 5
+  }, {
+    id: 4,
+    ticker: 'ETH',
+    name: 'Ethan Allen Interiors',
+    type: 'Stock',
+    currentMarketcap: 1,
     earningsDate: date,
     eps: 5
   }];
@@ -70,15 +80,30 @@ describe('Asset Repository', () => {
     assetId: 3,
     date: date,
     position: 3
+  }, {
+    id: 7,
+    assetId: 4,
+    date: date,
+    position: 4
+  }, {
+    id: 8,
+    assetId: 4,
+    date: date,
+    position: 4
   }];
 
-  const tags = [{name: 'Cryptocurrency'}, {name: 'Internet'}, {name: 'Finance'}];
+  const tags = [{name: 'Cryptocurrency'}, {name: 'Internet'}, {name: 'Finance'}, {name: 'Emerging Markets'}];
 
-  const assetsTags = [{assetId: 1, tagId: 1}, {assetId: 2, tagId: 1}, {assetId: 3, tagId: 2}, {assetId: 3, tagId: 3}];
+  const assetsTags = [
+    {assetId: 1, tagId: 1},
+    {assetId: 2, tagId: 1},
+    {assetId: 3, tagId: 2},
+    {assetId: 3, tagId: 3},
+    {assetId: 4, tagId: 4}
+  ];
 
   beforeEach(async () => {
     let db;
-    let tagRepository;
     ({db, assetRepository, ranksRepository, tagRepository} = createTestServices());
     await clearDatabase(db);
     await assetRepository.insertAssets(assets);
@@ -128,10 +153,10 @@ describe('Asset Repository', () => {
         pagination: {
           currentPage: 2,
           from: 1,
-          lastPage: 3,
+          lastPage: 4,
           perPage: 1,
           to: 2,
-          total: 3
+          total: 4
         }
       });
     });
@@ -140,9 +165,16 @@ describe('Asset Repository', () => {
   describe('findByString', () => {
     it('returns assets with string in name or ticker', async () => {
       const assets = await assetRepository.findByNameOrTickerPart('t', ['Stock', 'ETF', 'Cryptocurrency']);
-      expect(assets).to.have.length(2);
+      expect(assets).to.have.length(3);
       expect(assets[0]).to.deep.include({name: 'Bitcoin'});
       expect(assets[1]).to.deep.include({name: 'Ethereum'});
+      expect(assets[2]).to.deep.include({name: 'Ethan Allen Interiors'});
+    });
+
+    it('returns stocks with string in name or ticker when metric selected', async () => {
+      const assets = await assetRepository.findByNameOrTickerPart('ETH', ['Stock']);
+      expect(assets).to.have.length(1);
+      expect(assets[0]).to.deep.include({name: 'Ethan Allen Interiors'});
     });
   });
 
@@ -151,6 +183,11 @@ describe('Asset Repository', () => {
       const data = (await assetRepository.findByTags('Internet', 1, 10, ['Stock', 'ETF', 'Cryptocurrency'])).data;
       expect(data).to.have.length(1);
       expect(data[0]).to.deep.include({ticker: 'AAPL'});
+    });
+
+    it('returns empty result when selected "Cryptocurrency" tags and "Earnings" metric', async () => {
+      const data = (await assetRepository.findByTags('Cryptocurrency', 1, 10, ['Stock'])).data;
+      expect(data).to.have.length(0);
     });
   });
 

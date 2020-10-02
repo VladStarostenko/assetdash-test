@@ -80,9 +80,10 @@ export class AssetRepository {
   }
 
   async findByNameOrTickerPart(nameOrTickerPart: string, typesOfAssets: string[]): Promise<Asset[]> {
-    return this.findAssetQuery(typesOfAssets)
-      .where('name', 'ilike', `%${nameOrTickerPart}%`)
-      .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
+    return this.findAssetQuery(typesOfAssets).andWhere(function () {
+      this.where('name', 'ilike', `%${nameOrTickerPart}%`)
+        .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);
+    });
   }
 
   async updateDash(assetId: number, dashDaily: number, dashWeekly: number, dashMonthly: number) {
