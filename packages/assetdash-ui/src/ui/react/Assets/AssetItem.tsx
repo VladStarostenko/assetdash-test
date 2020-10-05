@@ -7,8 +7,8 @@ import {formatChange, formatMarketcap, formatPrice} from '../../../core/formatte
 import {useServices} from '../hooks/useServices';
 import {getQueryParam} from '../helpers/queryString';
 import {Dash} from '../common/Dash';
-import {DashViewCells} from '../common/AssetItemCells/DashView/DashViewCells';
-import {EarningsViewCells} from '../common/AssetItemCells/EarningsView/EarningsViewCells';
+import {DashViewCells} from '../common/AssetItemCells/DashViewCells';
+import {EarningsViewCells} from '../common/AssetItemCells/EarningsViewCells';
 import {AssetNameCell} from '../common/AssetItemCells/AssetNameCell';
 
 interface AssetItemProps {

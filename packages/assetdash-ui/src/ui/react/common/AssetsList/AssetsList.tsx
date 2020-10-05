@@ -8,6 +8,9 @@ import {Table, Th, ThId} from '../Table/Table';
 import {Tooltip} from '../Tooltip';
 import {useLocation} from 'react-router-dom';
 import {getQueryParam} from '../../helpers/queryString';
+import {ColumnHeaderText} from '../ColumnHeaderText';
+import {DashViewHeaders} from './DashViewHeaders';
+import {EarningsViewHeaders} from './EarningsViewHeaders';
 
 export interface AssetListProps {
   pageData: Asset[];
@@ -58,9 +61,9 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
                     an asset has moved up or down in the leaderboard over the course of the day."
                   position="left"
                 >
-                  <P
+                  <ColumnHeaderText
                     className={getIconClassName('dashDaily')}
-                  >Daily Dash</P>
+                  >Daily Dash</ColumnHeaderText>
                 </Tooltip>
               </Th>
               <Th
@@ -99,65 +102,8 @@ export const AssetsList = ({pageData, showIds}: AssetListProps) => {
             Today
               </Th>
               {!metric
-                ? <>
-                  <Th
-                    data-testid='dashWeekly-column-header'
-                    className={getIconClassName('dashWeekly')}
-                    onClick={() => setAssetsSortForColumn('dashWeekly')}
-                  >
-                    <Tooltip
-                      text="Our leaderboard ranks assets by market capitalization. The Weekly Dash tracks how many places
-                       an asset has moved up or down in the leaderboard over the course of the week."
-                    >
-                      <P
-                        className={getIconClassName('dashWeekly')}
-                      >Weekly Dash</P>
-                    </Tooltip>
-                  </Th>
-                  <Th
-                    data-testid='dashMonthly-column-header'
-                    className={getIconClassName('dashMonthly')}
-                    onClick={() => setAssetsSortForColumn('dashMonthly')}
-                  >
-                    <Tooltip
-                      text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
-                       an asset has moved up or down in the leaderboard over the course of the month."
-                    >
-                      <P
-                        className={getIconClassName('dashMonthly')}
-                      >Monthly Dash</P>
-                    </Tooltip>
-                  </Th>
-                </>
-                : <>
-                  <Th
-                    data-testid='earningsDate-column-header'
-                    className={getIconClassName('earningsDate')}
-                    onClick={() => setAssetsSortForColumn('earningsDate')}
-                  >
-                    <Tooltip
-                      text="Earnings Date is the next expected earnings report date for the company."
-                    >
-                      <P
-                        className={getIconClassName('earningsDate')}
-                      >Earnings Date</P>
-                    </Tooltip>
-                  </Th>
-                  <Th
-                    data-testid='eps-column-header'
-                    className={getIconClassName('eps')}
-                    onClick={() => setAssetsSortForColumn('eps')}
-                  >
-                    <Tooltip
-                      text="Earnings Per Share measures the profitability of a company. Our leaderboard reflects TTM
-                       EPS. TTM EPS is the EPS for the last 12 months of the company."
-                    >
-                      <P
-                        className={getIconClassName('eps')}
-                      >EPS</P>
-                    </Tooltip>
-                  </Th>
-                </>
+                ? <DashViewHeaders getIconClassName={getIconClassName} setAssetsSortForColumn={setAssetsSortForColumn}/>
+                : <EarningsViewHeaders getIconClassName={getIconClassName} setAssetsSortForColumn={setAssetsSortForColumn}/>
               }
               <Th/>
             </tr>
@@ -185,12 +131,4 @@ const AssetsView = styled.div<AssetsViewProps>`
   padding: ${({showIds}) => showIds ? '0 20px 0 0' : '0 20px'};
   margin: 0 auto;
   overflow-x: scroll;
-`;
-
-const P = styled.p`
- &.asc,
- &.desc {
-    position: relative;
-    color: ${({theme}) => theme.colors.colorPrimary};
-  }
 `;

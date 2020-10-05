@@ -1,6 +1,6 @@
-import {Td} from '../../Table/Table';
+import {Td} from '../Table/Table';
 import React from 'react';
-import {Dash} from '../../Dash';
+import {Dash} from '../Dash';
 
 interface DashViewCellsProps {
   dashWeekly: number;

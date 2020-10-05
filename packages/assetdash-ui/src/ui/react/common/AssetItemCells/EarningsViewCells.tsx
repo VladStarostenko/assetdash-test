@@ -1,6 +1,6 @@
-import {Td} from '../../Table/Table';
-import {formatEarningsDate, formatEps} from '../../../../../core/formatters';
-import notFoundIcon from '../../../../assets/icons/not-found-data.svg';
+import {Td} from '../Table/Table';
+import {formatEarningsDate, formatEps} from '../../../../core/formatters';
+import notFoundIcon from '../../../assets/icons/not-found-data.svg';
 import React from 'react';
 
 interface EarningsViewCellsProps {
