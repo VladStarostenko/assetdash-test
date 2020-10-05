@@ -15,25 +15,25 @@ chai.use(chaiAsPromised);
 describe('Asset filtering', () => {
   beforeEach(() => {
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100')
+      .get('/assets?currentPage=1&perPage=100&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: assetsPage1,
         pagination: page(1)
       }).persist();
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=2&perPage=100')
+      .get('/assets?currentPage=2&perPage=100&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: assetsPage2,
         pagination: page(2)
       });
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100&sector=Stock')
+      .get('/assets?currentPage=1&perPage=100&sector=Stock&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: assetsFilterResult,
         pagination: page(1)
       }).persist();
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=2&perPage=100&sector=Stock')
+      .get('/assets?currentPage=2&perPage=100&sector=Stock&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: assetsFilterResult2ndPage,
         pagination: page(2)

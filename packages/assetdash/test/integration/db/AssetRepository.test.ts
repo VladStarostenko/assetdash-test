@@ -38,6 +38,14 @@ describe('Asset Repository', () => {
     currentMarketcap: 5,
     earningsDate: date,
     eps: 5
+  }, {
+    id: 4,
+    ticker: 'ETH',
+    name: 'Ethan Allen Interiors',
+    type: 'Stock',
+    currentMarketcap: 1,
+    earningsDate: date,
+    eps: 5
   }];
 
   const ranks = [{
@@ -70,11 +78,27 @@ describe('Asset Repository', () => {
     assetId: 3,
     date: date,
     position: 3
+  }, {
+    id: 7,
+    assetId: 4,
+    date: date,
+    position: 4
+  }, {
+    id: 8,
+    assetId: 4,
+    date: date,
+    position: 4
   }];
 
-  const tags = [{name: 'Cryptocurrency'}, {name: 'Internet'}, {name: 'Finance'}];
+  const tags = [{name: 'Cryptocurrency'}, {name: 'Internet'}, {name: 'Finance'}, {name: 'Emerging Markets'}];
 
-  const assetsTags = [{assetId: 1, tagId: 1}, {assetId: 2, tagId: 1}, {assetId: 3, tagId: 2}, {assetId: 3, tagId: 3}];
+  const assetsTags = [
+    {assetId: 1, tagId: 1},
+    {assetId: 2, tagId: 1},
+    {assetId: 3, tagId: 2},
+    {assetId: 3, tagId: 3},
+    {assetId: 4, tagId: 4}
+  ];
 
   beforeEach(async () => {
     let db;
@@ -109,7 +133,7 @@ describe('Asset Repository', () => {
 
   describe('findPage', () => {
     it('returns selected page of assets', async () => {
-      expect(await assetRepository.findPage(2, 1)).to.deep.eq({
+      expect(await assetRepository.findPage(2, 1, ['Stock', 'ETF', 'Cryptocurrency'])).to.deep.eq({
         data: [{
           currentChange: 0,
           currentMarketcap: 10,
@@ -128,10 +152,10 @@ describe('Asset Repository', () => {
         pagination: {
           currentPage: 2,
           from: 1,
-          lastPage: 3,
+          lastPage: 4,
           perPage: 1,
           to: 2,
-          total: 3
+          total: 4
         }
       });
     });
@@ -139,18 +163,30 @@ describe('Asset Repository', () => {
 
   describe('findByString', () => {
     it('returns assets with string in name or ticker', async () => {
-      const assets = await assetRepository.findByNameOrTickerPart('t');
-      expect(assets).to.have.length(2);
+      const assets = await assetRepository.findByNameOrTickerPart('t', ['Stock', 'ETF', 'Cryptocurrency']);
+      expect(assets).to.have.length(3);
       expect(assets[0]).to.deep.include({name: 'Bitcoin'});
       expect(assets[1]).to.deep.include({name: 'Ethereum'});
+      expect(assets[2]).to.deep.include({name: 'Ethan Allen Interiors'});
+    });
+
+    it('returns stocks with string in name or ticker when metric selected', async () => {
+      const assets = await assetRepository.findByNameOrTickerPart('ETH', ['Stock']);
+      expect(assets).to.have.length(1);
+      expect(assets[0]).to.deep.include({name: 'Ethan Allen Interiors'});
     });
   });
 
   describe('findByTags', () => {
     it('returns assets with selected tags', async () => {
-      const data = (await assetRepository.findByTags('Internet', 1, 10)).data;
+      const data = (await assetRepository.findByTags('Internet', 1, 10, ['Stock', 'ETF', 'Cryptocurrency'])).data;
       expect(data).to.have.length(1);
       expect(data[0]).to.deep.include({ticker: 'AAPL'});
+    });
+
+    it('returns empty result when selected "Cryptocurrency" tags and "Earnings" metric', async () => {
+      const data = (await assetRepository.findByTags('Cryptocurrency', 1, 10, ['Stock'])).data;
+      expect(data).to.have.length(0);
     });
   });
 

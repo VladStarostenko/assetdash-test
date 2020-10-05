@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import searchIcon from '../../../assets/icons/search.svg';
 import {debounce} from '../../helpers/debounce';
 import {getQueryParam} from '../../helpers/queryString';
+import {getMetricParam} from '../../helpers/getMetricParam';
 
 export const Search = () => {
   const [searchInputValue, setSearchInputValue] = useState('');
@@ -11,10 +12,13 @@ export const Search = () => {
   const history = useHistory();
   const triggerSearch = (value: string) => {
     if (!(value)) {
-      history.push('/');
+      const metricParam = getMetricParam(location);
+      history.push('/' + metricParam);
     }
     if (value.length > 1) {
-      history.push(`/?q=${value}`);
+      const metricParam = getMetricParam(location);
+      const newUrl = metricParam ? '/' + metricParam + `&q=${value}` : `/?q=${value}`;
+      history.push(newUrl);
     }
   };
 

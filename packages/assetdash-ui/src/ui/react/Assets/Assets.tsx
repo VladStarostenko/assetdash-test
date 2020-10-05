@@ -13,6 +13,9 @@ import {getQueryParam} from '../helpers/queryString';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
+import {getMetricTypes} from '../helpers/getMetricTypes';
+import {getMetricParam} from '../helpers/getMetricParam';
+import {AssetType} from '../../../core/models/metrics';
 
 export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
@@ -22,6 +25,7 @@ export const Assets = () => {
   const [nameOrTickerPart, setNameOrTickerPart] = useState('');
   const [sector, setSector] = useState<string>('');
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
+  const [emptySortResults, setEmptySortResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const {api} = useServices();
@@ -29,6 +33,7 @@ export const Assets = () => {
   const [showIds, setShowIds] =
     useState<boolean>(areIdsVisible(location));
   const {sectorName} = useParams();
+  const [typesOfAssets, setTypesOfAssets] = useState<AssetType[]>([]);
 
   function usePageUpdate() {
     useEffect(() => {
@@ -38,6 +43,9 @@ export const Assets = () => {
       setNameOrTickerPart(nameOrTickerPart || '');
       const sector = sectorName || '';
       setSector(sector);
+      const metric = getQueryParam('m', location) || 'Dash';
+      const typesOfAssets = getMetricTypes(metric);
+      setTypesOfAssets(typesOfAssets);
     }, [location]);
   }
 
@@ -55,12 +63,12 @@ export const Assets = () => {
   const isShowingAll = () => perPage === 200;
 
   const loadAssetSearchResult = useCallback(() => {
-    api.searchAssets(nameOrTickerPart).then((res: GetPageResponse) => {
+    api.searchAssets(nameOrTickerPart, typesOfAssets).then((res: GetPageResponse) => {
       setEmptySearchResults(res.data.data.length === 0);
       setPageData(res.data.data);
       setIsLoading(false);
     });
-  }, [api, nameOrTickerPart]);
+  }, [api, nameOrTickerPart, typesOfAssets]);
 
   const paginateData = useCallback((res: GetPageResponse) => {
     if (currentPage > 1 && isShowingAll()) {
@@ -73,15 +81,18 @@ export const Assets = () => {
   }, [currentPage]);
 
   const loadFilteredAssets = useCallback((sector: string) => {
-    api.getAssetsForSectors(currentPage, perPage, sector).then((res: GetPageResponse) => paginateData(res));
-  }, [api, currentPage, perPage, paginateData]);
+    api.getAssetsForSectors(currentPage, perPage, sector, typesOfAssets).then((res: GetPageResponse) => {
+      setEmptySortResults(res.data.data.length === 0);
+      paginateData(res);
+    });
+  }, [api, currentPage, perPage, paginateData, typesOfAssets]);
 
   const loadCurrentPage = useCallback(() => {
     if (currentPage < 1) {
       return;
     }
-    api.getPage(currentPage, perPage).then((res: GetPageResponse) => paginateData(res));
-  }, [api, currentPage, perPage, paginateData]);
+    api.getPage(currentPage, perPage, typesOfAssets).then((res: GetPageResponse) => paginateData(res));
+  }, [api, currentPage, perPage, paginateData, typesOfAssets]);
 
   useEffect(() => {
     setShowIds(areIdsVisible(location));
@@ -94,7 +105,7 @@ export const Assets = () => {
     }
     if (nameOrTickerPart) {
       loadAssetSearchResult();
-    } else if (sector.length > 0) {
+    } else if (sector) {
       loadFilteredAssets(sector);
     } else {
       loadCurrentPage();
@@ -126,15 +137,21 @@ export const Assets = () => {
   };
 
   const onBackToTopClick = () => {
-    history.push('/');
+    const metricParam = getMetricParam(location);
+    history.push('/' + metricParam);
   };
 
   const onViewAllClick = () => {
-    history.push('/all');
+    const metricParam = getMetricParam(location);
+    history.push('/all' + metricParam);
   };
 
   const onLoadMoreCLick = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const noSearchOrSortResults = () => {
+    return (nameOrTickerPart && emptySearchResults) || (emptySortResults && sector);
   };
 
   return <>
@@ -180,7 +197,7 @@ export const Assets = () => {
       </Container>
       : null }
     { isLoading ? <Loader/> : null}
-    { nameOrTickerPart && emptySearchResults
+    { noSearchOrSortResults()
       ? <NoResultsContainer>
         <NoResults>
           <NotFoundIconWrapper>

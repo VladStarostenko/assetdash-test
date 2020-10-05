@@ -31,24 +31,24 @@ describe('Watchlist', () => {
   describe('Not empty watchlist', () => {
     beforeEach(() => {
       nock('http://127.0.0.1/')
-        .get('/assets?currentPage=1&perPage=100')
+        .get('/assets?currentPage=1&perPage=100&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
         .reply(200, {
           data: assetsPage1,
           pagination: page(1)
         });
       nock('http://127.0.0.1/')
-        .get('/watchlist?tickers=AAPL-')
+        .get('/watchlist?tickers=AAPL-&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
         .reply(200, {
           data: assetsOnWatchlist
         }).persist();
       nock('http://127.0.0.1/')
-        .get('/assets?currentPage=1&perPage=100&sector=Stock')
+        .get('/assets?currentPage=1&perPage=100&sector=Stock&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
         .reply(200, {
           data: assetsFilterResult,
           pagination: page(1)
         });
       nock('http://127.0.0.1/')
-        .get('/assets?nameOrTickerPart=ap')
+        .get('/assets?nameOrTickerPart=ap&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
         .reply(200, {
           data: assetSearchResult,
           pagination: page(1)

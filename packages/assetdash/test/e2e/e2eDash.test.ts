@@ -85,7 +85,7 @@ const testSeedAssets = (assetRepository: AssetRepository) => async (assets: Asse
 };
 
 const testFindAssets = (assetRepository: AssetRepository) => async () => {
-  return (await assetRepository.findPage(1, 10)).data;
+  return (await assetRepository.findPage(1, 10, ['Stock', 'ETF', 'Cryptocurrency'])).data;
 };
 
 describe('Whole flow', () => {

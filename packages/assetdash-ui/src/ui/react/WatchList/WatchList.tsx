@@ -6,18 +6,33 @@ import {Container} from '../common/Container';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
 import {EmptyWatchList} from './EmptyWatchList';
+import {getQueryParam} from '../helpers/queryString';
+import {getMetricTypes} from '../helpers/getMetricTypes';
+import {useLocation} from 'react-router-dom';
+import {AssetType} from '../../../core/models/metrics';
 
 export const WatchList = () => {
   const {api, watchlist} = useServices();
   const [watchlistData, setWatchlistData] = useState<Asset[]>([]);
 
+  const location = useLocation();
+
+  const metric = getQueryParam('m', location) || 'Dash';
+  const [typesOfAssets, setTypesOfAssets] = useState<AssetType[]>(getMetricTypes(metric));
+
+  useEffect(() => {
+    const metric = getQueryParam('m', location) || 'Dash';
+    const typesOfAssets = getMetricTypes(metric);
+    setTypesOfAssets(typesOfAssets);
+  }, [location]);
+
   const showWatchList = useCallback((watchList: string) => {
     if (watchList) {
-      api.getWatchList(watchList).then((res) => setWatchlistData(res.data.data));
+      api.getWatchList(watchList, typesOfAssets).then((res) => setWatchlistData(res.data.data));
     } else {
       setWatchlistData([]);
     }
-  }, [api]);
+  }, [api, typesOfAssets]);
 
   useEffect(() => {
     showWatchList(watchlist.get('watchlist'));

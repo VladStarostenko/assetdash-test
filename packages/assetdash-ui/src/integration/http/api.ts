@@ -1,4 +1,5 @@
 import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
+import {AssetType} from '../../core/models/metrics';
 
 export class Api {
   private instance: AxiosInstance;
@@ -10,19 +11,19 @@ export class Api {
     return this.instance.get('assets');
   };
 
-  getPage(currentPage: number, perPage: number) {
-    return this.instance.get('assets', {params: {currentPage, perPage}});
+  getPage(currentPage: number, perPage: number, typesOfAssets: AssetType[]) {
+    return this.instance.get('assets', {params: {currentPage, perPage, typesOfAssets}});
   };
 
-  getWatchList(tickers: string) {
-    return this.instance.get('watchlist', {params: {tickers}});
+  getWatchList(tickers: string, typesOfAssets: AssetType[]) {
+    return this.instance.get('watchlist', {params: {tickers, typesOfAssets}});
   };
 
-  searchAssets(nameOrTickerPart: string) {
-    return this.instance.get('assets', {params: {nameOrTickerPart}});
+  searchAssets(nameOrTickerPart: string, typesOfAssets: AssetType[]) {
+    return this.instance.get('assets', {params: {nameOrTickerPart, typesOfAssets}});
   }
 
-  getAssetsForSectors(currentPage: number, perPage: number, sector: string) {
-    return this.instance.get('assets', {params: {currentPage, perPage, sector}});
+  getAssetsForSectors(currentPage: number, perPage: number, sector: string, typesOfAssets: AssetType[]) {
+    return this.instance.get('assets', {params: {currentPage, perPage, sector, typesOfAssets}});
   }
 }

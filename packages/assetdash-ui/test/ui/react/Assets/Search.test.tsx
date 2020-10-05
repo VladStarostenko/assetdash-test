@@ -13,13 +13,13 @@ chai.use(chaiDom);
 describe('Asset searching', () => {
   beforeEach(() => {
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=100')
+      .get('/assets?currentPage=1&perPage=100&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
         data: assetsPage1,
         pagination: page(1)
       }).persist();
     nock('http://127.0.0.1/')
-      .get('/assets?nameOrTickerPart=ap')
+      .get('/assets?nameOrTickerPart=ap&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency&')
       .reply(200, {
         data: assetSearchResult,
         pagination: page(1)
