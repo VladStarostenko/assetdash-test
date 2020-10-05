@@ -5,7 +5,7 @@ import angleDownIcon from '../../assets/icons/angle-down-bright.svg';
 import angleUpIcon from '../../assets/icons/angle-up-bright.svg';
 import {ButtonFavorite} from '../common/Button/ButtonFavorite';
 import {Asset} from '../../../core/models/asset';
-import {formatChange, formatEarningsDate, formatEps, formatMarketcap, formatPrice} from '../../../core/utils';
+import {formatChange, formatEarningsDate, formatEps, formatMarketcap, formatPrice} from '../../../core/formatters';
 import {Tooltip} from '../common/Tooltip';
 import {useServices} from '../hooks/useServices';
 import {getQueryParam} from '../helpers/queryString';
