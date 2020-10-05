@@ -37,7 +37,8 @@ export class EarningsDataUpdater {
   }
 
   loop = async (stocksTickers: string[], updatingTime?: string) => {
-    const cronTime = updatingTime || getCronTimeForEarningsUpdater('09:00');
+    await this.updateEarnings(stocksTickers);
+    const cronTime = updatingTime || getCronTimeForEarningsUpdater('07:00');
     const earningsUpdater = new CronJob(cronTime, () => this.updateEarnings(stocksTickers));
     earningsUpdater.start();
   }
