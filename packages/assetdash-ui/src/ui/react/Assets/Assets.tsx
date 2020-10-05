@@ -149,6 +149,10 @@ export const Assets = () => {
     setCurrentPage(currentPage + 1);
   };
 
+  const noSearchOrSortResults = () => {
+    return (nameOrTickerPart && emptySearchResults) || (emptySortResults && sector);
+  };
+
   return <>
     <Container>
       <ButtonsRow>
@@ -192,7 +196,7 @@ export const Assets = () => {
       </Container>
       : null }
     { isLoading ? <Loader/> : null}
-    { (nameOrTickerPart && emptySearchResults) || (emptySortResults && sector)
+    { noSearchOrSortResults()
       ? <NoResultsContainer>
         <NoResults>
           <NotFoundIconWrapper>
