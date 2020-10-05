@@ -14,15 +14,11 @@ export const formatPrice = (price: number) => {
 };
 
 export const formatEps = (eps: number) => {
-  if (eps > 1.1) {
-    return `$${addSeparators(eps.toFixed(2))}`;
-  } else {
-    return `$${eps.toFixed(4)}`;
-  }
+  return `$${addSeparators(eps.toFixed(2))}`;
 };
 
 export const formatEarningsDate = (earningsDate: Date) => {
-  return `${(new Date(earningsDate)).toLocaleString('default', {month: 'short'})} - ${(new Date(earningsDate)).getDate()}`;
+  return `${(new Date(earningsDate)).toLocaleString('default', {month: 'short'})} ${(new Date(earningsDate)).getDate()}`;
 };
 
 export const formatChange = (change: number) => {
