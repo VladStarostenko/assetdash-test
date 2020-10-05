@@ -8,11 +8,11 @@ export const sortAssets = (assets: Asset[], assetsSort: AssetsSort) => {
     return order === 'asc' ? result : result.reverse();
   }
 
-  const compareByStringOrNumber = (column: keyof Asset) => (a: Asset, b: Asset) => {
-    return column === 'earningsDate' ? compareDates(a[column], b[column]) : compareTwoValues(a[column], b[column]);
+  const compare = (column: keyof Asset) => (a: Asset, b: Asset) => {
+    return column === 'earningsDate' ? compareDates(a[column], b[column]) : compareByStringOrNumber(a[column], b[column]);
   };
 
-  const compareTwoValues = (first: number | string, second: number | string) => {
+  const compareByStringOrNumber = (first: number | string, second: number | string) => {
     if (first > second) {
       return 1;
     }
@@ -25,12 +25,12 @@ export const sortAssets = (assets: Asset[], assetsSort: AssetsSort) => {
   const compareDates = (first: Date, second: Date) => {
     const firstTime = (new Date(first)).getTime();
     const secondTime = (new Date(second)).getTime();
-    return compareTwoValues(firstTime, secondTime);
+    return compareByStringOrNumber(firstTime, secondTime);
   };
 
   if (assetsSort.column === 'none') {
     return assets;
   } else {
-    return sort(assets, compareByStringOrNumber(assetsSort.column), assetsSort.order);
+    return sort(assets, compare(assetsSort.column), assetsSort.order);
   }
 };
