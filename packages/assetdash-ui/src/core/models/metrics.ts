@@ -1,9 +1,10 @@
 export type MetricName = 'Dash' | 'Earnings';
+export type MetricType = 'Stock' | 'ETF' | 'Cryptocurrency'
 
 export interface Metric {
   name: MetricName;
   label: string;
-  types: string[];
+  types: MetricType[];
 }
 
 export const metrics: Array<Metric> = [
