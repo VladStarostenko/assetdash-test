@@ -20,7 +20,7 @@ export class AssetRepository {
     return this.db('assets').orderBy('currentMarketcap', 'desc').select();
   }
 
-  findAssetQuery(typesOfAssets: string[]) {
+  findAssetQuery(typesOfAssets: AssetType[]) {
     const maxDate = this.db('ranks')
       .distinctOn('assetId')
       .select('position', 'assetId')
@@ -33,11 +33,11 @@ export class AssetRepository {
       .orderBy('currentMarketcap', 'desc');
   }
 
-  async findPage(currentPage: number, perPage: number, typesOfAssets: string[]) {
+  async findPage(currentPage: number, perPage: number, typesOfAssets: AssetType[]) {
     return this.findAssetQuery(typesOfAssets).paginate({perPage, currentPage, isLengthAware: true});
   }
 
-  async findWatchList(watchList: string, typesOfAssets: string[]) {
+  async findWatchList(watchList: string, typesOfAssets: AssetType[]) {
     return this.findAssetQuery(typesOfAssets)
       .whereIn('assets.ticker', watchList.split('-'));
   }
@@ -50,7 +50,7 @@ export class AssetRepository {
     return asset;
   }
 
-  async findByTags(tag: string, currentPage: number, perPage: number, typesOfAssets: string[]) {
+  async findByTags(tag: string, currentPage: number, perPage: number, typesOfAssets: AssetType[]) {
     return this.findAssetQuery(typesOfAssets)
       .join('assets_tags', 'assets.id', 'assets_tags.assetId')
       .join('tags', function () {
@@ -79,7 +79,7 @@ export class AssetRepository {
       .pluck('ticker');
   }
 
-  async findByNameOrTickerPart(nameOrTickerPart: string, typesOfAssets: string[]): Promise<Asset[]> {
+  async findByNameOrTickerPart(nameOrTickerPart: string, typesOfAssets: AssetType[]): Promise<Asset[]> {
     return this.findAssetQuery(typesOfAssets).andWhere(function () {
       this.where('name', 'ilike', `%${nameOrTickerPart}%`)
         .orWhere('ticker', 'ilike', `%${nameOrTickerPart}%`);

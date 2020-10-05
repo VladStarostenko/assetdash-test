@@ -15,6 +15,7 @@ import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
 import {getMetricTypes} from '../helpers/getMetricTypes';
 import {getMetricParam} from '../helpers/getMetricParam';
+import {AssetType} from '../../../core/models/metrics';
 
 export const Assets = () => {
   const [pageData, setPageData] = useState<Asset[]>([]);
@@ -32,7 +33,7 @@ export const Assets = () => {
   const [showIds, setShowIds] =
     useState<boolean>(areIdsVisible(location));
   const {sectorName} = useParams();
-  const [typesOfAssets, setTypesOfAssets] = useState<string[]>([]);
+  const [typesOfAssets, setTypesOfAssets] = useState<AssetType[]>([]);
 
   function usePageUpdate() {
     useEffect(() => {

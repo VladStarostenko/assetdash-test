@@ -9,6 +9,7 @@ import {EmptyWatchList} from './EmptyWatchList';
 import {getQueryParam} from '../helpers/queryString';
 import {getMetricTypes} from '../helpers/getMetricTypes';
 import {useLocation} from 'react-router-dom';
+import {AssetType} from '../../../core/models/metrics';
 
 export const WatchList = () => {
   const {api, watchlist} = useServices();
@@ -17,7 +18,7 @@ export const WatchList = () => {
   const location = useLocation();
 
   const metric = getQueryParam('m', location) || 'Dash';
-  const [typesOfAssets, setTypesOfAssets] = useState<string[]>(getMetricTypes(metric));
+  const [typesOfAssets, setTypesOfAssets] = useState<AssetType[]>(getMetricTypes(metric));
 
   useEffect(() => {
     const metric = getQueryParam('m', location) || 'Dash';

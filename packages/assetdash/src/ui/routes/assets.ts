@@ -2,6 +2,7 @@ import {Services} from '../../core/createServices';
 import {Router as expressRouter} from 'express';
 import {asyncHandler, sanitize, responseOf} from '@restless/restless';
 import {asArray, asNumber, asObject, asOptional, asString} from '@restless/sanitizers';
+import {asAssetType} from '../../core/sanitizers/asAssetType';
 
 export const assets = ({assetRepository}: Services) => {
   const router = expressRouter();
@@ -13,7 +14,7 @@ export const assets = ({assetRepository}: Services) => {
         perPage: asOptional(asNumber),
         nameOrTickerPart: asOptional(asString),
         sector: asOptional(asString),
-        typesOfAssets: asArray(asString)
+        typesOfAssets: asArray(asAssetType)
       })
     }),
     async ({query}) => {
