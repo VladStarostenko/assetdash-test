@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useHistory, useLocation, useParams, useRouteMatch} from 'react-router-dom';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import {Asset} from '../../../core/models/asset';
 import {GetPageResponse} from '../../../core/models/getPageResponse';
@@ -13,6 +13,7 @@ import {getQueryParam} from '../helpers/queryString';
 import {Tabs} from '../Home/Tabs';
 import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
+import {addAndDeleteParamFromURL, addParamToURL, deleteParamFromURL} from '../../../core/utils';
 import {getMetricTypes} from '../helpers/getMetricTypes';
 import {getMetricParam} from '../helpers/getMetricParam';
 import {AssetType} from '../../../core/models/metrics';
@@ -27,6 +28,7 @@ export const Assets = () => {
   const [emptySearchResults, setEmptySearchResults] = useState<boolean>(false);
   const [emptySortResults, setEmptySortResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [allMatch, setAllMatch] = useState('');
   const history = useHistory();
   const {api} = useServices();
   const location = useLocation();
@@ -46,19 +48,16 @@ export const Assets = () => {
       const metric = getQueryParam('m', location) || 'Dash';
       const typesOfAssets = getMetricTypes(metric);
       setTypesOfAssets(typesOfAssets);
+      const allMatch = getQueryParam('all', location);
+      setAllMatch(allMatch || '');
     }, [location]);
   }
 
-  function usePathUpdate() {
-    const allMatch = useRouteMatch('/all');
-
-    useEffect(() => {
-      setPerPage(allMatch ? 200 : 100);
-    }, [allMatch]);
-  }
+  useEffect(() => {
+    setPerPage(allMatch ? 200 : 100);
+  }, [allMatch]);
 
   usePageUpdate();
-  usePathUpdate();
 
   const isShowingAll = () => perPage === 200;
 
@@ -112,19 +111,10 @@ export const Assets = () => {
     }
   }, [nameOrTickerPart, loadAssetSearchResult, sector, loadCurrentPage, loadFilteredAssets, perPage]);
 
-  function updatePageInParams(newPage: number) {
-    const urlSearchParams = new URLSearchParams(location.search);
-    if (newPage > 1) {
-      urlSearchParams.set('p', newPage.toString());
-    } else {
-      urlSearchParams.delete('p');
-    }
-    return urlSearchParams.toString();
-  }
-
   const routeForNextAndPrevious = (newPage: number) => {
-    const urlSearchString = updatePageInParams(newPage);
-    const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+    const newPath = newPage > 1
+      ? addParamToURL(location, 'p', newPage.toString())
+      : deleteParamFromURL(location, 'p');
     history.push(newPath);
   };
 
@@ -137,13 +127,15 @@ export const Assets = () => {
   };
 
   const onBackToTopClick = () => {
+    const newPath = deleteParamFromURL(location, 'all');
     const metricParam = getMetricParam(location);
-    history.push('/' + metricParam);
+    history.push(newPath + metricParam);
   };
 
   const onViewAllClick = () => {
+    const newPath = addAndDeleteParamFromURL(location, 'all', true.toString(), 'p');
     const metricParam = getMetricParam(location);
-    history.push('/all' + metricParam);
+    history.push(newPath + metricParam);
   };
 
   const onLoadMoreCLick = () => {

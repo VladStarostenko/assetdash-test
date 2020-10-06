@@ -40,3 +40,25 @@ export const sortAssets = (assets: Asset[], assetsSort: AssetsSort) => {
     return sort(assets, compare(assetsSort.column), assetsSort.order);
   }
 };
+
+export const addParamToURL = (location: any, paramName: string, paramValue: string) => {
+  const urlSearchParams = new URLSearchParams(location.search);
+  urlSearchParams.set(paramName, paramValue);
+  const urlSearchString = urlSearchParams.toString();
+  return urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+};
+
+export const deleteParamFromURL = (location: any, paramName: string) => {
+  const urlSearchParams = new URLSearchParams(location.search);
+  urlSearchParams.delete(paramName);
+  const urlSearchString = urlSearchParams.toString();
+  return urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+};
+
+export const addAndDeleteParamFromURL = (location: any, paramNameToAdd: string, paramValueToAdd: string, paramNameToDelete: string) => {
+  const urlSearchParams = new URLSearchParams(location.search);
+  urlSearchParams.set(paramNameToAdd, paramValueToAdd);
+  urlSearchParams.delete(paramNameToDelete);
+  const urlSearchString = urlSearchParams.toString();
+  return urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+};

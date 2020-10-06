@@ -3,7 +3,7 @@ import chai, {expect} from 'chai';
 import chaiDom from 'chai-dom';
 import nock from 'nock';
 import {Simulate} from 'react-dom/test-utils';
-import {assetsPage1, assetsPage2} from '../../../fixtures/assets';
+import {assetsPage1, assetsPage2, allAssets} from '../../../fixtures/assets';
 import {waitForPageLoad} from '../../../fixtures/assetsPage';
 import {renderHome} from '../../../fixtures/pages.test';
 import {page} from '../../../fixtures/pagination';
@@ -24,6 +24,11 @@ describe('Asset paging', () => {
       .reply(200, {
         data: assetsPage2,
         pagination: page(2)
+      });
+    nock('http://127.0.0.1/')
+      .get('/assets?currentPage=1&perPage=200')
+      .reply(200, {
+        data: allAssets
       });
   });
   afterEach(() => {
@@ -49,6 +54,18 @@ describe('Asset paging', () => {
     await waitFor(() =>
       expect((getAllByTestId('asset-row-name')).map(el => el.textContent))
         .to.deep.eq(['Gilead Sciences', 'Starbucks', 'Anheuser-Busch'])
+    );
+  });
+
+  it('goes to all assets', async () => {
+    const {findByRole, getAllByTestId} = renderHome();
+    await waitForPageLoad(getAllByTestId);
+    const viewAllButton = await findByRole('button', {name: /View all/});
+    click(viewAllButton);
+
+    await waitFor(() =>
+      expect((getAllByTestId('asset-row-name')).map(el => el.textContent))
+        .to.deep.eq(['Apple Inc.', 'Microsoft Corporation', 'Amazon.com, Inc.', 'Gilead Sciences', 'Starbucks', 'Anheuser-Busch'])
     );
   });
 });
