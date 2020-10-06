@@ -81,6 +81,8 @@ export const assetsPage2 = [
   }
 ];
 
+export const allAssets = assetsPage1.concat(assetsPage2);
+
 export const assetsFilterResult = [
   {
     id: 593,
@@ -112,6 +114,8 @@ export const assetsFilterResult2ndPage = [
     rank: 2
   }
 ];
+
+export const allAssetsFilterResult = assetsFilterResult.concat(assetsFilterResult2ndPage);
 
 export const assetSearchResult = [
   {

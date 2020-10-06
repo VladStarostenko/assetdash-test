@@ -5,7 +5,6 @@ import Home from './Home';
 export const HomeWithRouter: React.FC = () => {
   return (
     <Switch>
-      <Route exact path="/all" component={Home}/>
       <Route exact path="/watchlist" component={Home}/>
       <Route path="/:sectorName/:key">
         <Home/>

@@ -7,6 +7,7 @@ import angleActiveIcon from '../../assets/icons/angle-down-light.svg';
 import {ThemeContext} from '../Theme/ThemeContextProvider';
 import {MetricButton} from './MetricButton';
 import {getQueryParam} from '../helpers/queryString';
+import {addParamToURL, deleteParamFromURL} from '../../../core/utils';
 import {MetricName, metrics} from '../../../core/models/metrics';
 import {getMetricParam} from '../helpers/getMetricParam';
 
@@ -56,21 +57,10 @@ export const Tabs = () => {
     setIsExpanded(!isExpanded);
   }, [isExpanded]);
 
-  function updateMetricInParams(metric: MetricName) {
-    const urlSearchParams = new URLSearchParams(location.search);
-    if (metric !== 'Dash') {
-      urlSearchParams.set('m', metric);
-    } else {
-      urlSearchParams.delete('m');
-    }
-    return urlSearchParams.toString();
-  }
-
   const onMetricButtonClick = useCallback((label: MetricName) => {
     setCheckedMetric(label);
     setIsExpanded(false);
-    const urlSearchString = updateMetricInParams(label);
-    const newPath = urlSearchString ? `${location.pathname}?${urlSearchString}` : `${location.pathname}`;
+    const newPath = label !== 'Dash' ? addParamToURL(location, 'm', label) : deleteParamFromURL(location, 'm');
     history.push(newPath);
   }, [checkedMetric, isExpanded]);
 

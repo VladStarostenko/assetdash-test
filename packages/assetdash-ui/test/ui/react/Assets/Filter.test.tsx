@@ -3,11 +3,18 @@ import chaiDom from 'chai-dom';
 import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
 import {Simulate} from 'react-dom/test-utils';
-import {assetsFilterResult, assetsFilterResult2ndPage, assetsPage1, assetsPage2} from '../../../fixtures/assets';
+import {
+  allAssetsFilterResult,
+  assetsFilterResult,
+  assetsFilterResult2ndPage,
+  assetsPage1,
+  assetsPage2
+} from '../../../fixtures/assets';
 import {clickFirstSector, waitForNames, waitForPageLoad} from '../../../fixtures/assetsPage';
 import {renderHome} from '../../../fixtures/pages.test';
 import {page} from '../../../fixtures/pagination';
 import click = Simulate.click;
+import {waitFor} from '@testing-library/dom';
 
 chai.use(chaiDom);
 chai.use(chaiAsPromised);
@@ -37,6 +44,12 @@ describe('Asset filtering', () => {
       .reply(200, {
         data: assetsFilterResult2ndPage,
         pagination: page(2)
+      });
+    nock('http://127.0.0.1/')
+      .get('/assets?currentPage=1&perPage=200&sector=Stock&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
+      .reply(200, {
+        data: allAssetsFilterResult,
+        pagination: page(1)
       });
   });
   afterEach(() => {
@@ -113,6 +126,21 @@ describe('Asset filtering', () => {
     click(previousPageButton);
 
     await waitForNames(getAllByTestId, ['Anheuser-Busch']);
+  });
+
+  it('goes to all assets when sector selected', async () => {
+    const {findByRole, getAllByTestId, findAllByTestId} = renderHome();
+    await waitForPageLoad(getAllByTestId);
+    await clickFirstSector(findAllByTestId);
+    await waitForNames(getAllByTestId, ['Anheuser-Busch']);
+
+    const viewAllButton = await findByRole('button', {name: /View all/});
+    click(viewAllButton);
+
+    await waitFor(() =>
+      expect((getAllByTestId('asset-row-name')).map(el => el.textContent))
+        .to.deep.eq(['Microsoft Corporation', 'Anheuser-Busch'])
+    );
   });
 
   it('change page title after filtering', async () => {
