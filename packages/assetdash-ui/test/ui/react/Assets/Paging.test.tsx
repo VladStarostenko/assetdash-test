@@ -26,9 +26,10 @@ describe('Asset paging', () => {
         pagination: page(2)
       });
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=200')
+      .get('/assets?currentPage=1&perPage=200&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
-        data: allAssets
+        data: allAssets,
+        pagination: page(1)
       });
   });
   afterEach(() => {

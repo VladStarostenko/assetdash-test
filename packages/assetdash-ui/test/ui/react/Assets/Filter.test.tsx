@@ -46,9 +46,10 @@ describe('Asset filtering', () => {
         pagination: page(2)
       });
     nock('http://127.0.0.1/')
-      .get('/assets?currentPage=1&perPage=200&sector=Stock')
+      .get('/assets?currentPage=1&perPage=200&sector=Stock&typesOfAssets[]=Stock&typesOfAssets[]=ETF&typesOfAssets[]=Cryptocurrency')
       .reply(200, {
-        data: allAssetsFilterResult
+        data: allAssetsFilterResult,
+        pagination: page(1)
       });
   });
   afterEach(() => {

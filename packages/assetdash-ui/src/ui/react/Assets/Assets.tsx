@@ -128,14 +128,12 @@ export const Assets = () => {
 
   const onBackToTopClick = () => {
     const newPath = deleteParamFromURL(location, 'all');
-    const metricParam = getMetricParam(location);
-    history.push(newPath + metricParam);
+    history.push(newPath);
   };
 
   const onViewAllClick = () => {
     const newPath = addAndDeleteParamFromURL(location, 'all', true.toString(), 'p');
-    const metricParam = getMetricParam(location);
-    history.push(newPath + metricParam);
+    history.push(newPath);
   };
 
   const onLoadMoreCLick = () => {
