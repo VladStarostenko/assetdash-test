@@ -15,7 +15,6 @@ import {useServices} from '../hooks/useServices';
 import {areIdsVisible} from '../helpers/areIdsVisible';
 import {addAndDeleteParamFromURL, addParamToURL, deleteParamFromURL} from '../../../core/utils';
 import {getMetricTypes} from '../helpers/getMetricTypes';
-import {getMetricParam} from '../helpers/getMetricParam';
 import {AssetType} from '../../../core/models/metrics';
 
 export const Assets = () => {
