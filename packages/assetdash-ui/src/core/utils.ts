@@ -24,7 +24,13 @@ export const sortAssets = (assets: Asset[], assetsSort: AssetsSort) => {
 
   const compareDates = (first: Date, second: Date) => {
     const firstTime = (new Date(first)).getTime();
+    if (firstTime === 0) {
+      return 1;
+    }
     const secondTime = (new Date(second)).getTime();
+    if (secondTime === 0) {
+      return -1;
+    }
     return compareByStringOrNumber(firstTime, secondTime);
   };
 

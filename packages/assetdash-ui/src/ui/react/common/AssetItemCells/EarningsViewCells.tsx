@@ -11,14 +11,14 @@ interface EarningsViewCellsProps {
 export const EarningsViewCells = ({earningsDate, eps}: EarningsViewCellsProps) => (
   <>
     <Td>
-      {earningsDate
-        ? formatEarningsDate(earningsDate)
+      {eps
+        ? formatEps(eps)
         : <img src={notFoundIcon}/>
       }
     </Td>
     <Td>
-      {eps
-        ? formatEps(eps)
+      {earningsDate
+        ? formatEarningsDate(earningsDate)
         : <img src={notFoundIcon}/>
       }
     </Td>
