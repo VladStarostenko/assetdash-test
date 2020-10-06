@@ -7,19 +7,6 @@ import {TabHeadersProps} from '../../../../core/models/tabHeadersProps';
 export const EarningsViewHeaders = ({getIconClassName, setAssetsSortForColumn}: TabHeadersProps) => (
   <>
     <Th
-      data-testid='earningsDate-column-header'
-      className={getIconClassName('earningsDate')}
-      onClick={() => setAssetsSortForColumn('earningsDate')}
-    >
-      <Tooltip
-        text="Earnings Date is the next expected earnings report date for the company."
-      >
-        <ColumnHeaderText
-          className={getIconClassName('earningsDate')}
-        >Earnings Date</ColumnHeaderText>
-      </Tooltip>
-    </Th>
-    <Th
       data-testid='eps-column-header'
       className={getIconClassName('eps')}
       onClick={() => setAssetsSortForColumn('eps')}
@@ -31,6 +18,20 @@ export const EarningsViewHeaders = ({getIconClassName, setAssetsSortForColumn}: 
         <ColumnHeaderText
           className={getIconClassName('eps')}
         >EPS</ColumnHeaderText>
+      </Tooltip>
+    </Th>
+    <Th
+      data-testid='earningsDate-column-header'
+      className={getIconClassName('earningsDate')}
+      onClick={() => setAssetsSortForColumn('earningsDate')}
+    >
+      <Tooltip
+        text="Earnings Date is the next expected earnings report date for the company."
+        isLast={true}
+      >
+        <ColumnHeaderText
+          className={getIconClassName('earningsDate')}
+        >Earnings Date</ColumnHeaderText>
       </Tooltip>
     </Th>
   </>

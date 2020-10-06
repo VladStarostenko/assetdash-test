@@ -28,6 +28,7 @@ export const DashViewHeaders = ({getIconClassName, setAssetsSortForColumn}: TabH
       <Tooltip
         text="Our leaderboard ranks assets by market capitalization. The Monthly Dash tracks how many places
                        an asset has moved up or down in the leaderboard over the course of the month."
+        isLast={true}
       >
         <ColumnHeaderText
           className={getIconClassName('dashMonthly')}

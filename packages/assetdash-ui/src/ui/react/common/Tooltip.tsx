@@ -7,12 +7,12 @@ interface TooltipProps extends TooltipBodyProps {
   isVisible?: boolean;
 }
 
-export const Tooltip = ({text, children, position, isVisible = true}: TooltipProps) => {
+export const Tooltip = ({text, children, position, isVisible = true, isLast = false}: TooltipProps) => {
   return (
     <TooltipWrapper>
       {children}
       {isVisible &&
-        <TooltipBody position={position}>
+        <TooltipBody position={position} isLast={isLast}>
           <p>{text}</p>
         </TooltipBody>
       }
@@ -51,13 +51,14 @@ const tooltipLeftPositionStyles = css`
 
 interface TooltipBodyProps {
   position?: 'left' | 'top' | 'bottom' | 'right';
+  isLast?: boolean;
 }
 
 const TooltipBody = styled.div<TooltipBodyProps>`
   display: none;
   position: absolute;
   bottom: -7px;
-  left: 50%;
+  left: ${({isLast}) => isLast ? '10%' : '50%'};
   transform: translate(-50%, 100%);
   width: 300px;
   padding: 16px;
@@ -76,7 +77,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
 
   &::before {
     content: '';
-    display: block;  
+    display: block;
     position: absolute;
     left: 140px;
     bottom: 100%;
@@ -87,7 +88,7 @@ const TooltipBody = styled.div<TooltipBodyProps>`
   }
   &:after {
     content: '';
-    display: block;  
+    display: block;
     position: absolute;
     left: 142px;
     bottom: 100%;
