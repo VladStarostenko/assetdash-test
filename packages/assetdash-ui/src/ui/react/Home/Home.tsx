@@ -18,6 +18,10 @@ const Home = () => {
     <Screen>
       <Container>
         <PageTitle data-testid='title'>{sectorName ? `${getPageTitle(sectorName)}` : 'Top Assets'} by Market Cap</PageTitle>
+        <div>blog
+          <a href="localhost:8080/blog/"></a>
+        </div>
+
         <PageSubtitle/>
         <Search/>
         <Sort/>
