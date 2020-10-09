@@ -76,10 +76,10 @@
   },
   "main": "n/a",
   "scripts": {
-    "build": "gatsby build --prefix-paths",
+    "build": "gatsby build",
     "develop": "gatsby develop",
     "clean": "gatsby clean",
-    "serve": "gatsby serve --prefix-paths -p 8080 -o",
+    "serve": "gatsby serve",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ignore-path .gitignore --ext .ts,.tsx,.js"
   }

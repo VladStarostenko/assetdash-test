@@ -3,7 +3,6 @@ require('dotenv').config({
 });
 
 module.exports = {
-  pathPrefix: `/blog`,
   siteMetadata: {
     title: `AssetDash Blog`,
     author: `Monnisa`,

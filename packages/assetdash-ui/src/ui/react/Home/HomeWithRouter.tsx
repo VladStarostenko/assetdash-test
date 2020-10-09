@@ -9,7 +9,7 @@ export const HomeWithRouter: React.FC = () => {
       <Route path="/:sectorName/:key">
         <Home/>
       </Route>
-      <Route path="/" component={Home}/>
+      <Route path="/test" component={Home}/>
     </Switch>
   );
 };
